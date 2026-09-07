@@ -97,8 +97,40 @@ Dataset download instructions: see `research/data/DATASETS.md`.
 | Component | State |
 |---|---|
 | Criteria tree | ✅ v0.1.0-draft — 49 criteria, all clause-traceable |
-| Criteria weights | ⛔ PLACEHOLDER — elicitation not yet run |
-| Scoring engine | 🔨 in progress |
-| Web application | 🔨 scaffolded |
-| Empirical validation | ⬜ not started |
-| Thesis chapters | ⬜ not started |
+| Scoring engine (TypeScript) | ✅ 9/9 structural checks |
+| Scoring engine (Python) | ✅ parity-verified against TypeScript, 280 checks |
+| Web application | ✅ intake, live scoring, explainability, audit trail |
+| DOCX export in bank format | ✅ |
+| SBA data pipeline + benchmarks | ✅ |
+| `Term` contamination finding | ✅ documented, reproducible |
+| BWM elicitation instrument | ✅ built and verified |
+| BWM solver + weight derivation | ✅ self-tested |
+| **Criterion weights** | ⛔ **PLACEHOLDER — no respondents yet** |
+| Thesis chapters 1–6 | ✅ drafted (~10,400 words) |
+| Thesis §6.1–6.2 (elicitation results) | ⛔ **awaiting respondents** |
+| Journal/conference paper | ⬜ not started |
+
+### The one blocker
+
+Everything except the elicitation is done. `derive_weights.py` will not mark the
+model `ELICITED` without usable responses, and it should not be made to. Until
+practitioners complete the instrument at `/elicitation`:
+
+- RQ2 is unanswered
+- every score in the thesis stays labelled as computed under placeholder weights
+
+Three respondents would change that. Deployment to Vercel, or fifteen minutes each
+on a laptop, are both sufficient.
+
+## Rebuilding everything
+
+```bash
+python research/src/prepare_sba.py        # clean the raw dataset
+python research/src/leakage_analysis.py   # the Term contamination evidence
+python research/src/benchmark.py          # clean vs contaminated benchmarks
+python research/src/test_parity.py        # TypeScript/Python engine agreement
+python research/src/bwm.py                # BWM solver self-test
+python research/src/derive_weights.py     # weights (needs responses)
+python scripts/build_thesis.py            # assemble THESIS.docx
+cd web && npm run test:scoring && npm run dev
+```

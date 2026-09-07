@@ -1,0 +1,15 @@
+{
+  "cohort": [
+    1990,
+    2010
+  ],
+  "n": 847980,
+  "roundness_auc": 0.8894,
+  "round_share_repaid": 0.8642,
+  "round_share_default": 0.0853,
+  "within_year_auc_min": 0.8589,
+  "within_year_auc_max": 0.8995,
+  "survival_correlation": 0.0434,
+  "survival_match_within_3mo": 0.05,
+  "mechanism": "unresolved"
+}

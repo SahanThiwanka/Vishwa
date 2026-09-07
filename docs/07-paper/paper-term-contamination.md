@@ -1,0 +1,337 @@
+# Target Contamination in a Widely Used Small-Business Credit Benchmark: Evidence from the SBA National Dataset
+
+**A. A. V. Athukorala**
+NSBM Green University, Sri Lanka
+
+---
+
+## Abstract
+
+The SBA National dataset — 899,164 U.S. Small Business Administration loan
+guarantees issued between 1987 and 2014, with realised repayment outcomes — is
+widely used as a benchmark in small-business credit-scoring research and
+teaching. We report that its `Term` field carries information about the outcome
+it is used to predict. Whether `Term` is an exact multiple of twelve, a property
+with no economic content, predicts default with AUC 0.889 across the dataset and
+between 0.859 and 0.900 within *every* approval year from 1990 to 2010. Among
+2007 approvals, facilities at 60 months defaulted at 11.1% while those at 59 and
+61 months defaulted at 86.7% and 92.2%. Including the field raises
+gradient-boosting discrimination from AUC 0.608 to 0.946 under temporal
+validation — an inflation of 0.339. We test and reject the natural explanation
+that `Term` records elapsed time to charge-off (correlation 0.043 with observed
+survival). The contamination is therefore demonstrated but its mechanism remains
+unresolved. We further show that right-censoring is a separate and independent
+hazard in this dataset, and that random splitting overstates performance by 0.182
+AUC relative to temporal validation. We recommend excluding `Term` and every
+derived feature, restricting to fully-matured facilities, validating temporally,
+and — generally — treating a variable that outperforms the plausible ceiling for
+its domain as a suspected defect rather than a result.
+
+**Keywords:** credit scoring, target leakage, benchmark datasets, SME lending,
+model validation, reproducibility
+
+---
+
+## I. Introduction
+
+Public benchmark datasets shape the fields that use them. When a dataset contains
+a variable that encodes the outcome, every model given that variable reports
+discrimination it does not possess, and the inflated figure becomes the standard
+against which subsequent work is measured.
+
+The SBA National dataset was introduced by Li, Mickel and Taylor [1] as a teaching
+resource for statistics as investigative decision-making, and has since become a
+common benchmark for small-business credit modelling. It records 899,164 loan
+guarantees with realised outcomes, making it one of the largest public datasets of
+small-business lending with ground truth.
+
+This paper reports that the dataset's `Term` field is contaminated. The finding
+emerged during an unrelated study — the construction of a multi-criteria appraisal
+model for Sri Lankan SME lending — when a gradient-boosting benchmark returned an
+AUC of 0.9726. Rather than reporting a result that exceeded plausible
+expectations for the domain, we investigated it.
+
+Our contributions:
+
+1. Evidence that `Term` carries outcome information, robust to cohort controls
+   (§IV).
+2. Quantification of the resulting inflation in reported performance, with a
+   meaningless-variable probe establishing an artefact ceiling (§V).
+3. Rejection of the natural mechanism hypothesis, leaving the cause open and
+   stated as such (§IV-D).
+4. Two further validation hazards in the same dataset: right-censoring, and the
+   optimism of random splitting (§VI).
+
+All analysis is reproducible from code and the public dataset.
+
+## II. Related Work
+
+Target leakage — the presence in training data of information unavailable at
+prediction time — is a recognised failure mode in applied machine learning, and
+general treatments of credit modelling identify fields such as interest rate,
+issue date and outstanding principal as requiring removal.
+
+Within the SBA National dataset specifically, the literature we surveyed
+identifies `Term`, disbursement and approval amounts as significant predictors of
+default, and uses them accordingly. The dataset's own codebook documents `Term` as
+"loan term in months" — that is, the contractual term agreed at origination, which
+is legitimately available at appraisal time and would properly be used.
+
+We located no source reporting that the field itself carries outcome information.
+We state this as a finding we have not found documented rather than as a claim of
+priority: our search was not exhaustive.
+
+## III. Data and Method
+
+### A. Dataset
+
+We use the SBA National dataset (899,164 records, 1987–2014). The outcome is
+`MIS_Status`: `P I F` (paid in full) or `CHGOFF` (charged off). Removing 1,997
+records with no usable outcome leaves 897,167, with an overall default rate of
+17.56%.
+
+### B. Removing known outcome-derived fields
+
+Three fields are populated only after default: `ChgOffPrinGr`, `ChgOffDate` and
+`BalanceGross`. These are dropped, and their absence asserted before analysis.
+This is standard practice and is not the subject of this paper.
+
+### C. Cohort window and maturity
+
+We restrict to approvals between 1990 and 2010 (847,980 records); earlier volumes
+are small and erratic, later approvals are heavily censored. We then separate
+facilities whose full contractual term elapsed before the 2014 data cut-off:
+
+| Cohort | n | Default rate |
+|---|---:|---:|
+| Censored (term not yet elapsed) | 195,696 | 7.77% |
+| Fully matured | 652,284 | 20.41% |
+
+Analysis uses the 652,284 fully-matured facilities. This control is applied
+*before* the contamination analysis, so the results in §IV cannot be attributed to
+censoring.
+
+### D. Models and protocols
+
+We compare an unfitted expert scorecard (bands set a priori, never exposed to
+outcome labels), logistic regression, and histogram gradient boosting, under two
+protocols: a 70/30 random split, and a temporal split training on approvals up to
+2003 and testing on 2004–2010.
+
+Each is run under two feature specifications: **clean**, excluding `Term` and all
+derived features, and **contaminated**, including them.
+
+## IV. Evidence of Contamination
+
+### A. Discovery
+
+Under the contaminated specification, gradient boosting reached AUC 0.9726
+(random) and 0.9461 (temporal). Permutation importance showed the model to be
+substantially a function of one variable: shuffling term cost 0.395 AUC, while no
+other feature cost more than 0.008.
+
+Yet `Term` as a monotone predictor reaches only 0.82. The discrimination therefore
+came from **non-monotone structure** within the variable — a model splitting on
+exact values could exploit something a linear model could not.
+
+### B. The structure is roundness
+
+Default rates by exact term value among 2007 approvals:
+
+| Term (months) | n | Default rate |
+|---:|---:|---:|
+| 58 | 634 | 92.1% |
+| 59 | 663 | 86.7% |
+| **60** | **5,040** | **11.1%** |
+| 61 | 641 | 92.2% |
+| 62 | 609 | 90.1% |
+| 63 | 674 | 81.0% |
+| 64 | 596 | 88.1% |
+
+A one-month difference in contractual term cannot produce an eight-fold change in
+default rate. Sixty months is not an economically distinct product from
+fifty-nine.
+
+Across the full cohort:
+
+- **86.4%** of repaid facilities have a term that is an exact multiple of twelve
+- **8.5%** of charged-off facilities do
+- charged-off facilities are distributed near-uniformly across `Term mod 12`
+  (7.7%–9.0% in each of the twelve residues)
+
+The single boolean *"Term is a multiple of twelve"* achieves **AUC 0.8894**.
+
+### C. Not a cohort artefact
+
+Irregular terms became more common over the period, as did defaults, raising the
+possibility that the association reflects pooling of heterogeneous cohorts. It
+does not. Computed within each approval year:
+
+| Year | n | Default, round | Default, irregular | AUC |
+|---:|---:|---:|---:|---:|
+| 1990 | 14,859 | 0.6% | 19.2% | 0.859 |
+| 1993 | 23,299 | 0.2% | 11.2% | 0.885 |
+| 1997 | 37,718 | 0.6% | 29.8% | 0.888 |
+| 2000 | 37,352 | 1.4% | 42.0% | 0.874 |
+| 2003 | 58,000 | 1.6% | 54.1% | 0.893 |
+| 2006 | 75,756 | 4.9% | 80.8% | 0.900 |
+| 2007 | 71,649 | 6.7% | 85.5% | 0.899 |
+| 2008 | 39,458 | 6.4% | 84.4% | 0.898 |
+
+The association holds in every year within 0.859–0.900.
+
+### D. The mechanism is not established
+
+The natural hypothesis is that `Term` for charged-off facilities has been
+overwritten with elapsed time to charge-off. **We tested and rejected it.** Among
+156,266 charged-off facilities with both disbursement and charge-off dates:
+
+- correlation between `Term` and observed months to charge-off: **0.043**
+- proportion agreeing within ±3 months: **5.0%**
+
+`Term` is not survival time. Whether values are rewritten on restructuring,
+recomputed under a servicing convention, or introduced during preparation of the
+distributed file cannot be determined from the data alone. We report the
+contamination as demonstrated and the mechanism as open, and we caution against
+citing a cause that has not been shown.
+
+## V. Impact on Reported Performance
+
+| Model | Fitted | Random | Temporal |
+|---|:--:|---:|---:|
+| **Clean specification** | | | |
+| Expert scorecard | no | 0.4144 | 0.5275 |
+| Logistic regression | yes | 0.6745 | 0.4565 |
+| Gradient boosting | yes | 0.7898 | 0.6076 |
+| **Contaminated specification** | | | |
+| Logistic regression | yes | 0.8452 | 0.7854 |
+| Gradient boosting | yes | 0.9726 | 0.9461 |
+| *Roundness probe* | no | *0.8870* | *0.8965* |
+
+Three observations.
+
+**The inflation is large.** Gradient boosting rises from 0.6076 to 0.9461 under
+temporal validation: **0.339 AUC** attributable to a contaminated field.
+
+**The probe bounds the artefact.** A single boolean with no economic content
+reaches 0.887 and 0.897. Results on this dataset in that region, obtained from a
+model given `Term`, are substantially reproducing the artefact rather than
+measuring credit risk.
+
+**Flexible models are more exposed.** Logistic regression, monotone in term, gains
+0.33 AUC; gradient boosting, free to split on exact values, gains more and reaches
+further. The contamination is most damaging precisely to the model families most
+commonly reported as state of the art on this dataset.
+
+## VI. Two Further Hazards
+
+**Right-censoring.** Censored facilities default at 7.77% against 20.41% for
+matured ones (§III-C). A model able to infer censoring status from feature
+interactions — facility size tracks inflation, some programmes ran only in certain
+years — obtains discrimination unrelated to credit risk. This is independent of
+the `Term` contamination and requires its own control.
+
+**Optimism of random splitting.** Under the clean specification, gradient boosting
+scores 0.7898 randomly against 0.6076 temporally: a gap of **0.182 AUC**. Random
+splitting places facilities from the same economic cycle on both sides.
+
+Logistic regression falls to 0.4565 temporally — **below chance**. Trained on
+1990–2003 (9.1% default) and tested on 2004–2010 (35.9% default), its ranking
+inverts. This has direct practical significance: a linear scorecard fitted during
+benign conditions may rank borrowers backwards under stress.
+
+## VII. Limitations
+
+We have not established the mechanism of the contamination (§IV-D), and we do not
+claim priority for the finding — our literature search was not exhaustive.
+
+Restricting to fully-matured facilities removes censoring but over-represents
+short-term facilities in later cohorts. Excluding `Term` also discards genuine
+predictive signal: contractual term is economically meaningful, and some of the
+0.339 AUC difference is legitimate. We exclude the whole field because the
+contaminated and legitimate components cannot be separated, which is conservative
+rather than precise.
+
+Our findings concern the distributed SBA National file. We have not compared
+against SBA's primary records, which would be the direct route to resolving the
+mechanism.
+
+## VIII. Recommendations and Conclusion
+
+For work using the SBA National dataset:
+
+1. **Exclude `Term` and all derived features.** Report performance without it, or
+   report both specifications side by side.
+2. **Control right-censoring** by restricting to facilities whose term elapsed
+   before the data cut-off.
+3. **Validate temporally**, not randomly.
+4. **Include a meaningless-variable probe.** The roundness boolean costs nothing
+   to compute and bounds how much apparent performance is artefact.
+
+More generally: **an unexpectedly strong result should be treated as a suspected
+defect until explained.** The contamination reported here was found only because
+an AUC of 0.9726 was investigated rather than published. It would have passed
+review comfortably — it exceeded the benchmarks it would have been compared
+against, which is precisely why it would not have been questioned.
+
+The `Term` field in the SBA National dataset carries information about the outcome
+it is used to predict. Its roundness alone predicts default at AUC 0.889, within
+every approval year, despite carrying no economic meaning. Its inclusion inflates
+gradient-boosting temporal discrimination by 0.339 AUC. Published results on this
+dataset obtained from tree-based models with `Term` included warrant
+re-examination.
+
+---
+
+## References
+
+[1] M. Li, A. Mickel, and S. Taylor, "'Should This Loan be Approved or Denied?': A
+Large Dataset with Class Assignment Guidelines," *Journal of Statistics
+Education*, vol. 26, no. 1, pp. 55–66, 2018, doi:10.1080/10691898.2018.1434342.
+
+[2] P. K. Roy and K. Shaw, "A multicriteria credit scoring model for SMEs using
+hybrid BWM and TOPSIS," *Financial Innovation*, vol. 7, no. 1, 2021,
+doi:10.1186/s40854-021-00295-5.
+
+*Additional references to be completed on submission: general treatments of target
+leakage in applied machine learning; prior published results on the SBA National
+dataset that would be affected by this finding, identified through a systematic
+search.*
+
+---
+
+## Reproducibility
+
+All results are produced by the following, in order, against the public dataset:
+
+```
+research/src/prepare_sba.py        # cleaning, leakage-column removal, censoring flags
+research/src/leakage_analysis.py   # Sections IV-B, IV-C, IV-D
+research/src/benchmark.py          # Section V
+research/src/make_figures.py       # figures
+```
+
+No value in this paper was entered by hand.
+
+---
+
+## Submission notes (not for publication)
+
+**Before submitting, complete these:**
+
+1. **Systematic search for affected published work.** §VIII asserts that published
+   results warrant re-examination. Identify specific papers reporting tree-based
+   models on this dataset with `Term` included, and cite them. Reviewers will
+   expect this and the claim is weak without it.
+2. **Contact the SBA or the dataset authors** about the mechanism. A reply
+   converts §IV-D from an open question into a complete account and materially
+   strengthens the paper.
+3. **Complete the leakage literature review** — reference [3] onward.
+4. **Reformat to the target venue's template** (IEEE two-column or the venue's
+   equivalent).
+
+**Suggested venues:** a Sri Lankan IEEE conference (ICIIS, ICAC, ICTer) for speed;
+or, given that the finding concerns research practice rather than a new method, a
+data-quality or reproducibility track. *Journal of Statistics and Data Science
+Education* is worth considering since it published the original dataset paper and
+the finding bears directly on its use in teaching.

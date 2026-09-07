@@ -1,0 +1,165 @@
+{
+  "cohort": [
+    1990,
+    2010
+  ],
+  "temporal_boundary": 2003,
+  "n_rows": 652284,
+  "default_rate": 0.2041,
+  "results": [
+    {
+      "model": "Expert scorecard (unfitted)",
+      "fitted_on_outcomes": false,
+      "auc": 0.4144,
+      "ks": 0.0046,
+      "avg_precision": 0.1665,
+      "brier": null,
+      "f1_at_youden": 0.3401,
+      "protocol": "random",
+      "spec": "clean"
+    },
+    {
+      "model": "Logistic regression",
+      "fitted_on_outcomes": true,
+      "auc": 0.6745,
+      "ks": 0.292,
+      "avg_precision": 0.3066,
+      "brier": 0.1539,
+      "f1_at_youden": 0.424,
+      "protocol": "random",
+      "spec": "clean"
+    },
+    {
+      "model": "Gradient boosting",
+      "fitted_on_outcomes": true,
+      "auc": 0.7898,
+      "ks": 0.4329,
+      "avg_precision": 0.5002,
+      "brier": 0.1319,
+      "f1_at_youden": 0.5032,
+      "protocol": "random",
+      "spec": "clean"
+    },
+    {
+      "model": "Expert scorecard (unfitted)",
+      "fitted_on_outcomes": false,
+      "auc": 0.5275,
+      "ks": 0.0517,
+      "avg_precision": 0.3729,
+      "brier": null,
+      "f1_at_youden": 0.4765,
+      "protocol": "temporal",
+      "spec": "clean"
+    },
+    {
+      "model": "Logistic regression",
+      "fitted_on_outcomes": true,
+      "auc": 0.4565,
+      "ks": 0.0001,
+      "avg_precision": 0.3255,
+      "brier": 0.2882,
+      "f1_at_youden": 0.5283,
+      "protocol": "temporal",
+      "spec": "clean"
+    },
+    {
+      "model": "Gradient boosting",
+      "fitted_on_outcomes": true,
+      "auc": 0.6076,
+      "ks": 0.1527,
+      "avg_precision": 0.4606,
+      "brier": 0.2592,
+      "f1_at_youden": 0.4835,
+      "protocol": "temporal",
+      "spec": "clean"
+    },
+    {
+      "model": "Expert scorecard (unfitted)",
+      "fitted_on_outcomes": false,
+      "auc": 0.4144,
+      "ks": 0.0046,
+      "avg_precision": 0.1665,
+      "brier": null,
+      "f1_at_youden": 0.3401,
+      "protocol": "random",
+      "spec": "contaminated"
+    },
+    {
+      "model": "Logistic regression",
+      "fitted_on_outcomes": true,
+      "auc": 0.8452,
+      "ks": 0.5882,
+      "avg_precision": 0.568,
+      "brier": 0.1193,
+      "f1_at_youden": 0.5872,
+      "protocol": "random",
+      "spec": "contaminated"
+    },
+    {
+      "model": "Gradient boosting",
+      "fitted_on_outcomes": true,
+      "auc": 0.9726,
+      "ks": 0.8466,
+      "avg_precision": 0.9026,
+      "brier": 0.0463,
+      "f1_at_youden": 0.8339,
+      "protocol": "random",
+      "spec": "contaminated"
+    },
+    {
+      "model": "Term-roundness probe (LEAKAGE)",
+      "fitted_on_outcomes": false,
+      "auc": 0.887,
+      "ks": 0.774,
+      "avg_precision": 0.5883,
+      "brier": 0.1303,
+      "f1_at_youden": 0.7419,
+      "protocol": "random",
+      "spec": "contaminated"
+    },
+    {
+      "model": "Expert scorecard (unfitted)",
+      "fitted_on_outcomes": false,
+      "auc": 0.5275,
+      "ks": 0.0517,
+      "avg_precision": 0.3729,
+      "brier": null,
+      "f1_at_youden": 0.4765,
+      "protocol": "temporal",
+      "spec": "contaminated"
+    },
+    {
+      "model": "Logistic regression",
+      "fitted_on_outcomes": true,
+      "auc": 0.7854,
+      "ks": 0.4539,
+      "avg_precision": 0.6035,
+      "brier": 0.2412,
+      "f1_at_youden": 0.6639,
+      "protocol": "temporal",
+      "spec": "contaminated"
+    },
+    {
+      "model": "Gradient boosting",
+      "fitted_on_outcomes": true,
+      "auc": 0.9461,
+      "ks": 0.7707,
+      "avg_precision": 0.8866,
+      "brier": 0.1182,
+      "f1_at_youden": 0.8428,
+      "protocol": "temporal",
+      "spec": "contaminated"
+    },
+    {
+      "model": "Term-roundness probe (LEAKAGE)",
+      "fitted_on_outcomes": false,
+      "auc": 0.8965,
+      "ks": 0.793,
+      "avg_precision": 0.769,
+      "brier": 0.109,
+      "f1_at_youden": 0.8578,
+      "protocol": "temporal",
+      "spec": "contaminated"
+    }
+  ]
+}

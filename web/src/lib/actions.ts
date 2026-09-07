@@ -122,3 +122,68 @@ export async function recordDecision(
   revalidatePath(`/appraisals/${id}`);
   revalidatePath("/");
 }
+
+// ---------------------------------------------------------------------------
+// Best-Worst Method elicitation
+// ---------------------------------------------------------------------------
+
+export interface ElicitationLevelResponse {
+  level: string;
+  best: string;
+  worst: string;
+  bestToOthers: Record<string, number>;
+  othersToWorst: Record<string, number>;
+}
+
+export interface Respondent {
+  respondentCode: string;
+  yearsExperience?: number;
+  institution?: string;
+  role?: string;
+}
+
+export async function saveElicitation(
+  respondent: Respondent,
+  levels: ElicitationLevelResponse[],
+) {
+  // Upserted per (respondent, level) so a respondent who resumes or corrects a
+  // level overwrites their earlier answer rather than creating a duplicate that
+  // would silently double their influence on the aggregated weights.
+  for (const level of levels) {
+    const data = {
+      respondentCode: respondent.respondentCode,
+      yearsExperience: respondent.yearsExperience ?? null,
+      institution: respondent.institution ?? null,
+      role: respondent.role ?? null,
+      level: level.level,
+      best: level.best,
+      worst: level.worst,
+      bestToOthers: JSON.stringify(level.bestToOthers),
+      othersToWorst: JSON.stringify(level.othersToWorst),
+    };
+
+    await prisma.elicitationResponse.upsert({
+      where: {
+        respondentCode_level: {
+          respondentCode: respondent.respondentCode,
+          level: level.level,
+        },
+      },
+      create: data,
+      update: data,
+    });
+  }
+
+  return { saved: levels.length };
+}
+
+export async function elicitationProgress() {
+  const rows = await prisma.elicitationResponse.groupBy({
+    by: ["respondentCode"],
+    _count: { level: true },
+  });
+  return rows.map((r) => ({
+    respondentCode: r.respondentCode,
+    levelsCompleted: r._count.level,
+  }));
+}

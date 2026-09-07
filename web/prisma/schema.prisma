@@ -97,3 +97,39 @@ model AuditEvent {
 
   @@index([appraisalId, createdAt])
 }
+
+// Best-Worst Method elicitation (Rezaei 2015).
+//
+// Classical pairwise AHP over this criteria tree would need 168 comparisons per
+// respondent - roughly an hour, and the fatigue-driven inconsistency would make
+// the resulting weights worthless. BWM needs 2n-3 comparisons per level, which
+// brings the whole instrument to 86 (~15 minutes) and carries a well-defined
+// consistency ratio.
+//
+// One row per respondent per level of the tree. `level` is either "objective:
+// <id>" for the dimension comparison, or "dimension:<id>" for the criteria
+// within one dimension.
+model ElicitationResponse {
+  id String @id @default(cuid())
+
+  respondentCode String
+  yearsExperience Int?
+  institution     String?
+  role            String?
+
+  level String
+
+  // Criterion/dimension ids chosen as most and least important at this level.
+  best  String
+  worst String
+
+  // { "<id>": 1-9 } - how much more important the BEST is than each other item.
+  bestToOthers String
+  // { "<id>": 1-9 } - how much more important each item is than the WORST.
+  othersToWorst String
+
+  createdAt DateTime @default(now())
+
+  @@unique([respondentCode, level])
+  @@index([level])
+}

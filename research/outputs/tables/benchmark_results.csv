@@ -1,0 +1,15 @@
+spec,protocol,model,fitted_on_outcomes,auc,ks,avg_precision,brier,f1_at_youden
+clean,random,Expert scorecard (unfitted),False,0.4144,0.0046,0.1665,,0.3401
+clean,random,Logistic regression,True,0.6745,0.292,0.3066,0.1539,0.424
+clean,random,Gradient boosting,True,0.7898,0.4329,0.5002,0.1319,0.5032
+clean,temporal,Expert scorecard (unfitted),False,0.5275,0.0517,0.3729,,0.4765
+clean,temporal,Logistic regression,True,0.4565,0.0001,0.3255,0.2882,0.5283
+clean,temporal,Gradient boosting,True,0.6076,0.1527,0.4606,0.2592,0.4835
+contaminated,random,Expert scorecard (unfitted),False,0.4144,0.0046,0.1665,,0.3401
+contaminated,random,Logistic regression,True,0.8452,0.5882,0.568,0.1193,0.5872
+contaminated,random,Gradient boosting,True,0.9726,0.8466,0.9026,0.0463,0.8339
+contaminated,random,Term-roundness probe (LEAKAGE),False,0.887,0.774,0.5883,0.1303,0.7419
+contaminated,temporal,Expert scorecard (unfitted),False,0.5275,0.0517,0.3729,,0.4765
+contaminated,temporal,Logistic regression,True,0.7854,0.4539,0.6035,0.2412,0.6639
+contaminated,temporal,Gradient boosting,True,0.9461,0.7707,0.8866,0.1182,0.8428
+contaminated,temporal,Term-roundness probe (LEAKAGE),False,0.8965,0.793,0.769,0.109,0.8578

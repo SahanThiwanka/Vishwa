@@ -75,10 +75,21 @@ scale, represented as triangular fuzzy numbers, aggregated by fuzzy weighted ave
 by centroid. The result is two scores reported **side by side, never merged**: a credit-risk score and
 a development-impact score.
 
-**The novelty is the second objective.** Clause 5 of the bank's form scores nine development outcomes
-(employment, women's participation, import substitution, foreign exchange earnings) and clause 3.4.1
-splits employment by gender. Mainstream credit-scoring literature discards all of this. A state bank
-with a development mandate cannot — and no published scoring model handles both objectives at once.
+**The second objective**, taken from clause 5 of the bank's form, scores nine development outcomes
+(employment, women's participation, import substitution, foreign exchange earnings), with clause 3.4.1
+splitting employment by gender. Mainstream credit scoring discards all of this; a state bank with a
+development mandate cannot.
+
+> **Novelty claim corrected.** An earlier version of this file claimed no published model handles both
+> objectives at once. That is false — Gutiérrez-Nieto, Serrano-Cinca & Camón-Cala (2016, *J. Business
+> Ethics*) score social impact alongside credit risk, and Roy & Shaw (2021, *Financial Innovation*)
+> already apply BWM to SME credit scoring. Both claims are withdrawn in Chapter 2 (§2.3.3, §2.4.1).
+>
+> What survives: the two objectives are **never aggregated** here, which prior work does do — and that
+> is supported by Arvanitis et al. (2015), who find development and credit concerns to be empirically
+> independent in development-bank appraisal. The substantial contributions are instead the `Term`
+> contamination finding and the methodological result that instrument-specific models cannot be
+> validated on datasets lacking their variables (§2.7).
 
 ---
 

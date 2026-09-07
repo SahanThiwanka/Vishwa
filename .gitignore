@@ -1,0 +1,54 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js
+web/.next/
+web/out/
+web/build/
+web/next-env.d.ts
+
+# Production
+dist/
+
+# Environment
+.env
+.env*.local
+!.env.example
+
+# Database (SQLite dev database - schema is committed, data is not)
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Research data - too large to commit, download per research/data/DATASETS.md
+research/data/raw/*
+!research/data/raw/.gitkeep
+research/data/processed/*
+!research/data/processed/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+
+# Office lock files
+~$*.doc*
+~$*.xls*
+
+# Logs
+*.log
+npm-debug.log*

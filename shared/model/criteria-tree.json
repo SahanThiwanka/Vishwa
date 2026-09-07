@@ -1,0 +1,148 @@
+{
+  "version": "0.1.0-draft",
+  "title": "Dual-Objective SME Credit Appraisal Criteria Tree",
+  "sourceInstrument": {
+    "name": "Project / Business Appraisal Report for SME Credit Facility",
+    "issuer": "People's Bank, Sri Lanka",
+    "annexure": "Annexure I-V",
+    "note": "Every criterion carries a 'ref' citing the clause of the source form it derives from. Traceability is a thesis requirement: no criterion exists without a source clause."
+  },
+  "weightStatus": {
+    "state": "PLACEHOLDER",
+    "detail": "All weights are provisional equal-splits within each level. They MUST be replaced by elicited values before any result is reported. Do not publish figures computed from placeholder weights.",
+    "plannedMethod": "Fuzzy AHP (pairwise) with Best-Worst Method cross-check; consistency ratio reported per respondent."
+  },
+  "linguisticScale": {
+    "type": "triangular-fuzzy",
+    "levels": [
+      { "code": "VP", "label": "Very Poor", "tfn": [0, 0, 25] },
+      { "code": "P", "label": "Poor", "tfn": [0, 25, 50] },
+      { "code": "F", "label": "Fair", "tfn": [25, 50, 75] },
+      { "code": "G", "label": "Good", "tfn": [50, 75, 100] },
+      { "code": "E", "label": "Excellent", "tfn": [75, 100, 100] }
+    ],
+    "defuzzification": "centroid"
+  },
+  "riskBands": [
+    { "code": "A", "label": "Low risk", "min": 80, "max": 100, "action": "Recommend approval" },
+    { "code": "B", "label": "Moderate risk", "min": 65, "max": 80, "action": "Recommend with conditions" },
+    { "code": "C", "label": "Elevated risk", "min": 50, "max": 65, "action": "Refer to higher authority" },
+    { "code": "D", "label": "High risk", "min": 0, "max": 50, "action": "Recommend decline" }
+  ],
+  "objectives": [
+    {
+      "id": "credit_risk",
+      "name": "Credit Risk / Bankability",
+      "weight": null,
+      "dimensions": [
+        {
+          "id": "borrower_management",
+          "name": "Borrower & Management Capacity",
+          "ref": "2.8, 2.10, 3.2, 3.4",
+          "criteria": [
+            { "id": "sponsor_experience", "name": "Sponsor experience in the field", "ref": "2.10", "type": "quantitative", "unit": "years", "direction": "higher_better", "bands": [[0,0],[2,25],[5,50],[10,75],[15,100]] },
+            { "id": "sponsor_quals", "name": "Educational/professional qualifications", "ref": "2.8", "type": "qualitative" },
+            { "id": "org_structure", "name": "Organizational structure & management style", "ref": "3.2", "type": "qualitative" },
+            { "id": "hr_adequacy", "name": "HR adequacy & succession depth", "ref": "3.4", "type": "qualitative" },
+            { "id": "statutory_compliance", "name": "EPF/ETF payment compliance", "ref": "3.4.2", "type": "qualitative" },
+            { "id": "business_vintage", "name": "Years since business commenced", "ref": "2.3", "type": "quantitative", "unit": "years", "direction": "higher_better", "bands": [[0,0],[1,25],[3,50],[5,75],[10,100]] }
+          ]
+        },
+        {
+          "id": "credit_conduct",
+          "name": "Credit History & Banking Conduct",
+          "ref": "2.11, 2.14",
+          "criteria": [
+            { "id": "repayment_performance", "name": "Repayment performance on prior facilities", "ref": "2.11.1, 2.11.2", "type": "qualitative" },
+            { "id": "arrears_ratio", "name": "Arrears as % of outstanding", "ref": "2.11", "type": "quantitative", "unit": "percent", "direction": "lower_better", "bands": [[0,100],[2,75],[5,50],[10,25],[20,0]] },
+            { "id": "account_turnover", "name": "Credit turnover through account vs. sales", "ref": "2.14.1", "type": "quantitative", "unit": "ratio", "direction": "higher_better", "bands": [[0,0],[0.25,25],[0.5,50],[0.75,75],[1.0,100]] },
+            { "id": "cheque_returns", "name": "Cheque returns on refer-to-drawer", "ref": "2.14.1", "type": "quantitative", "unit": "count", "direction": "lower_better", "bands": [[0,100],[1,75],[3,50],[6,25],[12,0]] },
+            { "id": "external_exposure", "name": "Exposure to other financial institutions", "ref": "2.11.2", "type": "qualitative" }
+          ]
+        },
+        {
+          "id": "historic_financials",
+          "name": "Historic Financial Performance",
+          "ref": "2.13, 2.15-2.18",
+          "criteria": [
+            { "id": "gross_profit_ratio", "name": "Gross profit ratio", "ref": "2.17", "type": "quantitative", "unit": "percent", "direction": "higher_better", "bands": [[0,0],[10,25],[20,50],[30,75],[45,100]] },
+            { "id": "net_profit_ratio", "name": "Net profit ratio", "ref": "2.17", "type": "quantitative", "unit": "percent", "direction": "higher_better", "bands": [[0,0],[3,25],[7,50],[12,75],[20,100]] },
+            { "id": "current_ratio", "name": "Current ratio", "ref": "2.17", "type": "quantitative", "unit": "ratio", "direction": "band_optimal", "bands": [[0.5,0],[1.0,40],[1.33,70],[2.0,100],[3.5,70]] },
+            { "id": "debt_equity_hist", "name": "Debt-equity ratio", "ref": "2.17", "type": "quantitative", "unit": "ratio", "direction": "lower_better", "bands": [[0.5,100],[1.0,80],[2.0,55],[3.0,30],[4.0,0]] },
+            { "id": "gearing_ratio", "name": "Gearing ratio", "ref": "2.17", "type": "quantitative", "unit": "percent", "direction": "lower_better", "bands": [[20,100],[40,75],[60,50],[75,25],[90,0]] },
+            { "id": "asset_turnover", "name": "Asset turnover ratio", "ref": "2.17", "type": "quantitative", "unit": "times", "direction": "higher_better", "bands": [[0,0],[0.5,25],[1.0,50],[2.0,75],[3.0,100]] },
+            { "id": "stock_retention", "name": "Stock retention period", "ref": "2.17", "type": "quantitative", "unit": "days", "direction": "lower_better", "bands": [[15,100],[30,80],[60,55],[90,30],[150,0]] },
+            { "id": "debtor_retention", "name": "Debtors retention period", "ref": "2.17", "type": "quantitative", "unit": "days", "direction": "lower_better", "bands": [[15,100],[30,80],[60,55],[90,30],[150,0]] },
+            { "id": "sales_trend", "name": "Sales trend & stability", "ref": "2.13", "type": "qualitative" }
+          ]
+        },
+        {
+          "id": "project_viability",
+          "name": "Project Viability & Projections",
+          "ref": "3.1.3, 3.7, 4",
+          "criteria": [
+            { "id": "dscr", "name": "Debt service cover ratio", "ref": "4", "type": "quantitative", "unit": "times", "direction": "higher_better", "bands": [[0.8,0],[1.0,25],[1.25,50],[1.5,75],[2.0,100]], "critical": true, "criticalNote": "DSCR below 1.0 is a hard knock-out in most credit policies; the engine flags it rather than silently averaging it away." },
+            { "id": "iscr", "name": "Interest service cover ratio", "ref": "4", "type": "quantitative", "unit": "times", "direction": "higher_better", "bands": [[1.0,0],[1.5,25],[2.0,50],[3.0,75],[4.0,100]] },
+            { "id": "roi", "name": "Return on investment", "ref": "4", "type": "quantitative", "unit": "percent", "direction": "higher_better", "bands": [[0,0],[8,25],[15,50],[25,75],[35,100]] },
+            { "id": "projected_np", "name": "Projected net profit ratio", "ref": "4", "type": "quantitative", "unit": "percent", "direction": "higher_better", "bands": [[0,0],[3,25],[7,50],[12,75],[20,100]] },
+            { "id": "project_gearing", "name": "Project debt-equity ratio", "ref": "3.7.1", "type": "quantitative", "unit": "ratio", "direction": "lower_better", "bands": [[0.5,100],[1.0,80],[1.5,60],[2.33,35],[4.0,0]] },
+            { "id": "promoter_equity", "name": "Promoter equity contribution", "ref": "3.7", "type": "quantitative", "unit": "percent", "direction": "higher_better", "bands": [[10,0],[20,35],[30,60],[40,80],[50,100]] },
+            { "id": "capacity_growth", "name": "Growth in production capacity", "ref": "3.1.3", "type": "quantitative", "unit": "percent", "direction": "higher_better", "bands": [[0,0],[15,25],[35,50],[60,75],[100,100]] },
+            { "id": "bep_headroom", "name": "Headroom above break-even", "ref": "4", "type": "quantitative", "unit": "percent", "direction": "higher_better", "bands": [[0,0],[10,25],[25,50],[40,75],[60,100]] }
+          ]
+        },
+        {
+          "id": "market_position",
+          "name": "Market & Competitive Position",
+          "ref": "3.10",
+          "note": "Sub-criteria 1-5 operationalise the Porter Five Forces block the bank's own form already uses in clause 3.10.3. Scored as favourability to the applicant: high rivalry scores LOW.",
+          "criteria": [
+            { "id": "rivalry", "name": "Rivalry among competing sellers", "ref": "3.10.3", "type": "qualitative" },
+            { "id": "threat_entry", "name": "Competitive force of potential entry", "ref": "3.10.3", "type": "qualitative" },
+            { "id": "buyer_power", "name": "Power of buyers", "ref": "3.10.3", "type": "qualitative" },
+            { "id": "supplier_power", "name": "Power of suppliers", "ref": "3.10.3", "type": "qualitative" },
+            { "id": "substitutes", "name": "Pressure from substitute products", "ref": "3.10.3", "type": "qualitative" },
+            { "id": "raw_material", "name": "Security of raw material supply", "ref": "3.10.2", "type": "qualitative" },
+            { "id": "distribution", "name": "Distribution arrangements", "ref": "3.10.4", "type": "qualitative" }
+          ]
+        },
+        {
+          "id": "risk_security",
+          "name": "Risk, Security & Compliance",
+          "ref": "3.3, 3.5, 3.6, 3.11, 3.12, 6.5",
+          "criteria": [
+            { "id": "security_cover", "name": "Security cover (FSV / facility amount)", "ref": "6.5", "type": "quantitative", "unit": "ratio", "direction": "higher_better", "bands": [[0.5,0],[0.8,30],[1.0,55],[1.5,80],[2.0,100]] },
+            { "id": "technological_risk", "name": "Technological risk", "ref": "3.11", "type": "qualitative" },
+            { "id": "environmental_risk", "name": "Environmental risk", "ref": "3.12", "type": "qualitative" },
+            { "id": "govt_consent", "name": "Government approvals obtained & current", "ref": "3.6", "type": "qualitative" },
+            { "id": "insurance_cover", "name": "Insurance coverage adequacy", "ref": "3.3", "type": "qualitative" },
+            { "id": "implementation", "name": "Realism of implementation schedule", "ref": "3.5", "type": "qualitative" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "development_impact",
+      "name": "Development Impact",
+      "weight": null,
+      "note": "This objective is the study's novelty. Clause 5 of the People's Bank form scores nine before/after development outcomes and clause 3.4.1 disaggregates employment by gender. Mainstream credit-scoring literature discards this dimension entirely; a state/development bank cannot. Reported SEPARATELY from credit risk, never collapsed into one number, so a weak-development/strong-credit case stays visible as such.",
+      "dimensions": [
+        {
+          "id": "dev_impact",
+          "name": "Economic & Social Contribution",
+          "ref": "5, 3.4.1",
+          "criteria": [
+            { "id": "employment_generation", "name": "Employment generation (manpower before/after)", "ref": "5.1, 3.4.1", "type": "quantitative", "unit": "percent_increase", "direction": "higher_better", "bands": [[0,0],[10,25],[25,50],[50,75],[100,100]] },
+            { "id": "women_participation", "name": "Women's participation in workforce", "ref": "5.2, 3.4.1", "type": "quantitative", "unit": "percent", "direction": "higher_better", "bands": [[0,0],[10,25],[25,50],[40,75],[50,100]] },
+            { "id": "local_raw_material", "name": "Local raw material usage", "ref": "5.3", "type": "quantitative", "unit": "percent", "direction": "higher_better", "bands": [[0,0],[25,25],[50,50],[75,75],[100,100]] },
+            { "id": "productive_capacity", "name": "Increase in productive capacity", "ref": "5.4, 5.5", "type": "quantitative", "unit": "percent_increase", "direction": "higher_better", "bands": [[0,0],[15,25],[35,50],[60,75],[100,100]] },
+            { "id": "export_share", "name": "Export sales as % of turnover", "ref": "5.6", "type": "quantitative", "unit": "percent", "direction": "higher_better", "bands": [[0,0],[10,30],[25,55],[50,80],[75,100]] },
+            { "id": "import_substitution", "name": "Import substitution effect", "ref": "5.7", "type": "qualitative" },
+            { "id": "value_added", "name": "Value added", "ref": "5.8", "type": "quantitative", "unit": "percent", "direction": "higher_better", "bands": [[0,0],[15,25],[30,50],[50,75],[70,100]] },
+            { "id": "fx_earnings", "name": "Foreign exchange earnings", "ref": "5.9", "type": "qualitative" }
+          ]
+        }
+      ]
+    }
+  ]
+}

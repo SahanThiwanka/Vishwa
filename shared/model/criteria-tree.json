@@ -10,7 +10,7 @@
   "weightStatus": {
     "state": "PLACEHOLDER",
     "detail": "All weights are provisional equal-splits within each level. They MUST be replaced by elicited values before any result is reported. Do not publish figures computed from placeholder weights.",
-    "plannedMethod": "Fuzzy AHP (pairwise) with Best-Worst Method cross-check; consistency ratio reported per respondent."
+    "plannedMethod": "Best-Worst Method (Rezaei 2015; linear model Rezaei 2016), consistency ratio reported per respondent, responses above CR 0.25 excluded, aggregation by geometric mean. BWM was chosen over pairwise AHP because AHP over this tree requires 168 comparisons per respondent against BWM's 86; the fatigue-driven inconsistency at that length would make the weights unusable."
   },
   "linguisticScale": {
     "type": "triangular-fuzzy",
@@ -18,47 +18,27 @@
       {
         "code": "VP",
         "label": "Very Poor",
-        "tfn": [
-          0,
-          0,
-          25
-        ]
+        "tfn": [0, 0, 25]
       },
       {
         "code": "P",
         "label": "Poor",
-        "tfn": [
-          0,
-          25,
-          50
-        ]
+        "tfn": [0, 25, 50]
       },
       {
         "code": "F",
         "label": "Fair",
-        "tfn": [
-          25,
-          50,
-          75
-        ]
+        "tfn": [25, 50, 75]
       },
       {
         "code": "G",
         "label": "Good",
-        "tfn": [
-          50,
-          75,
-          100
-        ]
+        "tfn": [50, 75, 100]
       },
       {
         "code": "E",
         "label": "Excellent",
-        "tfn": [
-          75,
-          100,
-          100
-        ]
+        "tfn": [75, 100, 100]
       }
     ],
     "defuzzification": "centroid"
@@ -116,28 +96,7 @@
               "type": "quantitative",
               "unit": "years",
               "direction": "higher_better",
-              "bands": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  2,
-                  25
-                ],
-                [
-                  5,
-                  50
-                ],
-                [
-                  10,
-                  75
-                ],
-                [
-                  15,
-                  100
-                ]
-              ]
+              "bands": [[0, 0], [2, 25], [5, 50], [10, 75], [15, 100]]
             },
             {
               "id": "sponsor_quals",
@@ -170,28 +129,7 @@
               "type": "quantitative",
               "unit": "years",
               "direction": "higher_better",
-              "bands": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  1,
-                  25
-                ],
-                [
-                  3,
-                  50
-                ],
-                [
-                  5,
-                  75
-                ],
-                [
-                  10,
-                  100
-                ]
-              ]
+              "bands": [[0, 0], [1, 25], [3, 50], [5, 75], [10, 100]]
             }
           ]
         },
@@ -213,28 +151,7 @@
               "type": "quantitative",
               "unit": "percent",
               "direction": "lower_better",
-              "bands": [
-                [
-                  0,
-                  100
-                ],
-                [
-                  2,
-                  75
-                ],
-                [
-                  5,
-                  50
-                ],
-                [
-                  10,
-                  25
-                ],
-                [
-                  20,
-                  0
-                ]
-              ]
+              "bands": [[0, 100], [2, 75], [5, 50], [10, 25], [20, 0]]
             },
             {
               "id": "account_turnover",
@@ -243,28 +160,7 @@
               "type": "quantitative",
               "unit": "ratio",
               "direction": "higher_better",
-              "bands": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  0.25,
-                  25
-                ],
-                [
-                  0.5,
-                  50
-                ],
-                [
-                  0.75,
-                  75
-                ],
-                [
-                  1.0,
-                  100
-                ]
-              ]
+              "bands": [[0, 0], [0.25, 25], [0.5, 50], [0.75, 75], [1.0, 100]]
             },
             {
               "id": "cheque_returns",
@@ -273,28 +169,7 @@
               "type": "quantitative",
               "unit": "count",
               "direction": "lower_better",
-              "bands": [
-                [
-                  0,
-                  100
-                ],
-                [
-                  1,
-                  75
-                ],
-                [
-                  3,
-                  50
-                ],
-                [
-                  6,
-                  25
-                ],
-                [
-                  12,
-                  0
-                ]
-              ]
+              "bands": [[0, 100], [1, 75], [3, 50], [6, 25], [12, 0]]
             },
             {
               "id": "external_exposure",
@@ -316,28 +191,7 @@
               "type": "quantitative",
               "unit": "percent",
               "direction": "higher_better",
-              "bands": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  10,
-                  25
-                ],
-                [
-                  20,
-                  50
-                ],
-                [
-                  30,
-                  75
-                ],
-                [
-                  45,
-                  100
-                ]
-              ]
+              "bands": [[0, 0], [10, 25], [20, 50], [30, 75], [45, 100]]
             },
             {
               "id": "net_profit_ratio",
@@ -346,28 +200,7 @@
               "type": "quantitative",
               "unit": "percent",
               "direction": "higher_better",
-              "bands": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  3,
-                  25
-                ],
-                [
-                  7,
-                  50
-                ],
-                [
-                  12,
-                  75
-                ],
-                [
-                  20,
-                  100
-                ]
-              ]
+              "bands": [[0, 0], [3, 25], [7, 50], [12, 75], [20, 100]]
             },
             {
               "id": "current_ratio",
@@ -376,28 +209,7 @@
               "type": "quantitative",
               "unit": "ratio",
               "direction": "band_optimal",
-              "bands": [
-                [
-                  0.5,
-                  0
-                ],
-                [
-                  1.0,
-                  40
-                ],
-                [
-                  1.33,
-                  70
-                ],
-                [
-                  2.0,
-                  100
-                ],
-                [
-                  3.5,
-                  70
-                ]
-              ]
+              "bands": [[0.5, 0], [1.0, 40], [1.33, 70], [2.0, 100], [3.5, 70]]
             },
             {
               "id": "debt_equity_hist",
@@ -406,28 +218,7 @@
               "type": "quantitative",
               "unit": "ratio",
               "direction": "lower_better",
-              "bands": [
-                [
-                  0.5,
-                  100
-                ],
-                [
-                  1.0,
-                  80
-                ],
-                [
-                  2.0,
-                  55
-                ],
-                [
-                  3.0,
-                  30
-                ],
-                [
-                  4.0,
-                  0
-                ]
-              ]
+              "bands": [[0.5, 100], [1.0, 80], [2.0, 55], [3.0, 30], [4.0, 0]]
             },
             {
               "id": "gearing_ratio",
@@ -436,28 +227,7 @@
               "type": "quantitative",
               "unit": "percent",
               "direction": "lower_better",
-              "bands": [
-                [
-                  20,
-                  100
-                ],
-                [
-                  40,
-                  75
-                ],
-                [
-                  60,
-                  50
-                ],
-                [
-                  75,
-                  25
-                ],
-                [
-                  90,
-                  0
-                ]
-              ]
+              "bands": [[20, 100], [40, 75], [60, 50], [75, 25], [90, 0]]
             },
             {
               "id": "asset_turnover",
@@ -466,28 +236,7 @@
               "type": "quantitative",
               "unit": "times",
               "direction": "higher_better",
-              "bands": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  0.5,
-                  25
-                ],
-                [
-                  1.0,
-                  50
-                ],
-                [
-                  2.0,
-                  75
-                ],
-                [
-                  3.0,
-                  100
-                ]
-              ]
+              "bands": [[0, 0], [0.5, 25], [1.0, 50], [2.0, 75], [3.0, 100]]
             },
             {
               "id": "stock_retention",
@@ -496,28 +245,7 @@
               "type": "quantitative",
               "unit": "days",
               "direction": "lower_better",
-              "bands": [
-                [
-                  15,
-                  100
-                ],
-                [
-                  30,
-                  80
-                ],
-                [
-                  60,
-                  55
-                ],
-                [
-                  90,
-                  30
-                ],
-                [
-                  150,
-                  0
-                ]
-              ]
+              "bands": [[15, 100], [30, 80], [60, 55], [90, 30], [150, 0]]
             },
             {
               "id": "debtor_retention",
@@ -526,28 +254,7 @@
               "type": "quantitative",
               "unit": "days",
               "direction": "lower_better",
-              "bands": [
-                [
-                  15,
-                  100
-                ],
-                [
-                  30,
-                  80
-                ],
-                [
-                  60,
-                  55
-                ],
-                [
-                  90,
-                  30
-                ],
-                [
-                  150,
-                  0
-                ]
-              ]
+              "bands": [[15, 100], [30, 80], [60, 55], [90, 30], [150, 0]]
             },
             {
               "id": "sales_trend",
@@ -569,28 +276,7 @@
               "type": "quantitative",
               "unit": "times",
               "direction": "higher_better",
-              "bands": [
-                [
-                  0.8,
-                  0
-                ],
-                [
-                  1.0,
-                  25
-                ],
-                [
-                  1.25,
-                  50
-                ],
-                [
-                  1.5,
-                  75
-                ],
-                [
-                  2.0,
-                  100
-                ]
-              ],
+              "bands": [[0.8, 0], [1.0, 25], [1.25, 50], [1.5, 75], [2.0, 100]],
               "critical": true,
               "criticalNote": "DSCR below 1.0 is a hard knock-out in most credit policies; the engine flags it rather than silently averaging it away."
             },
@@ -601,28 +287,7 @@
               "type": "quantitative",
               "unit": "times",
               "direction": "higher_better",
-              "bands": [
-                [
-                  1.0,
-                  0
-                ],
-                [
-                  1.5,
-                  25
-                ],
-                [
-                  2.0,
-                  50
-                ],
-                [
-                  3.0,
-                  75
-                ],
-                [
-                  4.0,
-                  100
-                ]
-              ]
+              "bands": [[1.0, 0], [1.5, 25], [2.0, 50], [3.0, 75], [4.0, 100]]
             },
             {
               "id": "roi",
@@ -631,28 +296,7 @@
               "type": "quantitative",
               "unit": "percent",
               "direction": "higher_better",
-              "bands": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  8,
-                  25
-                ],
-                [
-                  15,
-                  50
-                ],
-                [
-                  25,
-                  75
-                ],
-                [
-                  35,
-                  100
-                ]
-              ]
+              "bands": [[0, 0], [8, 25], [15, 50], [25, 75], [35, 100]]
             },
             {
               "id": "projected_np",
@@ -661,28 +305,7 @@
               "type": "quantitative",
               "unit": "percent",
               "direction": "higher_better",
-              "bands": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  3,
-                  25
-                ],
-                [
-                  7,
-                  50
-                ],
-                [
-                  12,
-                  75
-                ],
-                [
-                  20,
-                  100
-                ]
-              ]
+              "bands": [[0, 0], [3, 25], [7, 50], [12, 75], [20, 100]]
             },
             {
               "id": "project_gearing",
@@ -691,28 +314,7 @@
               "type": "quantitative",
               "unit": "ratio",
               "direction": "lower_better",
-              "bands": [
-                [
-                  0.5,
-                  100
-                ],
-                [
-                  1.0,
-                  80
-                ],
-                [
-                  1.5,
-                  60
-                ],
-                [
-                  2.33,
-                  35
-                ],
-                [
-                  4.0,
-                  0
-                ]
-              ]
+              "bands": [[0.5, 100], [1.0, 80], [1.5, 60], [2.33, 35], [4.0, 0]]
             },
             {
               "id": "promoter_equity",
@@ -721,28 +323,7 @@
               "type": "quantitative",
               "unit": "percent",
               "direction": "higher_better",
-              "bands": [
-                [
-                  10,
-                  0
-                ],
-                [
-                  20,
-                  35
-                ],
-                [
-                  30,
-                  60
-                ],
-                [
-                  40,
-                  80
-                ],
-                [
-                  50,
-                  100
-                ]
-              ]
+              "bands": [[10, 0], [20, 35], [30, 60], [40, 80], [50, 100]]
             },
             {
               "id": "capacity_growth",
@@ -751,28 +332,7 @@
               "type": "quantitative",
               "unit": "percent",
               "direction": "higher_better",
-              "bands": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  15,
-                  25
-                ],
-                [
-                  35,
-                  50
-                ],
-                [
-                  60,
-                  75
-                ],
-                [
-                  100,
-                  100
-                ]
-              ]
+              "bands": [[0, 0], [15, 25], [35, 50], [60, 75], [100, 100]]
             },
             {
               "id": "bep_headroom",
@@ -781,28 +341,7 @@
               "type": "quantitative",
               "unit": "percent",
               "direction": "higher_better",
-              "bands": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  10,
-                  25
-                ],
-                [
-                  25,
-                  50
-                ],
-                [
-                  40,
-                  75
-                ],
-                [
-                  60,
-                  100
-                ]
-              ]
+              "bands": [[0, 0], [10, 25], [25, 50], [40, 75], [60, 100]]
             }
           ]
         },
@@ -868,28 +407,7 @@
               "type": "quantitative",
               "unit": "ratio",
               "direction": "higher_better",
-              "bands": [
-                [
-                  0.5,
-                  0
-                ],
-                [
-                  0.8,
-                  30
-                ],
-                [
-                  1.0,
-                  55
-                ],
-                [
-                  1.5,
-                  80
-                ],
-                [
-                  2.0,
-                  100
-                ]
-              ]
+              "bands": [[0.5, 0], [0.8, 30], [1.0, 55], [1.5, 80], [2.0, 100]]
             },
             {
               "id": "technological_risk",
@@ -943,28 +461,7 @@
               "type": "quantitative",
               "unit": "percent_increase",
               "direction": "higher_better",
-              "bands": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  10,
-                  25
-                ],
-                [
-                  25,
-                  50
-                ],
-                [
-                  50,
-                  75
-                ],
-                [
-                  100,
-                  100
-                ]
-              ]
+              "bands": [[0, 0], [10, 25], [25, 50], [50, 75], [100, 100]]
             },
             {
               "id": "women_participation",
@@ -973,28 +470,7 @@
               "type": "quantitative",
               "unit": "percent",
               "direction": "higher_better",
-              "bands": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  10,
-                  25
-                ],
-                [
-                  25,
-                  50
-                ],
-                [
-                  40,
-                  75
-                ],
-                [
-                  50,
-                  100
-                ]
-              ]
+              "bands": [[0, 0], [10, 25], [25, 50], [40, 75], [50, 100]]
             },
             {
               "id": "local_raw_material",
@@ -1003,28 +479,7 @@
               "type": "quantitative",
               "unit": "percent",
               "direction": "higher_better",
-              "bands": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  25,
-                  25
-                ],
-                [
-                  50,
-                  50
-                ],
-                [
-                  75,
-                  75
-                ],
-                [
-                  100,
-                  100
-                ]
-              ]
+              "bands": [[0, 0], [25, 25], [50, 50], [75, 75], [100, 100]]
             },
             {
               "id": "productive_capacity",
@@ -1033,28 +488,7 @@
               "type": "quantitative",
               "unit": "percent_increase",
               "direction": "higher_better",
-              "bands": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  15,
-                  25
-                ],
-                [
-                  35,
-                  50
-                ],
-                [
-                  60,
-                  75
-                ],
-                [
-                  100,
-                  100
-                ]
-              ]
+              "bands": [[0, 0], [15, 25], [35, 50], [60, 75], [100, 100]]
             },
             {
               "id": "export_share",
@@ -1063,28 +497,7 @@
               "type": "quantitative",
               "unit": "percent",
               "direction": "higher_better",
-              "bands": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  10,
-                  30
-                ],
-                [
-                  25,
-                  55
-                ],
-                [
-                  50,
-                  80
-                ],
-                [
-                  75,
-                  100
-                ]
-              ]
+              "bands": [[0, 0], [10, 30], [25, 55], [50, 80], [75, 100]]
             },
             {
               "id": "import_substitution",
@@ -1099,28 +512,7 @@
               "type": "quantitative",
               "unit": "percent",
               "direction": "higher_better",
-              "bands": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  15,
-                  25
-                ],
-                [
-                  30,
-                  50
-                ],
-                [
-                  50,
-                  75
-                ],
-                [
-                  70,
-                  100
-                ]
-              ]
+              "bands": [[0, 0], [15, 25], [30, 50], [50, 75], [70, 100]]
             },
             {
               "id": "fx_earnings",

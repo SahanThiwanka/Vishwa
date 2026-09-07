@@ -53,3 +53,5 @@ desktop.ini
 *.log
 npm-debug.log*
 web/src/lib/scoring/criteria-tree.json
+web/dev.db
+web/src/generated/

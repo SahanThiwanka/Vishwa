@@ -67,7 +67,7 @@ function scoreCriterion(
     criticalNote: criterion.criticalNote,
   };
 
-  if (raw === null || raw === undefined || raw === "") return base;
+  if (raw === null || raw === undefined) return base;
 
   let tfn: TFN;
 
@@ -185,14 +185,34 @@ function scoreObjective(
   );
 
   const score = tfn ? round1(defuzzify(tfn)) : null;
+  const completeness = totalCriteria ? assessedCriteria / totalCriteria : 0;
+
+  // Completeness gate. A score computed from a handful of criteria is not wrong
+  // arithmetically - weight renormalisation keeps it plausible - but it has no
+  // evidential basis, so it gets no band and no recommendation.
+  const sufficient =
+    completeness >= tree.completenessPolicy.minObjectiveCompleteness;
+
+  const missingCriteria = dimensions.flatMap((d) =>
+    d.criteria
+      .filter((c) => !c.assessed)
+      .map((c) => ({
+        id: c.id,
+        name: c.name,
+        ref: c.ref,
+        dimension: d.name,
+      })),
+  );
 
   return {
     id: objective.id,
     name: objective.name,
     score,
     tfn,
-    completeness: totalCriteria ? assessedCriteria / totalCriteria : 0,
-    band: bandFor(score, tree.riskBands),
+    completeness,
+    sufficient,
+    band: sufficient ? bandFor(score, tree.riskBands) : null,
+    missingCriteria,
     dimensions,
   };
 }

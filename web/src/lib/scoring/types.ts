@@ -80,11 +80,18 @@ export interface WeightStatus {
   };
 }
 
+export interface CompletenessPolicy {
+  minObjectiveCompleteness: number;
+  minDimensionCompleteness: number;
+  rationale: string;
+}
+
 export interface CriteriaTree {
   version: string;
   title: string;
   sourceInstrument: Record<string, string>;
   weightStatus: WeightStatus;
+  completenessPolicy: CompletenessPolicy;
   linguisticScale: {
     type: string;
     levels: LinguisticLevel[];
@@ -142,7 +149,14 @@ export interface ObjectiveResult {
   score: number | null;
   tfn: TFN | null;
   completeness: number;
+  /**
+   * False when too few criteria were assessed to stand behind a recommendation.
+   * When false, `band` is null however plausible `score` looks, and
+   * `missingCriteria` lists what has to be filled in.
+   */
+  sufficient: boolean;
   band: RiskBand | null;
+  missingCriteria: Array<{ id: string; name: string; ref: string; dimension: string }>;
   dimensions: DimensionResult[];
 }
 

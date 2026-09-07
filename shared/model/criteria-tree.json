@@ -29,6 +29,11 @@
     { "code": "C", "label": "Elevated risk", "min": 50, "max": 65, "action": "Refer to higher authority" },
     { "code": "D", "label": "High risk", "min": 0, "max": 50, "action": "Recommend decline" }
   ],
+  "completenessPolicy": {
+    "minObjectiveCompleteness": 0.6,
+    "minDimensionCompleteness": 0.5,
+    "rationale": "An objective assessed on too few criteria returns a score but NO risk band and NO recommendation. Without this, entering 7 of 49 criteria produced 'band B - recommend with conditions', which is a system confidently recommending a facility on almost no information. Weight renormalisation makes a sparse appraisal look complete because the surviving criteria simply carry more weight; the score stays plausible while its evidential basis collapses. The gate is a deliberate refusal to answer, not a scoring adjustment - the officer is told what is missing instead of being given a number to sign against."
+  },
   "objectives": [
     {
       "id": "credit_risk",

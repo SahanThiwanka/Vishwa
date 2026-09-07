@@ -1,69 +1,145 @@
-import Image from "next/image";
+import Link from "next/link";
 
-export default function Home() {
+import { prisma } from "@/lib/db";
+
+function bandClass(code: string | null) {
+  switch (code) {
+    case "A": return "bg-emerald-50 text-emerald-700 border-emerald-300";
+    case "B": return "bg-lime-50 text-lime-700 border-lime-300";
+    case "C": return "bg-amber-50 text-amber-700 border-amber-300";
+    case "D": return "bg-red-50 text-red-700 border-red-300";
+    default: return "bg-slate-50 text-slate-500 border-slate-300";
+  }
+}
+
+const CURRENCY = new Intl.NumberFormat("en-LK", { maximumFractionDigits: 0 });
+
+export default async function Home() {
+  const appraisals = await prisma.appraisal.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 50,
+  });
+
+  const banded = appraisals.filter((a) => a.riskBand);
+  const withheld = appraisals.filter((a) => !a.riskBand).length;
+
+  const avgCredit = banded.length
+    ? banded.reduce((s, a) => s + (a.creditRiskScore ?? 0), 0) / banded.length
+    : null;
+  const avgDevelopment = banded.length
+    ? banded.reduce((s, a) => s + (a.developmentScore ?? 0), 0) / banded.length
+    : null;
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="space-y-6">
+      <div className="flex items-end justify-between">
+        <div>
+          <h1 className="text-xl font-semibold text-slate-900">Appraisals</h1>
+          <p className="mt-0.5 text-sm text-slate-500">
+            Credit risk and development impact are scored separately and never
+            combined into a single number.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      </div>
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <Stat label="Total appraisals" value={String(appraisals.length)} />
+        <Stat
+          label="Mean credit risk"
+          value={avgCredit !== null ? avgCredit.toFixed(1) : "—"}
+        />
+        <Stat
+          label="Mean development impact"
+          value={avgDevelopment !== null ? avgDevelopment.toFixed(1) : "—"}
+        />
+        <Stat
+          label="Withheld (incomplete)"
+          value={String(withheld)}
+          hint={withheld > 0 ? "no recommendation issued" : undefined}
+        />
+      </div>
+
+      {appraisals.length === 0 ? (
+        <div className="rounded-lg border border-dashed border-slate-300 bg-white p-12 text-center">
+          <p className="text-sm text-slate-600">No appraisals yet.</p>
+          <Link
+            href="/appraisals/new"
+            className="mt-3 inline-block rounded-md bg-slate-900 px-4 py-2 text-sm text-white hover:bg-slate-800"
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            Create the first appraisal
+          </Link>
         </div>
-      </main>
+      ) : (
+        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+          <table className="w-full text-sm">
+            <thead className="border-b border-slate-200 bg-slate-50 text-left">
+              <tr className="text-xs uppercase tracking-wide text-slate-500">
+                <th className="px-4 py-2.5 font-medium">Reference</th>
+                <th className="px-4 py-2.5 font-medium">Business</th>
+                <th className="px-4 py-2.5 font-medium text-right">Facility (Rs.)</th>
+                <th className="px-4 py-2.5 font-medium text-right">Credit</th>
+                <th className="px-4 py-2.5 font-medium text-right">Development</th>
+                <th className="px-4 py-2.5 font-medium">Band</th>
+                <th className="px-4 py-2.5 font-medium">Status</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {appraisals.map((a) => (
+                <tr key={a.id} className="hover:bg-slate-50">
+                  <td className="px-4 py-2.5">
+                    <Link
+                      href={`/appraisals/${a.id}`}
+                      className="font-mono text-xs text-slate-900 hover:underline"
+                    >
+                      {a.reference}
+                    </Link>
+                  </td>
+                  <td className="px-4 py-2.5 text-slate-800">{a.businessName}</td>
+                  <td className="px-4 py-2.5 text-right tabular-nums text-slate-700">
+                    {CURRENCY.format(a.facilityAmount)}
+                  </td>
+                  <td className="px-4 py-2.5 text-right tabular-nums text-slate-900">
+                    {a.creditRiskScore?.toFixed(1) ?? "—"}
+                  </td>
+                  <td className="px-4 py-2.5 text-right tabular-nums text-slate-900">
+                    {a.developmentScore?.toFixed(1) ?? "—"}
+                  </td>
+                  <td className="px-4 py-2.5">
+                    <span
+                      className={`inline-block rounded border px-2 py-0.5 text-xs font-medium ${bandClass(a.riskBand)}`}
+                    >
+                      {a.riskBand ?? "withheld"}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2.5 text-xs text-slate-500">{a.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Stat({
+  label,
+  value,
+  hint,
+}: {
+  label: string;
+  value: string;
+  hint?: string;
+}) {
+  return (
+    <div className="rounded-lg border border-slate-200 bg-white p-4">
+      <div className="text-xs font-medium uppercase tracking-wide text-slate-500">
+        {label}
+      </div>
+      <div className="mt-1 text-2xl font-semibold tabular-nums text-slate-900">
+        {value}
+      </div>
+      {hint && <div className="mt-0.5 text-xs text-slate-400">{hint}</div>}
     </div>
   );
 }

@@ -62,23 +62,15 @@ SEED = 23
 # ---------------------------------------------------------------------------
 
 def _midrank(x: np.ndarray) -> np.ndarray:
-    """Ranks with ties averaged - the tie handling DeLong's estimator requires."""
-    order = np.argsort(x)
-    sorted_x = x[order]
-    n = len(x)
-    ranks = np.empty(n, dtype=float)
+    """Ranks with ties averaged - the tie handling DeLong's estimator requires.
 
-    i = 0
-    while i < n:
-        j = i
-        while j < n - 1 and sorted_x[j + 1] == sorted_x[i]:
-            j += 1
-        ranks[i:j + 1] = 0.5 * (i + j) + 1
-        i = j + 1
-
-    out = np.empty(n, dtype=float)
-    out[order] = ranks
-    return out
+    This was originally hand-rolled with a Python loop over every element, which
+    is O(n) in interpreted code and dominated the runtime on a 275,000-case test
+    set. scipy's rankdata with method="average" computes exactly the same values
+    (verified against the loop implementation, including heavy ties) several
+    times faster.
+    """
+    return stats.rankdata(x, method="average")
 
 
 def delong_test(y_true: np.ndarray, score_a: np.ndarray,

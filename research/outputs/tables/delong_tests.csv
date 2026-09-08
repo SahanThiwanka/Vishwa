@@ -1,0 +1,7 @@
+protocol,comparison,auc_a,auc_b,p_value
+random,"leakage effect, GBM",0.6553,0.5461,0.0
+random,"leakage effect, logistic",0.6861,0.5961,0.0
+random,"GBM vs logistic, clean",0.6553,0.6861,7.860379014346108e-14
+temporal,"leakage effect, GBM",0.5377,0.4542,0.0
+temporal,"leakage effect, logistic",0.5971,0.4751,0.0
+temporal,"GBM vs logistic, clean",0.5377,0.5971,0.0

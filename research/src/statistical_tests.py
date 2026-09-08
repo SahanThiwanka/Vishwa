@@ -81,12 +81,23 @@ def delong_test(y_true: np.ndarray, score_a: np.ndarray,
 
     Implements the fast algorithm of Sun and Xu (2014) for DeLong's covariance
     estimator (DeLong, DeLong and Clarke-Pearson, 1988).
-    """
-    pos = y_true == 1
-    neg = ~pos
-    m, n = int(pos.sum()), int(neg.sum())
 
-    scores = np.vstack([score_a, score_b])
+    NOTE ON A BUG THIS ONCE HAD: the algorithm requires the score vectors to be
+    REORDERED with all positives first, because it indexes the combined-sample
+    midranks as `tz[:, :m]` to recover the positives' ranks. An earlier version
+    ranked the scores in their original order, so `tz[:, :m]` picked up an
+    arbitrary mix of classes and every AUC came out wrong. The assertion at the
+    end exists so that can never pass silently again.
+    """
+    pos = np.flatnonzero(y_true == 1)
+    neg = np.flatnonzero(y_true == 0)
+    m, n = len(pos), len(neg)
+
+    # Positives first, then negatives - required by the indexing below.
+    scores = np.vstack([
+        np.concatenate([score_a[pos], score_a[neg]]),
+        np.concatenate([score_b[pos], score_b[neg]]),
+    ])
     k = scores.shape[0]
 
     tx = np.empty([k, m], dtype=float)
@@ -94,22 +105,27 @@ def delong_test(y_true: np.ndarray, score_a: np.ndarray,
     tz = np.empty([k, m + n], dtype=float)
 
     for r in range(k):
-        tx[r] = _midrank(scores[r, pos])
-        ty[r] = _midrank(scores[r, neg])
+        tx[r] = _midrank(scores[r, :m])
+        ty[r] = _midrank(scores[r, m:])
         tz[r] = _midrank(scores[r])
 
-    aucs = tz[:, :m].sum(axis=1) / (m * n) - (m + 1) / (2 * n)
+    aucs = (tz[:, :m].sum(axis=1) - m * (m + 1) / 2) / (m * n)
 
     v01 = (tz[:, :m] - tx) / n
     v10 = 1 - (tz[:, m:] - ty) / m
 
-    sx = np.cov(v01)
-    sy = np.cov(v10)
-    cov = sx / m + sy / n
-    cov = np.atleast_2d(cov)
+    cov = np.atleast_2d(np.cov(v01) / m + np.cov(v10) / n)
 
     contrast = np.array([[1, -1]], dtype=float)
     var = float((contrast @ cov @ contrast.T).item())
+
+    # The AUCs this computes must equal the ones sklearn computes. If they do
+    # not, the reordering or the indexing is wrong and the p-value is meaningless.
+    for auc, score in zip(aucs, (score_a, score_b)):
+        assert abs(auc - roc_auc_score(y_true, score)) < 1e-6, (
+            f"DeLong AUC {auc:.6f} disagrees with roc_auc_score "
+            f"{roc_auc_score(y_true, score):.6f}"
+        )
 
     if var <= 0:
         return float(aucs[0]), float(aucs[1]), 1.0

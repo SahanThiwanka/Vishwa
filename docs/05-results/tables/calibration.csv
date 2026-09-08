@@ -1,0 +1,5 @@
+protocol,model,brier,reliability,resolution,uncertainty,base_rate
+random,Gradient boosting (clean),0.1319,5e-05,0.03003,0.16265,0.2045
+random,Logistic regression (clean),0.1539,0.00091,0.00838,0.16265,0.2045
+temporal,Gradient boosting (clean),0.25925,0.03705,0.00729,0.2301,0.3589
+temporal,Logistic regression (clean),0.28823,0.05803,0.00121,0.2301,0.3589

@@ -21,8 +21,9 @@ validation — an inflation of 0.339. We test and reject the natural explanation
 that `Term` records elapsed time to charge-off (correlation 0.043 with observed
 survival). The contamination is therefore demonstrated but its mechanism remains
 unresolved. We further show that right-censoring is a separate and independent
-hazard in this dataset, and that random splitting overstates performance by 0.182
-AUC relative to temporal validation. We recommend excluding `Term` and every
+hazard in this dataset, that random splitting overstates performance by 0.182 AUC relative to temporal
+validation, and that calibration degrades roughly 700-fold across the same
+boundary, with models systematically under-predicting default. We recommend excluding `Term` and every
 derived feature, restricting to fully-matured facilities, validating temporally,
 and — generally — treating a variable that outperforms the plausible ceiling for
 its domain as a suspected defect rather than a result.
@@ -211,16 +212,23 @@ citing a cause that has not been shown.
 
 ## V. Impact on Reported Performance
 
-| Model | Fitted | Random | Temporal |
-|---|:--:|---:|---:|
+AUCs carry 95% stratified bootstrap confidence intervals (300 replicates).
+
+| Model | Fitted | Random [95% CI] | Temporal [95% CI] |
+|---|:--:|---|---|
 | **Clean specification** | | | |
-| Expert scorecard | no | 0.4144 | 0.5275 |
-| Logistic regression | yes | 0.6745 | 0.4565 |
-| Gradient boosting | yes | 0.7898 | 0.6076 |
+| Expert scorecard | no | 0.4144 [0.4111, 0.4175] | 0.5275 [0.5252, 0.5296] |
+| Logistic regression | yes | 0.6745 [0.6722, 0.6774] | 0.4565 [0.4545, 0.4586] |
+| Gradient boosting | yes | 0.7898 [0.7877, 0.7926] | 0.6076 [0.6053, 0.6097] |
 | **Contaminated specification** | | | |
-| Logistic regression | yes | 0.8452 | 0.7854 |
-| Gradient boosting | yes | 0.9726 | 0.9461 |
+| Logistic regression | yes | 0.8452 [0.8433, 0.8472] | 0.7854 [0.7839, 0.7869] |
+| Gradient boosting | yes | 0.9726 [0.9718, 0.9732] | 0.9461 [0.9453, 0.9469] |
 | *Roundness probe* | no | *0.8870* | *0.8965* |
+
+The intervals for the clean and contaminated specifications do not overlap at
+either protocol, and paired DeLong tests [4] give p < 0.001 for every
+clean-versus-contaminated comparison. The effect is not attributable to sampling
+variation.
 
 Three observations.
 
@@ -253,6 +261,34 @@ Logistic regression falls to 0.4565 temporally — **below chance**. Trained on
 1990–2003 (9.1% default) and tested on 2004–2010 (35.9% default), its ranking
 inverts. This has direct practical significance: a linear scorecard fitted during
 benign conditions may rank borrowers backwards under stress.
+
+### C. Calibration degrades further than discrimination
+
+Discrimination is not the only thing temporal validation damages, and it is not
+the most consequential. Reporting the Brier score under Murphy's decomposition,
+reliability — the distance between predicted probabilities and observed rates —
+worsens by roughly **700-fold** for gradient boosting between protocols:
+
+| Model | Protocol | Brier | Reliability | Resolution |
+|---|---|---:|---:|---:|
+| Gradient boosting (clean) | random | 0.1319 | 0.00005 | 0.03003 |
+| Gradient boosting (clean) | temporal | 0.2592 | 0.03705 | 0.00729 |
+| Logistic regression (clean) | random | 0.1539 | 0.00091 | 0.00838 |
+| Logistic regression (clean) | temporal | 0.2882 | 0.05803 | 0.00121 |
+
+Under random splitting the boosted model's reliability diagram lies on the
+diagonal. Under temporal validation the whole curve lifts above it: the model
+**systematically under-predicts default**, reporting roughly 0.2 where the
+observed rate is 0.45. Trained on cohorts defaulting at 9.1% and tested on
+cohorts defaulting at 35.9%, it carries a benign period's base rate into a
+stressed one.
+
+For a lender this is the more dangerous failure mode. Falling discrimination is
+visible and invites scrutiny; a model that still ranks tolerably while pricing a
+45% risk at 20% produces provisions less than half of what they should be, and
+appears to be working while doing so. **Recalibration on recent outcomes is a
+separate requirement from revalidation of discrimination**, and the two are
+frequently conflated.
 
 ## VII. Limitations
 
@@ -310,6 +346,10 @@ Education*, vol. 26, no. 1, pp. 55–66, 2018, doi:10.1080/10691898.2018.1434342
 [2] P. K. Roy and K. Shaw, "A multicriteria credit scoring model for SMEs using
 hybrid BWM and TOPSIS," *Financial Innovation*, vol. 7, no. 1, 2021,
 doi:10.1186/s40854-021-00295-5.
+
+[4] E. R. DeLong, D. M. DeLong and D. L. Clarke-Pearson, "Comparing the areas
+under two or more correlated receiver operating characteristic curves: a
+nonparametric approach," *Biometrics*, vol. 44, no. 3, pp. 837-845, 1988.
 
 [3] S. Kapoor and A. Narayanan, "Leakage and the reproducibility crisis in
 machine-learning-based science," *Patterns*, vol. 4, no. 9, 100804, 2023,

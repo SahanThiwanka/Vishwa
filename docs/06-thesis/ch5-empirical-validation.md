@@ -1,9 +1,11 @@
 # Chapter 5 — Empirical Validation
 
 > **Reproducibility.** Every figure and table in this chapter is produced by code in
-> `research/src/`. Re-running `prepare_sba.py`, `leakage_analysis.py` and
-> `benchmark.py` in that order regenerates all of it. No value has been entered by
-> hand.
+> `research/src/`. Re-running `prepare_sba.py`, `leakage_analysis.py`,
+> `benchmark.py`, `statistical_tests.py` and `weight_sensitivity.py` in that order
+> regenerates all of it. No value has been entered by hand, and
+> `scripts/verify_claims.py` checks every load-bearing figure in this chapter
+> against the generated tables.
 
 ## 5.1 Purpose and scope of this chapter
 
@@ -159,16 +161,39 @@ Two model specifications were run. The **clean** specification excludes `Term`
 and every feature derived from it; the **contaminated** specification adds them
 back, solely to quantify the inflation.
 
-| Model | Fitted | Random AUC | Temporal AUC |
-|---|:--:|---:|---:|
+AUCs are reported with 95% stratified bootstrap confidence intervals (300
+replicates, positives and negatives resampled separately so the interval
+reflects uncertainty in discrimination rather than in prevalence).
+
+| Model | Fitted | Random AUC [95% CI] | Temporal AUC [95% CI] |
+|---|:--:|---|---|
 | **Clean specification** | | | |
-| Expert scorecard | no | 0.4144 | 0.5275 |
-| Logistic regression | yes | 0.6745 | 0.4565 |
-| Gradient boosting | yes | 0.7898 | 0.6076 |
+| Expert scorecard | no | 0.4144 [0.4111, 0.4175] | 0.5275 [0.5252, 0.5296] |
+| Logistic regression | yes | 0.6745 [0.6722, 0.6774] | 0.4565 [0.4545, 0.4586] |
+| Gradient boosting | yes | 0.7898 [0.7877, 0.7926] | 0.6076 [0.6053, 0.6097] |
 | **Contaminated specification** | | | |
-| Logistic regression | yes | 0.8452 | 0.7854 |
-| Gradient boosting | yes | 0.9726 | 0.9461 |
+| Logistic regression | yes | 0.8452 [0.8433, 0.8472] | 0.7854 [0.7839, 0.7869] |
+| Gradient boosting | yes | 0.9726 [0.9718, 0.9732] | 0.9461 [0.9453, 0.9469] |
 | *Term-roundness probe* | no | *0.8870* | *0.8965* |
+
+**The intervals do not overlap.** Gradient boosting under the clean
+specification tops out at 0.7926 on a random split; the contaminated
+specification starts at 0.9718. On temporal validation the gap is wider still —
+[0.6053, 0.6097] against [0.9453, 0.9469]. With 195,000–275,000 test cases the
+estimates are precise enough that the leakage effect cannot be attributed to
+sampling variation.
+
+Paired DeLong tests confirm this formally. Because the models are compared on
+identical cases, the paired test is the correct one; treating the AUCs as
+independent would overstate the uncertainty.
+
+| Comparison | Protocol | AUCs | p |
+|---|---|---|---|
+| Leakage effect, gradient boosting | random | 0.7898 vs 0.9726 | < 0.001 |
+| Leakage effect, gradient boosting | temporal | 0.6076 vs 0.9461 | < 0.001 |
+| Leakage effect, logistic regression | random | 0.6745 vs 0.8452 | < 0.001 |
+| Leakage effect, logistic regression | temporal | 0.4565 vs 0.7854 | < 0.001 |
+| Gradient boosting vs logistic, clean | both | — | < 0.001 |
 
 Three observations.
 
@@ -196,6 +221,56 @@ Logistic regression falls to 0.4565 temporally — below chance. Trained on
 model does not merely lose accuracy; its ranking inverts. This is a substantive
 finding about credit-scoring practice: **a linear scorecard fitted to a benign
 cycle can rank borrowers backwards in a stressed one.**
+
+## 5.5a Calibration: ranking is not the same as being right
+
+AUC measures whether a model *orders* borrowers correctly. It says nothing about
+whether a predicted probability means what it says. A bank pricing risk, setting
+provisions, or reporting expected loss needs the second property, and a model can
+have the first without it.
+
+Calibration is reported here as the Brier score under Murphy's decomposition,
+*Brier = reliability − resolution + uncertainty*, where **reliability** measures
+how far predicted probabilities sit from observed rates (lower is better; zero is
+perfect) and **resolution** measures how far the model separates cases from the
+base rate (higher is better).
+
+| Model | Protocol | Brier | Reliability | Resolution |
+|---|---|---:|---:|---:|
+| Gradient boosting (clean) | random | 0.1319 | **0.00005** | 0.03003 |
+| Logistic regression (clean) | random | 0.1539 | 0.00091 | 0.00838 |
+| Gradient boosting (clean) | temporal | 0.2592 | **0.03705** | 0.00729 |
+| Logistic regression (clean) | temporal | 0.2882 | 0.05803 | 0.00121 |
+
+**Reliability degrades by roughly 700× for gradient boosting** — 0.00005 to
+0.03705 — and 64× for logistic regression. Under random splitting the boosted
+model is almost perfectly calibrated: its reliability diagram sits on the
+diagonal. Under temporal validation the entire curve lifts **above** the
+diagonal, meaning the model **systematically under-predicts default**. At a
+predicted probability of 0.2 the observed default rate is approximately 0.45.
+
+The mechanism is straightforward. The model is trained on 1990–2003 approvals
+defaulting at 9.1% and tested on 2004–2010 approvals defaulting at 35.9%. It has
+learned the base rate of a benign period and carries it into a stressed one.
+
+### Why this matters more than the AUC result
+
+For a lender this is the more consequential finding. A model whose discrimination
+falls is visibly worse and invites scrutiny. A model that still ranks tolerably
+but **prices a 45% risk as 20%** produces provisions that are less than half what
+they should be, and does so while appearing to work.
+
+Given Sri Lanka's recent macroeconomic volatility, the implication is direct: a
+scorecard calibrated on pre-crisis SME lending should not be assumed to carry its
+probability estimates into a stressed period. Recalibration on recent outcomes is
+a separate requirement from revalidation of discrimination, and the two are
+frequently conflated.
+
+**A caveat on scope.** This concerns the trained benchmark models, not the
+criteria model this study proposes. The proposed model produces an ordinal band
+rather than a probability, and is therefore not calibrated in this sense at all —
+which is itself a limitation (§5.7) and the reason it must never be used to price
+a facility.
 
 ## 5.6 The expert scorecard: a negative result
 
@@ -323,6 +398,11 @@ how much this matters: within ±25% perturbation the ranking is preserved
 (ρ ≈ 0.98) and ~94% of risk bands are unchanged. The limitation stands, but its
 magnitude is now measured rather than merely acknowledged.
 
+**The proposed model is not calibrated.** It produces an ordinal risk band, not a
+probability of default. Section 5.5a shows that even trained probabilistic models
+lose calibration badly across time periods; the proposed model does not offer a
+probability to lose. It must not be used for pricing or provisioning.
+
 **The sensitivity analysis uses a simulated population.** It characterises the
 model's response to weight change; it says nothing about how real Sri Lankan SME
 applications are distributed, and the two must not be confused.
@@ -360,6 +440,11 @@ not aware of having been documented, which is a weaker and defensible claim.
    carries four to seven times the leverage of a credit-risk criterion over its
    objective, a direct consequence of clause 5 being one section of the source
    form.
+8. Calibration degrades far more sharply than discrimination across time periods:
+   gradient-boosting reliability worsens roughly 700-fold (0.00005 to 0.03705),
+   with the model systematically under-predicting default — pricing an observed
+   45% risk at 20%. For a lender this is the more consequential failure, because
+   it is less visible than a fall in discrimination.
 
 Findings 1 and 5 are the contributions of this chapter. Finding 1 is a caution to
 users of a widely-adopted benchmark; finding 5 justifies the methodological

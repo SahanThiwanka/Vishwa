@@ -105,37 +105,63 @@ Dataset download instructions: see `research/data/DATASETS.md`.
 
 ## Status
 
+### Research
+
 | Component | State |
 |---|---|
-| Criteria tree | ✅ v0.1.0-draft — 49 criteria, all clause-traceable |
-| Scoring engine (TypeScript) | ✅ 9/9 structural checks |
-| Test suite | ✅ 62 tests (engine, validation, auth) |
-| Authentication + role-based sign-off | ✅ clause-7 chain enforced server-side |
-| Input validation on all Server Actions | ✅ |
-| Scoring engine (Python) | ✅ parity-verified against TypeScript, 280 checks |
-| Web application | ✅ intake, live scoring, explainability, audit trail |
-| DOCX export in bank format | ✅ |
-| SBA data pipeline + benchmarks | ✅ |
-| `Term` contamination finding | ✅ documented, reproducible |
-| BWM elicitation instrument | ✅ built and verified |
-| BWM solver + weight derivation | ✅ self-tested |
-| **Criterion weights** | ⛔ **PLACEHOLDER — no respondents yet** |
-| Thesis chapters 1–6 | ✅ drafted (~11,200 words) |
+| Criteria tree — 49 criteria, clause-traceable | ✅ |
+| `Term` contamination finding | ✅ reproducible, figures generated |
+| Weight sensitivity (Monte Carlo) | ✅ robust at ±25%; structural asymmetry found |
+| AUC confidence intervals, DeLong, calibration | 🔄 running |
+| Bibliography | ✅ 50 entries, details verified |
+| Thesis chapters 1–6 | ✅ ~13,000 words |
+| Conference paper | ✅ drafted |
+| Model card | ✅ |
+| Systematic search for affected prior work | ◐ evidence gathered, **verification outstanding** |
+| **Criterion weights** | ⛔ **PLACEHOLDER — no respondents** |
 | Thesis §6.1–6.2 (elicitation results) | ⛔ **awaiting respondents** |
-| Conference paper (Term contamination) | ✅ drafted; needs a systematic search for affected prior work |
-| Deployment path (Vercel + Postgres) | ✅ documented, not yet executed |
+| Inter-rater reliability study | ⛔ needs officers |
 
-### The one blocker
+### System
 
-Everything except the elicitation is done. `derive_weights.py` will not mark the
-model `ELICITED` without usable responses, and it should not be made to. Until
-practitioners complete the instrument at `/elicitation`:
+| Component | State |
+|---|---|
+| Scoring engine (TypeScript + Python) | ✅ parity-verified, 280 checks |
+| Web application | ✅ intake, live scoring, explainability, audit trail |
+| Authentication + role-based sign-off | ✅ clause-7 chain, enforced server-side |
+| Input validation on all Server Actions | ✅ |
+| Test suite | ✅ 62 tests |
+| DOCX export in bank format | ✅ |
+| BWM elicitation instrument + solver | ✅ |
+| Deployment path (Vercel + Postgres) | ✅ documented, not executed |
+| Fairness / disparate-impact assessment | ⬜ **not done — see model card §7** |
+| Rate limiting, pagination, accessibility audit, CI | ⬜ |
+
+### The blocker
+
+Everything that can be done without people is done or in progress.
+`derive_weights.py` will not mark the model `ELICITED` without usable responses,
+and should not be made to. Until practitioners complete `/elicitation`:
 
 - RQ2 is unanswered
-- every score in the thesis stays labelled as computed under placeholder weights
+- every score stays labelled as computed under placeholder weights
 
-Three respondents would change that. Deployment to Vercel, or fifteen minutes each
-on a laptop, are both sufficient.
+Three respondents changes that. §5.6a bounds how much the placeholders distort
+results meanwhile — ranking holds to ρ ≈ 0.98 at ±25% perturbation — but 6–7% of
+cases would still band differently.
+
+### Key documents
+
+| Path | What |
+|---|---|
+| `docs/06-thesis/THESIS.docx` | Assembled thesis |
+| `docs/07-paper/paper-term-contamination.md` | Conference paper draft |
+| `docs/07-paper/affected-work-search.md` | Systematic search — **read before citing §VIII** |
+| `docs/02-literature/bibliography.md` | 50 sources, verification status per entry |
+| `docs/04-criteria-model/MODEL-CARD.md` | Intended use, limitations, risks |
+| `docs/VIVA-PREPARATION.md` | Likely questions with answers |
+| `docs/RESEARCH-STRENGTHENING-PLAN.md` | What remains, ordered by value |
+| `docs/DEPLOYMENT.md` | Vercel walkthrough |
 
 ## Rebuilding everything
 
@@ -145,7 +171,10 @@ python research/src/leakage_analysis.py   # the Term contamination evidence
 python research/src/benchmark.py          # clean vs contaminated benchmarks
 python research/src/test_parity.py        # TypeScript/Python engine agreement
 python research/src/bwm.py                # BWM solver self-test
+python research/src/statistical_tests.py  # CIs, DeLong tests, calibration
+python research/src/weight_sensitivity.py # weight perturbation Monte Carlo
+python research/src/make_figures.py       # all figures
 python research/src/derive_weights.py     # weights (needs responses)
 python scripts/build_thesis.py            # assemble THESIS.docx
-cd web && npm run test:scoring && npm run dev
+cd web && npm test && npm run dev
 ```

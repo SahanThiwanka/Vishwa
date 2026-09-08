@@ -53,7 +53,7 @@ ROOT = Path(__file__).resolve().parents[2]
 PROCESSED = ROOT / "research" / "data" / "processed" / "sba_clean.parquet"
 OUT_TABLES = ROOT / "research" / "outputs" / "tables"
 
-N_BOOTSTRAP = 500
+N_BOOTSTRAP = 300
 SEED = 23
 
 

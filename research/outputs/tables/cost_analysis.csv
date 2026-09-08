@@ -1,0 +1,31 @@
+protocol,cost_ratio,model,expected_cost,baseline_cost,baseline_strategy,saving_pct,threshold
+random,2,Logistic regression,0.40374,0.4089,approve all,1.26,0.28751
+random,2,Gradient boosting,0.3116,0.4089,approve all,23.8,0.32987
+random,2,Expert scorecard (unfitted),0.40983,0.4089,approve all,-0.23,-44.81934
+random,5,Logistic regression,0.60973,0.79555,decline all,23.36,0.17814
+random,5,Gradient boosting,0.50154,0.79555,decline all,36.96,0.17254
+random,5,Expert scorecard (unfitted),0.79358,0.79555,decline all,0.25,-82.08333
+random,10,Logistic regression,0.77426,0.79555,decline all,2.68,0.08737
+random,10,Gradient boosting,0.62136,0.79555,decline all,21.9,0.08912
+random,10,Expert scorecard (unfitted),0.79566,0.79555,decline all,-0.01,-83.33333
+random,20,Logistic regression,0.79584,0.79555,decline all,-0.04,0.00204
+random,20,Gradient boosting,0.72286,0.79555,decline all,9.14,0.04756
+random,20,Expert scorecard (unfitted),0.79622,0.79555,decline all,-0.08,-83.33333
+random,50,Logistic regression,0.79768,0.79555,decline all,-0.27,0.00204
+random,50,Gradient boosting,0.77637,0.79555,decline all,2.41,0.01629
+random,50,Expert scorecard (unfitted),0.79791,0.79555,decline all,-0.3,-83.33333
+temporal,2,Logistic regression,0.64209,0.64107,decline all,-0.16,0.04184
+temporal,2,Gradient boosting,0.57577,0.64107,decline all,10.19,0.13504
+temporal,2,Expert scorecard (unfitted),0.63141,0.64107,decline all,1.51,-80.36111
+temporal,5,Logistic regression,0.64412,0.64107,decline all,-0.48,0.04184
+temporal,5,Gradient boosting,0.64306,0.64107,decline all,-0.31,0.00111
+temporal,5,Expert scorecard (unfitted),0.64065,0.64107,decline all,0.06,-82.77778
+temporal,10,Logistic regression,0.64749,0.64107,decline all,-1.0,0.04184
+temporal,10,Gradient boosting,0.64554,0.64107,decline all,-0.7,0.00111
+temporal,10,Expert scorecard (unfitted),0.6413,0.64107,decline all,-0.04,-83.33333
+temporal,20,Logistic regression,0.65425,0.64107,decline all,-2.06,0.04184
+temporal,20,Gradient boosting,0.65052,0.64107,decline all,-1.47,0.00111
+temporal,20,Expert scorecard (unfitted),0.64207,0.64107,decline all,-0.16,-83.33333
+temporal,50,Logistic regression,0.6745,0.64107,decline all,-5.21,0.04184
+temporal,50,Gradient boosting,0.66544,0.64107,decline all,-3.8,0.00111
+temporal,50,Expert scorecard (unfitted),0.64435,0.64107,decline all,-0.51,-83.33333

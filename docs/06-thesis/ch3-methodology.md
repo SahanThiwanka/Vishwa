@@ -2,8 +2,11 @@
 
 ## 3.1 Research design
 
-This study follows **Design Science Research**: knowledge is produced by building
-an artefact and evaluating it. The artefact is a dual-objective decision-support
+This study follows **Design Science Research** (Hevner et al., 2004): knowledge is
+produced by building an artefact and evaluating it, rather than by testing
+hypotheses about existing phenomena. The process follows the six activities set
+out by Peffers et al. (2007) — problem identification, objectives, design and
+development, demonstration, evaluation, and communication. The artefact is a dual-objective decision-support
 system for SME credit appraisal, together with the criteria model beneath it.
 
 Three activities make up the design:

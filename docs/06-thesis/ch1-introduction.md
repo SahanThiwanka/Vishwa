@@ -2,8 +2,8 @@
 
 ## 1.1 Background
 
-Small and medium enterprises account for the large majority of businesses in Sri
-Lanka and a substantial share of employment. Their access to formal credit is
+Small and medium enterprises are reported to account for approximately 75% of
+active enterprises in Sri Lanka, 45% of employment and 52% of GDP.[^smestats] Their access to formal credit is
 persistently constrained. Documented supply-side barriers include the absence of
 formal accounting records, insufficient tangible collateral, non-submission of
 financial statements, and limited management capacity — with policy responses
@@ -13,6 +13,13 @@ banking practice.
 Most of that literature examines whether credit is *available*. This study
 examines something narrower and less studied: how a bank *decides*, once an
 application is in front of an officer.
+
+[^smestats]: These figures are widely reported but currently rest on secondary
+    sources. **Attribute them to a primary source — the National Policy Framework
+    for SME Development, Department of Census and Statistics, or Central Bank of
+    Sri Lanka — before submission.** Note also that Sri Lanka had no uniform SME
+    definition before 2015, so figures spanning that boundary are not necessarily
+    comparable.
 
 ## 1.2 The appraisal problem
 

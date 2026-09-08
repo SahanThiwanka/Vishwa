@@ -230,6 +230,76 @@ This is why the criterion weights are established by expert elicitation
 (Chapter 6) rather than fitted to borrowed outcome data, and why that choice is a
 methodological requirement rather than a fallback.
 
+## 5.6a How much do the weights matter?
+
+The criteria model carries placeholder weights until elicitation is complete
+(§4.10), and that is ordinarily treated as blocking: no elicited weights, no
+reportable result. But the question underneath — *how much does the output depend
+on the weight vector at all?* — is answerable now, and answering it bounds the
+damage the placeholders can be doing.
+
+### 5.6a.1 Method
+
+Two thousand complete appraisals were simulated by drawing each criterion across
+its plausible range. The population is **synthetic**: the object of study is the
+model's mathematical behaviour, not any real portfolio, and no claim is made
+about real borrowers. Simulation is appropriate precisely because the question is
+about the model rather than the world.
+
+Each weight was then perturbed multiplicatively by up to ±p and renormalised, for
+p ∈ {10%, 25%, 50%, 75%, 100%}, with 400 draws at each level. For every draw the
+whole population was rescored and compared against the equal-weight baseline on
+three measures: Spearman rank correlation, the proportion of cases keeping their
+risk band, and the largest score shift.
+
+### 5.6a.2 Results
+
+| Perturbation | Credit risk ρ | Band unchanged | Development ρ | Band unchanged |
+|---:|---:|---:|---:|---:|
+| ±10% | 0.9971 | 97.6% | 0.9982 | 97.1% |
+| **±25%** | **0.9822** | **94.0%** | **0.9890** | **92.7%** |
+| ±50% | 0.9314 | 88.2% | 0.9586 | 85.5% |
+| ±75% | 0.8517 | 82.2% | 0.9121 | 78.3% |
+| ±100% | 0.7547 | 76.1% | 0.8543 | 71.2% |
+
+At ±25% — a spread wider than experienced practitioners typically differ by — the
+ranking is essentially preserved (ρ ≈ 0.98–0.99) and roughly 93–94% of cases keep
+their risk band. Degradation beyond that is gradual rather than abrupt; even at
+±100%, where a weight may be scaled anywhere in [0, 2], rank correlation remains
+above 0.75.
+
+**Interpretation.** The model's conclusions do not hinge on the precise weight
+vector within the range over which experts plausibly disagree. This does not make
+elicitation optional — the weights still need to be defensible, and the 6–7% of
+cases whose band changes at ±25% are real appraisals that would receive a
+different recommendation. What it does is bound the distortion: results reported
+under placeholder weights are unlikely to be qualitatively wrong, and that can be
+stated rather than hoped.
+
+### 5.6a.3 An unanticipated structural finding
+
+Estimating each criterion's influence separately — by doubling its weight within
+its dimension and measuring the shift — exposed an asymmetry in the tree itself.
+
+| Objective | Dimensions | One criterion's share of the objective |
+|---|---:|---|
+| Credit risk | 6 | 0.0185 – 0.0333 |
+| Development impact | 1 | 0.1250 |
+
+A development-impact criterion carries roughly **four to seven times the leverage**
+of a credit-risk criterion over its own objective. Doubling `employment_generation`
+moves the development score by 3.06 points and changes the risk band for 19.2% of
+cases; doubling `account_turnover`, the most influential credit criterion, moves
+the credit score by 0.71 points and changes 5.1% of bands.
+
+This is not an error. It follows directly from the source instrument: clause 5 of
+the People's Bank form is a single section of nine items, while the credit-risk
+material is spread across six sections. The tree faithfully reproduces that
+shape. But the consequence should be stated plainly — **the development objective
+is materially more sensitive to individual weight choices than the credit
+objective**, so elicitation error there carries more consequence, and the
+development weights deserve more respondents rather than fewer.
+
 ## 5.7 Limitations
 
 **Jurisdiction.** SBA data reflects U.S. government-guaranteed small-business
@@ -248,7 +318,14 @@ aggregation, not fuzzy inference.
 removes censoring but over-represents short-term facilities in later cohorts.
 
 **Weights were placeholders.** All results here use equal weights within each
-level. They therefore test structure, not the elicited model.
+level, so they test structure rather than the elicited model. Section 5.6a bounds
+how much this matters: within ±25% perturbation the ranking is preserved
+(ρ ≈ 0.98) and ~94% of risk bands are unchanged. The limitation stands, but its
+magnitude is now measured rather than merely acknowledged.
+
+**The sensitivity analysis uses a simulated population.** It characterises the
+model's response to weight change; it says nothing about how real Sri Lankan SME
+applications are distributed, and the two must not be confused.
 
 **The development objective is barely observable.** Only `CreateJob` and
 `RetainedJob` proxy the development-impact objective. Five of the nine items in
@@ -276,6 +353,13 @@ not aware of having been documented, which is a weaker and defensible claim.
 5. The a priori expert scorecard shows no discrimination on SBA-observable
    proxies (AUC 0.41–0.53), supporting the conclusion that instrument-specific
    appraisal models require elicitation rather than proxy-dataset fitting.
+6. The model is robust to weight perturbation within the range experts plausibly
+   disagree over (ρ ≈ 0.98 and ~94% band stability at ±25%), which bounds the
+   distortion introduced by reporting under placeholder weights.
+7. The criteria tree is structurally asymmetric: a development-impact criterion
+   carries four to seven times the leverage of a credit-risk criterion over its
+   objective, a direct consequence of clause 5 being one section of the source
+   form.
 
 Findings 1 and 5 are the contributions of this chapter. Finding 1 is a caution to
 users of a widely-adopted benchmark; finding 5 justifies the methodological

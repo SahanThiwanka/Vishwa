@@ -115,6 +115,48 @@ def figure_adjacent_terms() -> None:
     print("  adjacent_terms.png")
 
 
+def figure_weight_sensitivity() -> None:
+    """How far rankings and bands move as criterion weights are perturbed."""
+    df = pd.read_csv(TABLES / "weight_sensitivity.csv")
+
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4.2))
+    colours = {"credit_risk": CLEAN, "development_impact": "#7a4fa3"}
+
+    for objective, group in df.groupby("objective"):
+        g = group.sort_values("perturbation")
+        x = g["perturbation"] * 100
+        c = colours.get(objective, CONTAM)
+
+        axes[0].plot(x, g["spearman_mean"], marker="o", color=c, label=objective)
+        axes[0].fill_between(x, g["spearman_p05"], g["spearman_mean"],
+                             color=c, alpha=0.15)
+
+        axes[1].plot(x, g["band_agreement_mean"] * 100, marker="o", color=c,
+                     label=objective)
+        axes[1].fill_between(x, g["band_agreement_p05"] * 100,
+                             g["band_agreement_mean"] * 100, color=c, alpha=0.15)
+
+    for ax, title, ylabel in [
+        (axes[0], "Ranking stability", "Spearman rho vs baseline"),
+        (axes[1], "Risk band stability", "% of cases keeping their band"),
+    ]:
+        # Mark the level of disagreement experts plausibly exhibit.
+        ax.axvline(25, color="#999999", ls=":", lw=1.2)
+        ax.text(26, ax.get_ylim()[0], " plausible expert\n disagreement",
+                fontsize=7.5, color="#777777", va="bottom")
+        ax.set_xlabel("weight perturbation (%)")
+        ax.set_ylabel(ylabel)
+        ax.set_title(title, fontsize=11)
+        ax.grid(alpha=0.25)
+        ax.legend(fontsize=8)
+
+    fig.suptitle("Sensitivity of model output to criterion weights "
+                 "(2,000 simulated appraisals, 400 draws per level)", fontsize=11)
+    fig.tight_layout()
+    fig.savefig(FIGURES / "weight_sensitivity.png", dpi=200)
+    print("  weight_sensitivity.png")
+
+
 def main() -> int:
     if not (TABLES / "benchmark_results.csv").exists():
         print("Missing result tables. Run benchmark.py and leakage_analysis.py first.")
@@ -125,6 +167,8 @@ def main() -> int:
     figure_inflation()
     figure_within_year()
     figure_adjacent_terms()
+    if (TABLES / 'weight_sensitivity.csv').exists():
+        figure_weight_sensitivity()
 
     # Mirror into the thesis results folder.
     dest = ROOT / "docs" / "05-results" / "figures"

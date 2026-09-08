@@ -1,0 +1,14 @@
+{
+  "n_cases": 2000,
+  "n_draws_per_level": 400,
+  "perturbation_levels": [
+    0.1,
+    0.25,
+    0.5,
+    0.75,
+    1.0
+  ],
+  "seed": 11,
+  "model_version": "0.1.0-draft",
+  "case_population": "simulated - not real applications"
+}

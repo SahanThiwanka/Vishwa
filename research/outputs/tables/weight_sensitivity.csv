@@ -1,0 +1,11 @@
+objective,perturbation,spearman_mean,spearman_p05,kendall_mean,band_agreement_mean,band_agreement_p05,max_score_shift_mean
+credit_risk,0.1,0.9971,0.9957,0.9538,0.9759,0.968,1.32
+development_impact,0.1,0.9982,0.997,0.9651,0.9712,0.96,1.88
+credit_risk,0.25,0.9822,0.9743,0.8855,0.9401,0.925,3.33
+development_impact,0.25,0.989,0.9818,0.9121,0.9267,0.9025,4.77
+credit_risk,0.5,0.9314,0.9,0.7735,0.8818,0.8545,6.76
+development_impact,0.5,0.9586,0.9312,0.8277,0.8553,0.8085,9.57
+credit_risk,0.75,0.8517,0.782,0.6634,0.8223,0.7729,10.59
+development_impact,0.75,0.9121,0.8557,0.7473,0.7834,0.7094,14.42
+credit_risk,1.0,0.7547,0.6318,0.5618,0.7608,0.68,14.86
+development_impact,1.0,0.8543,0.7352,0.6723,0.7124,0.5794,19.71

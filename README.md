@@ -109,6 +109,9 @@ Dataset download instructions: see `research/data/DATASETS.md`.
 |---|---|
 | Criteria tree | ✅ v0.1.0-draft — 49 criteria, all clause-traceable |
 | Scoring engine (TypeScript) | ✅ 9/9 structural checks |
+| Test suite | ✅ 62 tests (engine, validation, auth) |
+| Authentication + role-based sign-off | ✅ clause-7 chain enforced server-side |
+| Input validation on all Server Actions | ✅ |
 | Scoring engine (Python) | ✅ parity-verified against TypeScript, 280 checks |
 | Web application | ✅ intake, live scoring, explainability, audit trail |
 | DOCX export in bank format | ✅ |

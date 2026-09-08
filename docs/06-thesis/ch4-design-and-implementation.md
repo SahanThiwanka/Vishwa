@@ -229,6 +229,46 @@ would silently re-interpret under the current model, and an appraisal signed in
 March could not be explained in September. Storing the result document makes past
 decisions permanently reconstructible.
 
+## 4.6a Access control and the integrity of the audit trail
+
+An audit trail is only worth as much as the identity behind each entry.
+
+An earlier iteration of the sign-off panel accepted a typed name. It recorded
+who *claimed* to have signed, which is no record at all: anyone could enter any
+name, and the trail would look complete while proving nothing. The system now
+authenticates users and takes the signatory from the session.
+
+Roles map directly onto the chain in clause 7 of the form:
+
+| Role | Permitted |
+|---|---|
+| `OFFICER` | prepare an appraisal |
+| `RECOMMENDER` | endorse |
+| `HEAD_OFFICE` | approve or decline |
+| `ADMIN` | all of the above, plus user administration |
+
+Three properties are enforced rather than merely displayed. The interface offers
+only the actions a user's role permits; the **server re-checks the role before
+writing**, so the restriction cannot be bypassed by calling the action directly;
+and an appraisal that has been approved or declined rejects further decisions —
+a correction is made by raising a new appraisal, never by rewriting a signed one.
+
+**The elicitation instrument is deliberately left public.** Requiring accounts of
+practitioners completing a fifteen-minute voluntary study would collapse the
+response rate, and the instrument collects no name and no customer data, so there
+is nothing behind it to protect. The research instrument and the operational
+system have different threat models and are treated differently.
+
+### 4.6a.1 What this is not
+
+Session cookies are HMAC-signed and passwords are hashed with scrypt, with no
+external authentication dependency, so the system runs without network access for
+demonstration purposes. It is **not** a production authentication system: there
+is no password reset, no multi-factor authentication, no account lockout, no rate
+limiting on sign-in attempts, and no password policy. A banking deployment would
+require all of these, along with penetration testing and an accessibility audit.
+These are recorded as limitations rather than presented as complete.
+
 ## 4.7 Explainability
 
 Each criterion's contribution is computed as its normalised weight times its
@@ -259,6 +299,12 @@ barrier entirely.
 The engine carries a structural test suite (`npm run test:scoring`) covering three
 cases — a sound manufacturing expansion, a thin startup with a DSCR breach, and a
 deliberately incomplete file:
+
+The suite covers the scoring engine, the validation schemas, and the
+authorisation logic — 62 tests in total. Server Actions are reachable by direct
+POST rather than only through the application's own forms, so every action
+validates its input before use, and validation failures report which field failed
+without echoing the submitted value back.
 
 | Check | Result |
 |---|---|

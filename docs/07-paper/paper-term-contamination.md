@@ -60,8 +60,9 @@ Our contributions:
    meaningless-variable probe establishing an artefact ceiling (§V).
 3. Rejection of the natural mechanism hypothesis, leaving the cause open and
    stated as such (§IV-D).
-4. Two further validation hazards in the same dataset: right-censoring, and the
-   optimism of random splitting (§VI).
+4. Three further validation hazards in the same dataset: right-censoring, the
+   optimism of random splitting, and a roughly 700-fold degradation in
+   calibration across a temporal boundary (§VI).
 
 All analysis is reproducible from code and the public dataset.
 
@@ -245,15 +246,19 @@ measuring credit risk.
 further. The contamination is most damaging precisely to the model families most
 commonly reported as state of the art on this dataset.
 
-## VI. Two Further Hazards
+## VI. Three Further Hazards
 
-**Right-censoring.** Censored facilities default at 7.77% against 20.41% for
+### A. Right-censoring
+
+Censored facilities default at 7.77% against 20.41% for
 matured ones (§III-C). A model able to infer censoring status from feature
 interactions — facility size tracks inflation, some programmes ran only in certain
 years — obtains discrimination unrelated to credit risk. This is independent of
 the `Term` contamination and requires its own control.
 
-**Optimism of random splitting.** Under the clean specification, gradient boosting
+### B. Optimism of random splitting
+
+Under the clean specification, gradient boosting
 scores 0.7898 randomly against 0.6076 temporally: a gap of **0.182 AUC**. Random
 splitting places facilities from the same economic cycle on both sides.
 

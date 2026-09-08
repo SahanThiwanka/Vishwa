@@ -157,6 +157,59 @@ def figure_weight_sensitivity() -> None:
     print("  weight_sensitivity.png")
 
 
+def figure_calibration() -> None:
+    """Reliability diagrams: does a predicted probability mean what it says?
+
+    AUC measures ranking only. A bank pricing risk needs the predicted
+    probability to be right in level as well as in order, and these two panels
+    show that a model well calibrated under random splitting can be badly
+    miscalibrated on a later period.
+    """
+    df = pd.read_csv(TABLES / "reliability_curves.csv")
+    summary = pd.read_csv(TABLES / "calibration.csv")
+
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4.6), sharex=True, sharey=True)
+    colours = {"Gradient boosting (clean)": CLEAN,
+               "Logistic regression (clean)": "#c07a2a"}
+
+    for ax, protocol in zip(axes, ["random", "temporal"]):
+        ax.plot([0, 1], [0, 1], ls="--", color="#999999", lw=1.2)
+        ax.text(0.52, 0.46, "perfect calibration", fontsize=7.5,
+                color="#777777", rotation=38)
+
+        sub = df[df["protocol"] == protocol]
+        for model, group in sub.groupby("model"):
+            g = group.sort_values("mean_predicted")
+            # Marker area tracks how many cases sit in each bin, so sparsely
+            # populated bins are not read as strongly as dense ones.
+            sizes = 18 + 90 * (g["n"] / g["n"].max())
+            c = colours.get(model, CONTAM)
+            ax.plot(g["mean_predicted"], g["observed_rate"], color=c, lw=1.5,
+                    zorder=2)
+            ax.scatter(g["mean_predicted"], g["observed_rate"], s=sizes,
+                       color=c, zorder=3, label=model.replace(" (clean)", ""))
+
+            row = summary[(summary.protocol == protocol) &
+                          (summary.model == model)]
+            if not row.empty:
+                ax.plot([], [], " ",
+                        label=f"   reliability {row.iloc[0]['reliability']:.5f}")
+
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+        ax.set_xlabel("mean predicted probability of default")
+        ax.set_title(f"{protocol} split", fontsize=11)
+        ax.grid(alpha=0.25)
+        ax.legend(fontsize=7.5, loc="upper left")
+
+    axes[0].set_ylabel("observed default rate")
+    fig.suptitle("Calibration: predicted vs observed default rate "
+                 "(lower reliability is better)", fontsize=11)
+    fig.tight_layout()
+    fig.savefig(FIGURES / "calibration.png", dpi=200)
+    print("  calibration.png")
+
+
 def main() -> int:
     if not (TABLES / "benchmark_results.csv").exists():
         print("Missing result tables. Run benchmark.py and leakage_analysis.py first.")
@@ -169,6 +222,8 @@ def main() -> int:
     figure_adjacent_terms()
     if (TABLES / 'weight_sensitivity.csv').exists():
         figure_weight_sensitivity()
+    if (TABLES / 'reliability_curves.csv').exists():
+        figure_calibration()
 
     # Mirror into the thesis results folder.
     dest = ROOT / "docs" / "05-results" / "figures"

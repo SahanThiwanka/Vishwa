@@ -255,7 +255,7 @@ def main() -> int:
     df = add_scorecard_columns(df)
     print(f"{len(df):,} fully-matured loans, default rate {df['default'].mean():.2%}\n")
 
-    ci_rows, test_rows, calib_rows = [], [], []
+    ci_rows, test_rows, calib_rows, curve_rows = [], [], [], []
 
     for protocol in ("random", "temporal"):
         print("=" * 72)
@@ -314,12 +314,15 @@ def main() -> int:
                   f"reliability={c['reliability']:.5f}  resolution={c['resolution']:.5f}")
             calib_rows.append({"protocol": protocol, "model": name,
                                **{k: v for k, v in c.items() if k != "curve"}})
+            for point in c["curve"]:
+                curve_rows.append({"protocol": protocol, "model": name, **point})
         print()
 
     OUT_TABLES.mkdir(parents=True, exist_ok=True)
     pd.DataFrame(ci_rows).to_csv(OUT_TABLES / "auc_confidence_intervals.csv", index=False)
     pd.DataFrame(test_rows).to_csv(OUT_TABLES / "delong_tests.csv", index=False)
     pd.DataFrame(calib_rows).to_csv(OUT_TABLES / "calibration.csv", index=False)
+    pd.DataFrame(curve_rows).to_csv(OUT_TABLES / "reliability_curves.csv", index=False)
 
     with open(OUT_TABLES / "statistical_tests_meta.json", "w", encoding="utf-8") as fh:
         json.dump({"n_bootstrap": N_BOOTSTRAP, "seed": SEED,

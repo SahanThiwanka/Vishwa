@@ -14,7 +14,7 @@
   "disjoint_pearson_r": 0.3563,
   "disjoint_spearman_rho": 0.4495,
   "disjoint_verdict": "moderately related",
-  "band_same": 0.1182,
-  "band_one_apart": 0.4973,
-  "band_two_plus_apart": 0.3845
+  "band_same": 0.118176,
+  "band_one_apart": 0.497332,
+  "band_two_plus_apart": 0.384492
 }

@@ -134,6 +134,30 @@ def main() -> int:
                                 f"{float(row['band_agreement_mean']) * 100:.1f}%", docs,
                                 ["ch5-empirical-validation.md"]))
 
+    # ---- objective separability (RQ4) --------------------------------------
+    indep = load_json("objective_independence.json")
+    if indep:
+        checks.append(check("objectives Pearson r",
+                            f"+{indep['pearson_r']:.4f}", docs,
+                            ["ch5-empirical-validation.md"]))
+        checks.append(check("disjoint-input r",
+                            f"+{indep['disjoint_pearson_r']:.4f}", docs,
+                            ["ch5-empirical-validation.md"]))
+        checks.append(check("bands disagree",
+                            f"{(1 - indep['band_same']) * 100:.1f}%", docs))
+        checks.append(check("two or more bands apart",
+                            f"{indep['band_two_plus_apart'] * 100:.1f}%", docs))
+
+    # ---- calibration --------------------------------------------------------
+    calib = load_csv("calibration.csv")
+    for row in calib:
+        if row["protocol"] == "temporal" and row["model"].startswith("Gradient"):
+            checks.append(check("GBM temporal reliability",
+                                f"{float(row['reliability']):.5f}", docs))
+        if row["protocol"] == "random" and row["model"].startswith("Gradient"):
+            checks.append(check("GBM random reliability",
+                                f"{float(row['reliability']):.5f}", docs))
+
     # ---- model structure ---------------------------------------------------
     tree = json.loads(
         (ROOT / "shared" / "model" / "criteria-tree.json").read_text(encoding="utf-8")

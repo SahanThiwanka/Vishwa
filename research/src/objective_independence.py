@@ -210,9 +210,9 @@ def main() -> int:
     print(f"  two or more bands apart  : {two_plus:.1%}")
     print(f"\n  disagree at all          : {1 - same:.1%}")
 
-    findings["band_same"] = round(same, 4)
-    findings["band_one_apart"] = round(one, 4)
-    findings["band_two_plus_apart"] = round(two_plus, 4)
+    findings["band_same"] = round(same, 6)
+    findings["band_one_apart"] = round(one, 6)
+    findings["band_two_plus_apart"] = round(two_plus, 6)
 
     cross = pd.crosstab(df["credit_band"], df["dev_band"], normalize=True)
     print("\n  credit band (rows) x development band (columns), share of portfolio:")

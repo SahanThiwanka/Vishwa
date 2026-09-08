@@ -272,6 +272,42 @@ rather than a probability, and is therefore not calibrated in this sense at all 
 which is itself a limitation (§5.7) and the reason it must never be used to price
 a facility.
 
+## 5.5b What the models are worth to a lender
+
+AUC weights both error types equally; a lender does not. Approving a facility
+that charges off costs the loss given default; declining a sound one costs the
+margin forgone. The ratio between them determines where the cut-off belongs.
+
+Expected cost is reported in units of one false positive, so a cost ratio of
+10:1 means one bad approval costs as much as ten good declines. The ratio is
+swept rather than assumed, because the right value is a policy question for the
+lender.
+
+Two fixed policies provide the floor: approve everything, or decline everything.
+
+| Temporal split, 10:1 | Expected cost | vs best fixed policy |
+|---|---:|---:|
+| "Decline all" baseline | 0.6411 | — |
+| Gradient boosting | 0.6455 | **−0.7%** |
+| Logistic regression | 0.6475 | **−1.0%** |
+| Expert scorecard | 0.6413 | −0.0% |
+
+**Under temporal validation, 12 of 15 model/cost-ratio combinations fail to beat
+the better fixed policy.** At the discrimination levels the clean specification
+achieves — AUC 0.6076 against a 35.9% default rate — none of these models earns
+its place economically on that cohort. Under random splitting, where
+discrimination is higher, the picture improves: gradient boosting saves 10.2% at
+a 2:1 ratio.
+
+**An important caveat.** "Decline all" is a floor for comparison, not a strategy.
+A bank that declines every application has no business, so this is not a claim
+that lenders should stop lending. It is a claim that a model must clear a low bar
+before it is worth the process it adds, and on the stressed cohort these models
+do not clear it.
+
+The finding is consistent with everything else in this chapter and is reported
+without softening.
+
 ## 5.6 The expert scorecard: a negative result
 
 The a priori scorecard, whose bands were set from credit reasoning before any
@@ -375,6 +411,87 @@ is materially more sensitive to individual weight choices than the credit
 objective**, so elicitation error there carries more consequence, and the
 development weights deserve more respondents rather than fewer.
 
+## 5.6b Are the two objectives independent? (RQ4)
+
+The model reports two scores and refuses to combine them. That decision was
+justified in §4.3.2 on Arvanitis, Stampini and Vencatachellum's (2015) finding
+that development and credit concerns are empirically independent in
+development-bank appraisal. Their result comes from one multilateral
+institution's project portfolio. It can be tested here on 652,284 small-business
+facilities with realised outcomes.
+
+### 5.6b.1 The objectives are not independent
+
+| Measure | Value |
+|---|---|
+| Pearson r | **+0.4003** |
+| Spearman ρ | +0.4213 |
+| Shared variance (r²) | 0.1602 |
+
+With n this large every correlation is statistically significant, so effect size
+is what carries meaning. An r of 0.40 is **moderate**, not negligible.
+
+The two proxy scores do not draw on disjoint variables, which inflates this:
+`NoEmp` feeds both the credit criterion *employees* and the development criterion
+*job creation rate*, and `GrAppv` feeds both *loan per employee* and *jobs per
+100k*. Recomputing with a development measure sharing no inputs with the credit
+score — raw jobs supported — gives **r = +0.3563**. The confound accounts for
+part of the association but not most of it.
+
+**This partly contradicts the premise the design was justified on**, and is
+reported as such rather than omitted. On this population the two objectives
+co-move more than Arvanitis et al. found.
+
+### 5.6b.2 The practical case survives by a different route
+
+Correlation describes average co-movement across a population. It does not say
+whether the two objectives agree about any *particular* facility, which is the
+question a combined score actually settles.
+
+| Relationship between the two bands | Share of facilities |
+|---|---:|
+| Same band | **11.8%** |
+| One band apart | 49.7% |
+| Two or more bands apart | **38.4%** |
+| **Disagree at all** | **88.2%** |
+
+An r of 0.40 leaves enormous scatter. The two objectives place the same facility
+in different risk bands **88.2% of the time**, and more than a third differ by
+two bands or more.
+
+That is the argument for reporting them separately, and it is stronger than the
+independence argument it replaces. **A combined score would issue one number for
+the 88% of cases where the objectives disagree**, making a strong-credit,
+weak-development facility indistinguishable from one that is middling on both.
+Whether the underlying scores correlate on average is beside the point; what a
+decision-maker needs is whether *this* application is one of the many where they
+diverge.
+
+### 5.6b.3 Development impact is associated with higher default
+
+| Development band | n | Default rate |
+|---|---:|---:|
+| Lowest | 326,491 | **10.80%** |
+| Middle | 162,746 | 29.77% |
+| Highest | 163,047 | **30.32%** |
+
+Facilities supporting more employment default **substantially more** — a spread
+of 19.5 percentage points.
+
+**Read this as association, not cause.** It is very likely confounded: facilities
+creating more jobs tend to be larger, newer, and more expansionary, and each of
+those independently raises credit risk. Establishing a causal relationship would
+require controls this study has not applied, and the claim is not made.
+
+But if the association holds under proper controls, it has a direct implication
+for a state bank with a development mandate: **the developmental objective and
+the credit objective may genuinely pull against each other.** Development-oriented
+lending would then carry a real and measurable credit cost.
+
+That is precisely the trade-off the dual-objective design exists to surface. A
+model that averaged the two into one figure would report a middling score and
+conceal the fact that the institution is being asked to choose.
+
 ## 5.7 Limitations
 
 **Jurisdiction.** SBA data reflects U.S. government-guaranteed small-business
@@ -397,6 +514,10 @@ level, so they test structure rather than the elicited model. Section 5.6a bound
 how much this matters: within ±25% perturbation the ranking is preserved
 (ρ ≈ 0.98) and ~94% of risk bands are unchanged. The limitation stands, but its
 magnitude is now measured rather than merely acknowledged.
+
+**The independence test uses thin development proxies.** SBA data carries
+employment only; five of the nine items in clause 5 have no counterpart. §5.6b
+tests the employment dimension of development impact, not the whole objective.
 
 **The proposed model is not calibrated.** It produces an ordinal risk band, not a
 probability of default. Section 5.5a shows that even trained probabilistic models
@@ -440,7 +561,19 @@ not aware of having been documented, which is a weaker and defensible claim.
    carries four to seven times the leverage of a credit-risk criterion over its
    objective, a direct consequence of clause 5 being one section of the source
    form.
-8. Calibration degrades far more sharply than discrimination across time periods:
+8. The two objectives are **not** independent on this population (r = +0.40, or
+   +0.36 with disjoint inputs), which partly contradicts the premise the
+   non-aggregation design was justified on. They nonetheless band the same
+   facility differently 88.2% of the time, which is the stronger argument for
+   reporting them separately.
+9. Development impact is positively associated with default (10.8% in the lowest
+   band against 30.3% in the highest). Reported as association, not cause; if it
+   survives proper controls, a development mandate carries a measurable credit
+   cost.
+10. At realistic cost ratios under temporal validation, none of the models beats
+    the better fixed policy — discrimination at this level does not convert into
+    economic value.
+11. Calibration degrades far more sharply than discrimination across time periods:
    gradient-boosting reliability worsens roughly 700-fold (0.00005 to 0.03705),
    with the model systematically under-predicting default — pricing an observed
    45% risk at 20%. For a lender this is the more consequential failure, because

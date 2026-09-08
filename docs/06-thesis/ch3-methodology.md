@@ -13,10 +13,14 @@ Three activities make up the design:
 
 | Activity | Addresses | Method | Output |
 |---|---|---|---|
-| Formalisation | RQ1 | Clause-by-clause derivation from the bank's form | 49-criterion model |
-| Weight elicitation | RQ2 | Best-Worst Method with practitioners | Weights + consistency ratios |
-| Empirical validation | RQ3 | Benchmarking against realised outcomes | Chapter 5 |
-| Objective comparison | RQ4 | Dual-objective scoring of the same applications | Chapters 4–6 |
+| Formalisation | RQ1 | Clause-by-clause derivation from the bank's form | 49-criterion model, working system |
+| Weight sensitivity | RQ2 | Monte Carlo over perturbed weight vectors | §5.6a |
+| Empirical validation | RQ3 | Benchmarking against realised outcomes, with CIs and paired tests | §5.3–5.6 |
+| Objective separability | RQ4 | Correlation and band agreement across 652,284 facilities | §5.6b |
+
+Weight elicitation by Best-Worst Method was designed and instrumented but not
+administered; §3.5 documents it as a prepared method and §6.1 reports it as not
+carried out.
 
 ## 3.2 Research questions
 
@@ -27,12 +31,14 @@ established that the initially claimed contribution was already published
 - **RQ1** — How can the narrative, multi-section appraisal instrument used by a
   Sri Lankan state bank be formalised into a computable multi-criteria model
   without discarding the judgement it encodes?
-- **RQ2** — What relative weights do experienced credit practitioners assign to
-  the resulting criteria, and how consistent are those judgements?
-- **RQ3** — How does the resulting model perform against realised loan outcomes on
-  observable criteria, relative to standard credit-scoring benchmarks?
-- **RQ4** — How does treating development impact as a separate objective change
-  the assessment of applications, compared with credit risk alone?
+- **RQ2** — How sensitive is such a model's output to its criterion weights, and
+  what follows for a model deployed before those weights are empirically
+  established?
+- **RQ3** — What can and cannot be established about an instrument-specific
+  appraisal model from publicly available credit data, and how does it compare
+  with standard credit-scoring benchmarks?
+- **RQ4** — Are credit risk and development impact separable objectives in
+  practice, and what would a combined score conceal?
 
 ## 3.3 Formalisation method (RQ1)
 

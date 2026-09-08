@@ -65,18 +65,31 @@ codifies what to look at without codifying how to judge it.
 - **RQ1** — How can the narrative, multi-section appraisal instrument used by a
   Sri Lankan state bank be formalised into a computable multi-criteria model
   without discarding the judgement it encodes?
-- **RQ2** — What relative weights do experienced credit practitioners assign to
-  the resulting criteria, and how consistent are those judgements?
-- **RQ3** — How does the resulting model perform against realised loan outcomes on
-  observable criteria, relative to standard credit-scoring benchmarks?
-- **RQ4** — How does treating development impact as a separate objective change
-  the assessment of applications, compared with credit risk alone?
+- **RQ2** — How sensitive is such a model's output to its criterion weights, and
+  what follows for a model deployed before those weights are empirically
+  established?
+- **RQ3** — What can and cannot be established about an instrument-specific
+  appraisal model from publicly available credit data, and how does it compare
+  with standard credit-scoring benchmarks?
+- **RQ4** — Are credit risk and development impact separable objectives in
+  practice, and what would a combined score conceal?
 
-These differ from the questions in the original research proposal. The literature
-review (§2.3.3) established that the contribution originally claimed — applying
-fuzzy multi-criteria methods to SME credit scoring — is already published. The
-questions were revised accordingly rather than restated in a form the literature
-no longer supports.
+These differ from the questions in the original research proposal, for two
+reasons, both stated openly.
+
+First, the literature review (§2.5.3) established that the contribution
+originally claimed — applying fuzzy multi-criteria methods to SME credit scoring —
+is already published. The questions were revised rather than restated in a form
+the literature no longer supports.
+
+Second, the original RQ2 asked what weights practitioners assign to the criteria.
+Answering it requires practitioner participation that was not obtained within the
+study period (§6.1). Rather than pose a question the study cannot answer, RQ2 now
+asks something it can: how much the model's output depends on its weights at all.
+That is answerable by simulation, is arguably the more useful question for anyone
+deploying such a model, and it bounds what the missing elicitation costs. The
+elicitation instrument was nonetheless built, tested and is reported in §6.1 as
+prepared but not administered.
 
 ## 1.4 Objectives
 
@@ -147,8 +160,16 @@ follows from that honestly, including a negative result.
 5. **A design finding**: weight renormalisation over unassessed criteria allows a
    sparse appraisal to produce a confident score, requiring an explicit
    completeness gate (§4.5).
+6. **Evidence on objective separability**: across 652,284 facilities the two
+   objectives correlate moderately (r = +0.40) yet band the same facility
+   differently 88.2% of the time — and development impact is positively
+   associated with default. Reporting them separately preserves information a
+   combined score would destroy (§5.6b).
+7. **A calibration finding**: reliability degrades roughly 700-fold across a
+   temporal boundary while discrimination falls far less, so a scorecard can
+   continue to rank while systematically mispricing risk (§5.5a).
 
-Contributions 1 and 2 are the substantial ones. Contributions 3 to 5 are real but
+Contributions 1 and 2 are the substantial ones. Contributions 3 to 7 are real but
 incremental, and are described as such throughout.
 
 ## 1.8 Structure
@@ -159,10 +180,11 @@ incremental, and are described as such throughout.
 | 3 | Methodology: design science, formalisation, BWM elicitation, validation protocol, ethics |
 | 4 | Design and implementation of the criteria model and system |
 | 5 | Empirical validation, the contamination finding, and a negative result |
-| 6 | Elicitation results, discussion, limitations, conclusion |
+| 6 | Answers to the research questions, discussion, limitations, conclusion |
 
 A note on presentation. This thesis reports several things that did not work: a
 claimed contribution withdrawn after the literature review, a scorecard that
-failed to discriminate, and a mechanism hypothesis tested and rejected. These are
-reported because a study that presents only its successes gives the reader no way
-to judge the reliability of any of them.
+failed to discriminate, a mechanism hypothesis tested and rejected, an elicitation
+designed but not administered, and an independence premise that its own data
+partly contradicts. These are reported because a study that presents only its
+successes gives the reader no way to judge the reliability of any of them.

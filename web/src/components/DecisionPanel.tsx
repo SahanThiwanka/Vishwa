@@ -18,19 +18,19 @@ const STEPS = [
   {
     action: "RECOMMENDED" as const,
     label: "Recommend",
-    role: "Recommending Officer",
+    allowed: ["RECOMMENDER", "HEAD_OFFICE", "ADMIN"],
     tone: "border-slate-300 bg-white text-slate-800 hover:bg-slate-50",
   },
   {
     action: "APPROVED" as const,
     label: "Approve",
-    role: "Head Office",
+    allowed: ["HEAD_OFFICE", "ADMIN"],
     tone: "border-emerald-600 bg-emerald-600 text-white hover:bg-emerald-700",
   },
   {
     action: "DECLINED" as const,
     label: "Decline",
-    role: "Head Office",
+    allowed: ["HEAD_OFFICE", "ADMIN"],
     tone: "border-red-600 bg-red-600 text-white hover:bg-red-700",
   },
 ];
@@ -38,28 +38,31 @@ const STEPS = [
 export function DecisionPanel({
   appraisalId,
   status,
+  user,
 }: {
   appraisalId: string;
   status: string;
+  user: { displayName: string; role: string };
 }) {
-  const [actor, setActor] = useState("");
   const [note, setNote] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
   const settled = status === "APPROVED" || status === "DECLINED";
 
-  function submit(action: (typeof STEPS)[number]["action"], role: string) {
+  function submit(action: (typeof STEPS)[number]["action"]) {
     setError(null);
     startTransition(async () => {
       try {
-        await recordDecision(appraisalId, action, actor, role, note || undefined);
+        await recordDecision(appraisalId, action, note || undefined);
         setNote("");
       } catch (e) {
         setError(e instanceof Error ? e.message : "Could not record the decision");
       }
     });
   }
+
+  const permitted = STEPS.filter((s) => s.allowed.includes(user.role));
 
   if (settled) {
     return (
@@ -82,29 +85,25 @@ export function DecisionPanel({
         <span className="font-medium text-slate-700">{status}</span>
       </p>
 
-      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div>
-          <label className="block text-xs font-medium text-slate-600">
-            Name &amp; designation <span className="text-red-500">*</span>
-          </label>
-          <input
-            className="input mt-1"
-            value={actor}
-            onChange={(e) => setActor(e.target.value)}
-            placeholder="e.g. K. Perera, Branch Manager"
-          />
-        </div>
-        <div>
-          <label className="block text-xs font-medium text-slate-600">
-            Note (optional)
-          </label>
-          <input
-            className="input mt-1"
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            placeholder="Conditions, observations"
-          />
-        </div>
+      <div className="mt-4">
+        <p className="text-xs text-slate-500">
+          Signing as{" "}
+          <span className="font-medium text-slate-800">{user.displayName}</span>{" "}
+          ({user.role})
+        </p>
+        <label
+          htmlFor="decision-note"
+          className="mt-3 block text-xs font-medium text-slate-600"
+        >
+          Note (optional)
+        </label>
+        <input
+          id="decision-note"
+          className="input mt-1"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          placeholder="Conditions, observations"
+        />
       </div>
 
       {error && (
@@ -114,12 +113,12 @@ export function DecisionPanel({
       )}
 
       <div className="mt-4 flex flex-wrap gap-2">
-        {STEPS.map((step) => (
+        {permitted.map((step) => (
           <button
             key={step.action}
             type="button"
-            disabled={!actor.trim() || pending}
-            onClick={() => submit(step.action, step.role)}
+            disabled={pending}
+            onClick={() => submit(step.action)}
             className={`rounded-md border px-4 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-100 disabled:text-slate-400 ${step.tone}`}
           >
             {pending ? "Recording…" : step.label}
@@ -127,9 +126,10 @@ export function DecisionPanel({
         ))}
       </div>
 
-      {!actor.trim() && (
+      {permitted.length === 0 && (
         <p className="mt-2 text-xs text-slate-500">
-          Enter a name and designation before signing off.
+          Your role ({user.role}) cannot sign off on appraisals. A recommending
+          officer or Head Office must act on this file.
         </p>
       )}
     </section>

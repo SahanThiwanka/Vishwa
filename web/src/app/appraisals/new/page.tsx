@@ -1,8 +1,12 @@
 import { AppraisalForm } from "@/components/AppraisalForm";
+import { requireSession } from "@/lib/dal";
 
 export const metadata = { title: "New appraisal" };
+export const dynamic = "force-dynamic";
 
-export default function NewAppraisalPage() {
+export default async function NewAppraisalPage() {
+  await requireSession();
+
   return (
     <div className="space-y-5">
       <div>

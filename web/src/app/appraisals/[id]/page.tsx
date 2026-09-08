@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { DecisionPanel } from "@/components/DecisionPanel";
+import { requireSession } from "@/lib/dal";
 import { prisma } from "@/lib/db";
 import { criteriaTree } from "@/lib/scoring";
 import type { AppraisalResult, ObjectiveResult } from "@/lib/scoring/types";
@@ -34,6 +35,8 @@ export default async function AppraisalDetail({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  // Authorisation happens here, at the data, not only in the proxy.
+  const session = await requireSession();
   const { id } = await params;
 
   const appraisal = await prisma.appraisal.findUnique({
@@ -109,7 +112,11 @@ export default async function AppraisalDetail({
       {credit && <Breakdown objective={credit} />}
       {development && <Breakdown objective={development} />}
 
-      <DecisionPanel appraisalId={appraisal.id} status={appraisal.status} />
+      <DecisionPanel
+        appraisalId={appraisal.id}
+        status={appraisal.status}
+        user={{ displayName: session.displayName, role: session.role }}
+      />
 
       <section className="rounded-lg border border-slate-200 bg-white p-5">
         <h2 className="text-sm font-semibold text-slate-900">Audit trail</h2>

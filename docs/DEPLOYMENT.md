@@ -94,6 +94,17 @@ or database file is staged.
    | Name | Value |
    |---|---|
    | `DATABASE_URL` | your PostgreSQL connection string |
+   | `SESSION_SECRET` | a random string, 32+ characters |
+
+   Generate the secret with:
+
+   ```bash
+   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+   ```
+
+   The application **refuses to start in production without it** — sessions
+   signed with a guessable key can be forged, and a forged session is a
+   Head Office sign-off.
 
 4. Deploy
 
@@ -125,6 +136,14 @@ Check all four:
 - `"criteria": 49` — the model synced
 - `"weights": "PLACEHOLDER"` — correct until elicitation completes
 - `"elicitationResponses": 0` — the table exists and is queryable
+
+### Create user accounts
+
+Appraisal records require an account; the elicitation instrument does not.
+`npm run db:seed-users` creates three **demonstration** accounts with published
+passwords — these are for the viva only and **must not exist on a public
+deployment**. Either change their passwords immediately or create real accounts
+and delete the demo ones.
 
 Then complete one full run of `/elicitation` yourself under a code like
 `TEST-DELETE`, confirm the count increments, and **delete that row before

@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { requireSession } from "@/lib/dal";
 import { prisma } from "@/lib/db";
 
 // The dashboard reads appraisals at request time. Without this it is
@@ -20,6 +21,8 @@ function bandClass(code: string | null) {
 const CURRENCY = new Intl.NumberFormat("en-LK", { maximumFractionDigits: 0 });
 
 export default async function Home() {
+  await requireSession();
+
   const appraisals = await prisma.appraisal.findMany({
     orderBy: { createdAt: "desc" },
     take: 50,

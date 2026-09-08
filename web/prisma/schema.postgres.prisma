@@ -141,3 +141,35 @@ model ElicitationResponse {
   @@unique([respondentCode, level])
   @@index([level])
 }
+
+// Users and the sign-off roles from clause 7 of the appraisal form.
+//
+// Before this existed, the sign-off panel took a typed name: anyone could sign
+// as anyone. In a bank the signatory is the authenticated user, and the audit
+// trail is worthless if it records a self-declared name.
+//
+// Roles map to the form's approval chain:
+//   OFFICER      prepares an appraisal
+//   RECOMMENDER  endorses it
+//   HEAD_OFFICE  approves or declines
+//   ADMIN        manages users and the criteria model
+model User {
+  id String @id @default(cuid())
+
+  username String @unique
+  // scrypt hash, stored as "salt:derivedKey" in hex. Never a plaintext password.
+  passwordHash String
+
+  displayName String
+  designation String?
+
+  // OFFICER | RECOMMENDER | HEAD_OFFICE | ADMIN
+  role String @default("OFFICER")
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([username])
+}

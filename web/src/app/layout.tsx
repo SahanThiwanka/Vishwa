@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 
+import { currentUser, signOut } from "@/lib/auth-actions";
+
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -13,11 +15,13 @@ export const metadata: Metadata = {
     "Dual-objective decision support for SME credit appraisal: credit risk and development impact, scored separately and explainably.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const user = await currentUser();
+
   return (
     <html
       lang="en"
@@ -35,18 +39,38 @@ export default function RootLayout({
               </span>
             </Link>
             <nav className="flex items-center gap-4 text-sm">
-              <Link href="/" className="text-slate-600 hover:text-slate-900">
-                Appraisals
-              </Link>
-              <Link href="/model" className="text-slate-600 hover:text-slate-900">
-                Model
-              </Link>
-              <Link
-                href="/appraisals/new"
-                className="rounded-md bg-slate-900 px-3 py-1.5 text-white hover:bg-slate-800"
-              >
-                New appraisal
-              </Link>
+              {user ? (
+                <>
+                  <Link href="/" className="text-slate-600 hover:text-slate-900">
+                    Appraisals
+                  </Link>
+                  <Link href="/model" className="text-slate-600 hover:text-slate-900">
+                    Model
+                  </Link>
+                  <Link
+                    href="/appraisals/new"
+                    className="rounded-md bg-slate-900 px-3 py-1.5 text-white hover:bg-slate-800"
+                  >
+                    New appraisal
+                  </Link>
+                  <span className="border-l border-slate-200 pl-4 text-xs text-slate-500">
+                    {user.displayName}
+                    <span className="ml-1 text-slate-400">({user.role})</span>
+                  </span>
+                  <form action={signOut}>
+                    <button
+                      type="submit"
+                      className="text-xs text-slate-500 underline hover:text-slate-800"
+                    >
+                      Sign out
+                    </button>
+                  </form>
+                </>
+              ) : (
+                <Link href="/login" className="text-slate-600 hover:text-slate-900">
+                  Sign in
+                </Link>
+              )}
             </nav>
           </div>
         </header>

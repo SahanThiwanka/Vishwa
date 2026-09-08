@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { canDecide, requireSession } from "@/lib/dal";
 import { prisma } from "@/lib/db";
 import { appraise, criteriaTree, creditRisk, developmentImpact } from "@/lib/scoring";
 import type { AppraisalInput } from "@/lib/scoring/types";
@@ -47,6 +48,7 @@ export async function createAppraisal(
 ) {
   // Server Actions accept direct POSTs, so this input is untrusted regardless
   // of what the form component sends.
+  const session = await requireSession();
   const header = validate(appraisalHeaderSchema, rawHeader, "appraisal details");
   const inputs = validate(
     appraisalInputSchema, rawInputs, "criterion inputs",
@@ -87,8 +89,8 @@ export async function createAppraisal(
         create: [
           {
             action: "CREATED",
-            actor: header.appraisalOfficer,
-            role: "Appraisal Officer",
+            actor: session.displayName,
+            role: session.role,
             note: `Appraisal created against model ${result.modelVersion}`,
           },
           {
@@ -111,18 +113,40 @@ export async function createAppraisal(
 export async function recordDecision(
   rawId: string,
   rawAction: "RECOMMENDED" | "APPROVED" | "DECLINED",
-  rawActor: string,
-  rawRole: string,
   rawNote?: string,
 ) {
-  const { id, action, actor, role, note } = validate(
+  // The signatory is whoever is signed in. Before authentication existed this
+  // took a typed name, which anyone could set to anyone - an audit trail of
+  // self-declared names records nothing.
+  const session = await requireSession();
+
+  const { id, action, note } = validate(
     decisionSchema,
-    { id: rawId, action: rawAction, actor: rawActor, role: rawRole, note: rawNote },
+    {
+      id: rawId,
+      action: rawAction,
+      actor: session.displayName,
+      role: session.role,
+      note: rawNote,
+    },
     "decision",
   );
 
+  if (!canDecide(session.role, action)) {
+    throw new Error(
+      `Your role (${session.role}) is not permitted to record "${action}".`,
+    );
+  }
+
   const appraisal = await prisma.appraisal.findUnique({ where: { id } });
   if (!appraisal) throw new Error("Appraisal not found");
+
+  if (appraisal.status === "APPROVED" || appraisal.status === "DECLINED") {
+    throw new Error(
+      "This appraisal is already settled. Raise a new appraisal rather than " +
+        "altering a signed decision.",
+    );
+  }
 
   await prisma.appraisal.update({
     where: { id },
@@ -131,8 +155,8 @@ export async function recordDecision(
       events: {
         create: {
           action,
-          actor,
-          role,
+          actor: session.displayName,
+          role: session.role,
           note,
           scoreSnapshot: appraisal.creditRiskScore,
         },

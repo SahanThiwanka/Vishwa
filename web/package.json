@@ -12,7 +12,9 @@
     "test:scoring": "tsx scripts/smoke-scoring.ts",
     "sync-model": "node ../scripts/sync-model.mjs",
     "db:gen-postgres": "node scripts/gen-postgres-schema.mjs",
-    "db:migrate:postgres": "cross-env PRISMA_SCHEMA=prisma/schema.postgres.prisma prisma migrate deploy"
+    "db:migrate:postgres": "cross-env PRISMA_SCHEMA=prisma/schema.postgres.prisma prisma migrate deploy",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
@@ -34,7 +36,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "^22.20.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "cross-env": "^10.1.0",
@@ -42,6 +44,7 @@
     "eslint-config-next": "16.3.4",
     "tailwindcss": "^4",
     "tsx": "^4.23.13",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^5.0.0"
   }
 }

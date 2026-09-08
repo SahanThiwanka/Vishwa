@@ -6,6 +6,14 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { appraise, criteriaTree, creditRisk, developmentImpact } from "@/lib/scoring";
 import type { AppraisalInput } from "@/lib/scoring/types";
+import {
+  appraisalHeaderSchema,
+  appraisalInputSchema,
+  decisionSchema,
+  elicitationResponseSchema,
+  respondentSchema,
+  validate,
+} from "@/lib/validation";
 
 export interface AppraisalHeader {
   businessName: string;
@@ -34,9 +42,16 @@ async function nextReference(branch: string): Promise<string> {
 }
 
 export async function createAppraisal(
-  header: AppraisalHeader,
-  inputs: AppraisalInput,
+  rawHeader: AppraisalHeader,
+  rawInputs: AppraisalInput,
 ) {
+  // Server Actions accept direct POSTs, so this input is untrusted regardless
+  // of what the form component sends.
+  const header = validate(appraisalHeaderSchema, rawHeader, "appraisal details");
+  const inputs = validate(
+    appraisalInputSchema, rawInputs, "criterion inputs",
+  ) as AppraisalInput;
+
   const result = appraise(inputs, criteriaTree);
   const credit = creditRisk(result);
   const development = developmentImpact(result);
@@ -94,12 +109,18 @@ export async function createAppraisal(
 }
 
 export async function recordDecision(
-  id: string,
-  action: "RECOMMENDED" | "APPROVED" | "DECLINED",
-  actor: string,
-  role: string,
-  note?: string,
+  rawId: string,
+  rawAction: "RECOMMENDED" | "APPROVED" | "DECLINED",
+  rawActor: string,
+  rawRole: string,
+  rawNote?: string,
 ) {
+  const { id, action, actor, role, note } = validate(
+    decisionSchema,
+    { id: rawId, action: rawAction, actor: rawActor, role: rawRole, note: rawNote },
+    "decision",
+  );
+
   const appraisal = await prisma.appraisal.findUnique({ where: { id } });
   if (!appraisal) throw new Error("Appraisal not found");
 
@@ -143,9 +164,18 @@ export interface Respondent {
 }
 
 export async function saveElicitation(
-  respondent: Respondent,
-  levels: ElicitationLevelResponse[],
+  rawRespondent: Respondent,
+  rawLevels: ElicitationLevelResponse[],
 ) {
+  const respondent = validate(respondentSchema, rawRespondent, "participant details");
+
+  if (!Array.isArray(rawLevels) || rawLevels.length === 0) {
+    throw new Error("Invalid submission — no responses were included");
+  }
+  const levels = rawLevels.map((l, i) =>
+    validate(elicitationResponseSchema, l, `response for section ${i + 1}`),
+  );
+
   // Upserted per (respondent, level) so a respondent who resumes or corrects a
   // level overwrites their earlier answer rather than creating a duplicate that
   // would silently double their influence on the aggregated weights.

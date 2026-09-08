@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { DecisionPanel } from "@/components/DecisionPanel";
 import { prisma } from "@/lib/db";
 import { criteriaTree } from "@/lib/scoring";
 import type { AppraisalResult, ObjectiveResult } from "@/lib/scoring/types";
@@ -107,6 +108,8 @@ export default async function AppraisalDetail({
       {/* Explainability: how each dimension and criterion moved the score. */}
       {credit && <Breakdown objective={credit} />}
       {development && <Breakdown objective={development} />}
+
+      <DecisionPanel appraisalId={appraisal.id} status={appraisal.status} />
 
       <section className="rounded-lg border border-slate-200 bg-white p-5">
         <h2 className="text-sm font-semibold text-slate-900">Audit trail</h2>

@@ -120,9 +120,10 @@ Dataset download instructions: see `research/data/DATASETS.md`.
 | BWM elicitation instrument | ✅ built and verified |
 | BWM solver + weight derivation | ✅ self-tested |
 | **Criterion weights** | ⛔ **PLACEHOLDER — no respondents yet** |
-| Thesis chapters 1–6 | ✅ drafted (~10,400 words) |
+| Thesis chapters 1–6 | ✅ drafted (~11,200 words) |
 | Thesis §6.1–6.2 (elicitation results) | ⛔ **awaiting respondents** |
-| Journal/conference paper | ⬜ not started |
+| Conference paper (Term contamination) | ✅ drafted; needs a systematic search for affected prior work |
+| Deployment path (Vercel + Postgres) | ✅ documented, not yet executed |
 
 ### The one blocker
 

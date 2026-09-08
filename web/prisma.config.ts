@@ -8,8 +8,11 @@ import { defineConfig } from "prisma/config";
 // This file is NOT loaded through Next.js, so .env is not read automatically.
 // process.env is used directly, with the local SQLite file as the default so a
 // fresh clone can migrate and run without any environment setup.
+//
+// PRISMA_SCHEMA selects the PostgreSQL schema for deployment:
+//   PRISMA_SCHEMA=prisma/schema.postgres.prisma npx prisma migrate deploy
 export default defineConfig({
-  schema: path.join("prisma", "schema.prisma"),
+  schema: process.env.PRISMA_SCHEMA ?? path.join("prisma", "schema.prisma"),
   migrations: {
     path: path.join("prisma", "migrations"),
   },

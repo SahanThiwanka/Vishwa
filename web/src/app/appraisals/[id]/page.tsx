@@ -5,6 +5,9 @@ import { prisma } from "@/lib/db";
 import { criteriaTree } from "@/lib/scoring";
 import type { AppraisalResult, ObjectiveResult } from "@/lib/scoring/types";
 
+// Reads one appraisal at request time; must not be cached across requests.
+export const dynamic = "force-dynamic";
+
 const CURRENCY = new Intl.NumberFormat("en-LK", { maximumFractionDigits: 0 });
 
 function bandClass(code?: string | null) {

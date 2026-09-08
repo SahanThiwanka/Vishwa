@@ -1,0 +1,143 @@
+// GENERATED FILE - DO NOT EDIT.
+//
+// Derived from prisma/schema.prisma by scripts/gen-postgres-schema.mjs.
+// Edit the SQLite schema and re-run `npm run db:gen-postgres`.
+//
+// Used for production deployment only. Local development uses SQLite so the
+// system runs with no external services.
+
+// SME Credit Appraisal - data model
+//
+// SQLite is used so the system runs with no external services: clone, install,
+// run. Swapping to PostgreSQL for a production deployment is a change to the
+// `provider` line and the connection string only; no model changes are needed.
+//
+// Scores are NOT stored as loose columns. Each appraisal keeps the exact inputs
+// it was scored from plus the full result document and the model version that
+// produced it. That makes every stored recommendation reproducible after the
+// criteria tree or its weights change - which they will, once elicitation
+// replaces the placeholder weights. An appraisal signed in March must still be
+// explainable in September under the model that actually produced it.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+// Prisma 7 moved the connection URL out of the schema. It now lives in
+// prisma.config.ts for migration commands, and the runtime client receives a
+// driver adapter (see src/lib/db.ts).
+datasource db {
+  provider = "postgresql"
+}
+
+model Appraisal {
+  id        String @id @default(cuid())
+  reference String @unique
+
+  // Section 1 of the People's Bank form: General Information
+  branch         String
+  region         String?
+  district       String?
+  facilityAmount Float
+  facilityType   String
+  productProject String?
+  // New / Expansion / Cost Overrun / Working Capital
+  projectType    String?
+
+  // Section 2.1-2.7: Borrower
+  businessName String
+  registrationNo String?
+  businessStarted DateTime?
+  organisationType String?
+  address       String?
+
+  appraisalOfficer String
+  dateApplied      DateTime?
+  dateVisited      DateTime?
+
+  // Criterion inputs, keyed by criterion id, as submitted.
+  inputs String
+
+  // Full AppraisalResult document as computed. Null while still a draft.
+  result       String?
+  modelVersion String?
+
+  // Denormalised for list views and portfolio analytics. Always re-derived
+  // from `result`, never edited independently.
+  creditRiskScore  Float?
+  developmentScore Float?
+  riskBand         String?
+  completeness     Float?
+
+  // DRAFT | SUBMITTED | RECOMMENDED | APPROVED | DECLINED
+  status String @default("DRAFT")
+
+  events AuditEvent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+// Mirrors the sign-off chain in section 7 of the form: the appraisal officer
+// prepares, a recommending officer endorses, Head Office approves. Every
+// transition is recorded and nothing is ever deleted - an appraisal's history
+// is part of the audit trail a bank needs.
+model AuditEvent {
+  id          String @id @default(cuid())
+  appraisalId String
+
+  // CREATED | UPDATED | SCORED | SUBMITTED | RECOMMENDED | APPROVED | DECLINED | EXPORTED
+  action String
+  actor  String
+  role   String?
+  note   String?
+
+  // Score at the time of the event, so the history shows how it moved.
+  scoreSnapshot Float?
+
+  appraisal Appraisal @relation(fields: [appraisalId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([appraisalId, createdAt])
+}
+
+// Best-Worst Method elicitation (Rezaei 2015).
+//
+// Classical pairwise AHP over this criteria tree would need 168 comparisons per
+// respondent - roughly an hour, and the fatigue-driven inconsistency would make
+// the resulting weights worthless. BWM needs 2n-3 comparisons per level, which
+// brings the whole instrument to 86 (~15 minutes) and carries a well-defined
+// consistency ratio.
+//
+// One row per respondent per level of the tree. `level` is either "objective:
+// <id>" for the dimension comparison, or "dimension:<id>" for the criteria
+// within one dimension.
+model ElicitationResponse {
+  id String @id @default(cuid())
+
+  respondentCode String
+  yearsExperience Int?
+  institution     String?
+  role            String?
+
+  level String
+
+  // Criterion/dimension ids chosen as most and least important at this level.
+  best  String
+  worst String
+
+  // { "<id>": 1-9 } - how much more important the BEST is than each other item.
+  bestToOthers String
+  // { "<id>": 1-9 } - how much more important each item is than the WORST.
+  othersToWorst String
+
+  createdAt DateTime @default(now())
+
+  @@unique([respondentCode, level])
+  @@index([level])
+}

@@ -75,7 +75,7 @@ interface LevelAnswer {
 }
 
 export function ElicitationWizard() {
-  const levels = useMemo(buildLevels, []);
+  const levels = useMemo(() => buildLevels(), []);
 
   const [respondent, setRespondent] = useState<Respondent>({
     respondentCode: "",

@@ -2,6 +2,11 @@ import Link from "next/link";
 
 import { prisma } from "@/lib/db";
 
+// The dashboard reads appraisals at request time. Without this it is
+// prerendered at build, and a deployment would serve the list as it stood when
+// the build ran - never showing anything created afterwards.
+export const dynamic = "force-dynamic";
+
 function bandClass(code: string | null) {
   switch (code) {
     case "A": return "bg-emerald-50 text-emerald-700 border-emerald-300";

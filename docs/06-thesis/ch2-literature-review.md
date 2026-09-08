@@ -30,6 +30,37 @@ practice (Institute of Policy Studies, Sri Lanka). This establishes the practica
 motivation for the present study but does not address the appraisal *process*
 itself, which is where this research is situated.
 
+### 2.2.1 Variability in human credit judgement
+
+This study is premised on manual appraisal being inconsistent. That premise
+should not rest on assertion, and it does not have to.
+
+Cortés, Duchin and Sosyura (2016) provide causal evidence. Using daily
+fluctuations in local sunshine as an instrument for sentiment, they show that
+the mood of lower-level financial officers affects day-to-day credit decisions:
+positive sentiment raises approval rates, negative sentiment lowers them by a
+larger magnitude, and the variation affects subsequent financial performance and
+produces real effects. Officers are, measurably, influenced by something with no
+bearing whatever on the borrower.
+
+Two features of their result matter directly here. The effects are **stronger
+when decisions require more discretion and when reviews are less automated** —
+which describes the People's Bank instrument precisely, since clause 7 asks for
+a viability judgement with no stated procedure for reaching it. And the mechanism
+is not incompetence but ordinary human variability, which is why the response
+pursued in this study is to structure the judgement rather than to remove the
+officer.
+
+Related work reaches similar conclusions from other directions: studies of
+discretion in loan rate setting, and of loan officers' subjective judgement in
+microfinance, where risk classification rests on recollected professional
+experience rather than an explicit model.
+
+The premise is therefore supported by the literature even though this study does
+not itself measure inter-rater reliability. That omission remains the most
+significant gap in the present work (§6.4), and Cortés et al. indicate what a
+well-designed measurement would look for.
+
 ## 2.3 Multi-criteria decision methods in credit evaluation
 
 ### 2.3.1 Fuzzy MCDM for credit scoring
@@ -132,6 +163,15 @@ The searched literature discusses feature importance in this dataset, and notes
 General treatments of leakage in credit modelling identify interest rate, issue
 date and outstanding principal as fields to remove.
 
+Leakage of this kind is a recognised and widespread problem in ML-based science
+rather than an isolated curiosity. Kapoor and Narayanan (2023) surveyed
+literature across seventeen fields and found leakage affecting **294 papers**,
+in some cases producing wildly overoptimistic conclusions, and set out a taxonomy
+of eight leakage types. Their central observation — that leakage is the single
+largest cause of irreproducibility in ML-based science — is the frame within
+which Chapter 5's finding should be read: not as a defect peculiar to one
+dataset, but as an instance of a documented, recurring failure.
+
 **No located source reports that the `Term` field itself carries outcome
 information.** Chapter 5 presents evidence that it does. This is stated as a
 finding the author has not found documented elsewhere, which is weaker than a
@@ -170,6 +210,14 @@ to 3 are real but incremental, and are stated as such.
 ---
 
 ## References
+
+Cortés, K.R., Duchin, R. and Sosyura, D. (2016) 'Clouded judgment: The role of
+sentiment in credit origination', *Journal of Financial Economics*, 121(2),
+pp. 392–413.
+
+Kapoor, S. and Narayanan, A. (2023) 'Leakage and the reproducibility crisis in
+machine-learning-based science', *Patterns*, 4(9), 100804.
+doi:10.1016/j.patter.2023.100804.
 
 Arvanitis, Y., Stampini, M. and Vencatachellum, D. (2015) 'Balancing development
 returns and credit risks: project appraisal in a multilateral development bank',

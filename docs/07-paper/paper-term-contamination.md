@@ -71,6 +71,20 @@ prediction time — is a recognised failure mode in applied machine learning, an
 general treatments of credit modelling identify fields such as interest rate,
 issue date and outstanding principal as requiring removal.
 
+Its prevalence is not marginal. Kapoor and Narayanan [3] surveyed ML-based
+science across seventeen fields and found leakage affecting **294 papers**, in
+some cases producing wildly overoptimistic conclusions, and argue that leakage is
+the single largest cause of irreproducibility in the area. They set out a
+taxonomy of eight leakage types ranging from textbook errors to open research
+problems.
+
+The case reported here is of a kind their taxonomy anticipates but which is
+harder to detect than the textbook forms: the offending field is **documented as
+legitimate**, is available at prediction time under its documented meaning, and
+is economically meaningful — so it passes the checks a careful analyst would
+apply. It is caught only by noticing that the *shape* of its relationship with
+the outcome is not one any economic mechanism could produce.
+
 Within the SBA National dataset specifically, the literature we surveyed
 identifies `Term`, disbursement and approval amounts as significant predictors of
 default, and uses them accordingly. The dataset's own codebook documents `Term` as
@@ -268,6 +282,10 @@ For work using the SBA National dataset:
 4. **Include a meaningless-variable probe.** The roundness boolean costs nothing
    to compute and bounds how much apparent performance is artefact.
 
+These extend, for this dataset, the general remedies Kapoor and Narayanan [3]
+propose — principally that authors document leakage checks explicitly rather than
+leaving them implicit.
+
 More generally: **an unexpectedly strong result should be treated as a suspected
 defect until explained.** The contamination reported here was found only because
 an AUC of 0.9726 was investigated rather than published. It would have passed
@@ -292,6 +310,10 @@ Education*, vol. 26, no. 1, pp. 55–66, 2018, doi:10.1080/10691898.2018.1434342
 [2] P. K. Roy and K. Shaw, "A multicriteria credit scoring model for SMEs using
 hybrid BWM and TOPSIS," *Financial Innovation*, vol. 7, no. 1, 2021,
 doi:10.1186/s40854-021-00295-5.
+
+[3] S. Kapoor and A. Narayanan, "Leakage and the reproducibility crisis in
+machine-learning-based science," *Patterns*, vol. 4, no. 9, 100804, 2023,
+doi:10.1016/j.patter.2023.100804.
 
 *Additional references to be completed on submission: general treatments of target
 leakage in applied machine learning; prior published results on the SBA National
@@ -326,7 +348,9 @@ No value in this paper was entered by hand.
 2. **Contact the SBA or the dataset authors** about the mechanism. A reply
    converts §IV-D from an open question into a complete account and materially
    strengthens the paper.
-3. **Complete the leakage literature review** — reference [3] onward.
+3. **Complete the leakage literature review** — reference [4] onward. Kapoor and
+   Narayanan's taxonomy is cited; position this case explicitly against the
+   specific type it instantiates.
 4. **Reformat to the target venue's template** (IEEE two-column or the venue's
    equivalent).
 

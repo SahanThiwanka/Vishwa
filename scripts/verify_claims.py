@@ -48,12 +48,37 @@ def load_json(name: str) -> dict:
 
 
 def documents() -> dict[str, str]:
+    """The source chapters, the restructured sections, and the paper.
+
+    Both copies of the thesis content are checked. The ch*.md chapters are the
+    editable originals; the numbered 0N-*.md sections are generated from them by
+    restructure_thesis.py and are what the submitted document is built from. If
+    a chapter is edited without re-running the restructure, the two diverge and
+    the submitted document silently carries stale numbers - so both are verified.
+    """
     docs = {}
-    for path in sorted(CHAPTERS.glob("ch*.md")):
-        docs[path.name] = path.read_text(encoding="utf-8")
+    for pattern in ("ch*.md", "0[0-9]-*.md"):
+        for path in sorted(CHAPTERS.glob(pattern)):
+            docs[path.name] = path.read_text(encoding="utf-8")
     if PAPER.exists():
         docs[PAPER.name] = PAPER.read_text(encoding="utf-8")
     return docs
+
+
+def check_restructure_current() -> tuple[bool, str]:
+    """Are the generated sections newer than the chapters they derive from?"""
+    sources = list(CHAPTERS.glob("ch*.md"))
+    generated = list(CHAPTERS.glob("0[1-9]-*.md"))
+    if not sources or not generated:
+        return True, "OK    restructure check skipped (files absent)"
+
+    newest_source = max(p.stat().st_mtime for p in sources)
+    oldest_generated = min(p.stat().st_mtime for p in generated)
+
+    if newest_source > oldest_generated + 1:
+        return False, ("FAIL  a source chapter is newer than the generated "
+                       "sections - re-run restructure_thesis.py")
+    return True, "OK    generated sections are current with source chapters"
 
 
 def check(label: str, expected: str, docs: dict[str, str],
@@ -167,6 +192,8 @@ def main() -> int:
     n_dims = sum(len(o["dimensions"]) for o in tree["objectives"])
     checks.append(check("criteria count", str(n_criteria), docs))
     checks.append(check("dimension count", str(n_dims), docs))
+
+    checks.append(check_restructure_current())
 
     # ---- placeholder-weight guard -----------------------------------------
     state = tree["weightStatus"]["state"]

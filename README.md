@@ -154,7 +154,7 @@ cases would still band differently.
 
 | Path | What |
 |---|---|
-| `docs/06-thesis/THESIS.docx` | Assembled thesis |
+| `docs/06-thesis/THESIS-NSBM.docx` | Thesis, NSBM Senate format |
 | `docs/07-paper/paper-term-contamination.md` | Conference paper draft |
 | `docs/07-paper/affected-work-search.md` | Systematic search — **read before citing §VIII** |
 | `docs/02-literature/bibliography.md` | 50 sources, verification status per entry |
@@ -175,6 +175,8 @@ python research/src/statistical_tests.py  # CIs, DeLong tests, calibration
 python research/src/weight_sensitivity.py # weight perturbation Monte Carlo
 python research/src/make_figures.py       # all figures
 python research/src/derive_weights.py     # weights (needs responses)
-python scripts/build_thesis.py            # assemble THESIS.docx
+python scripts/restructure_thesis.py      # chapters -> NSBM section order
+python scripts/build_thesis_nsbm.py       # assemble THESIS-NSBM.docx
+python scripts/build_paper.py             # paper + supervisor briefing
 cd web && npm test && npm run dev
 ```

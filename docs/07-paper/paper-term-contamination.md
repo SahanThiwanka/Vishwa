@@ -80,12 +80,21 @@ the single largest cause of irreproducibility in the area. They set out a
 taxonomy of eight leakage types ranging from textbook errors to open research
 problems.
 
-The case reported here is of a kind their taxonomy anticipates but which is
-harder to detect than the textbook forms: the offending field is **documented as
-legitimate**, is available at prediction time under its documented meaning, and
-is economically meaningful — so it passes the checks a careful analyst would
-apply. It is caught only by noticing that the *shape* of its relationship with
-the outcome is not one any economic mechanism could produce.
+The case reported here falls squarely in their category **[L2], "model uses
+features that are not legitimate"**, and specifically in the instance they name:
+"if a feature is a proxy for the outcome variable". What makes it harder to
+detect than the textbook forms of [L2] is that the offending field is
+**documented as legitimate**, is available at prediction time under its
+documented meaning, and is economically meaningful — so it passes the checks a
+careful analyst would apply, and it passes their own model info sheet, which asks
+the researcher to argue why each feature is legitimate. `Term` can be argued
+legitimate, correctly, from the codebook. It is caught only by noticing that the
+*shape* of its relationship with the outcome is not one any economic mechanism
+could produce.
+
+This is the respect in which the case extends rather than merely instantiates
+their taxonomy. Their remedy is to have the researcher justify each feature; here
+that justification is available and sound, and the leakage is still present.
 
 Within the SBA National dataset specifically, the literature we surveyed
 identifies `Term`, disbursement and approval amounts as significant predictors of

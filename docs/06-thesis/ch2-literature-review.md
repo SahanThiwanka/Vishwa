@@ -103,6 +103,23 @@ procedure for reaching it. And the mechanism is ordinary human variability rathe
 than incompetence, which is why the response pursued here is to *structure* the
 judgement rather than remove the officer.
 
+Their most directly relevant result is finer than the headline. Examining the
+reasons officers recorded for their decisions, they find that **a loan with the
+same quantitative measures of risk is less likely to be rejected for subjective
+reasons on sunny days**. It is not the arithmetic that moves; it is the
+judgemental residue around it — which is precisely the part of the People's Bank
+form that this study formalises, and precisely the part it leaves to the officer
+where it cannot be formalised.
+
+**The setting must be stated, because it is not this one.** Their evidence comes
+from US residential mortgage applications in the confidential Home Mortgage
+Disclosure Act registry — standardised consumer lending, not SME appraisal, and
+not Sri Lanka. Nothing transfers automatically. What supports the transfer is the
+direction of their own cross-sectional result: the effect grows as decisions
+become more discretionary and less automated, and a narrative SME appraisal form
+completed by hand sits further along that dimension than a residential mortgage
+does. That is an argument, not an observation, and it is offered as one.
+
 Related work reaches similar conclusions from other directions: studies of
 discretion in loan rate setting, and of loan officers' subjective judgement in
 microfinance, where risk classification rests on recollected professional

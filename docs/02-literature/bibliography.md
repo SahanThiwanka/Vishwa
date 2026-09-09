@@ -83,12 +83,31 @@ pp. 1891–1921.
 
 ## 3. Judgement, discretion and inconsistency in lending
 
-◐ **Cortés, K.R., Duchin, R. and Sosyura, D.** (2016) 'Clouded judgment: The role
+✅ **Cortés, K.R., Duchin, R. and Sosyura, D.** (2016) 'Clouded judgment: The role
 of sentiment in credit origination', *Journal of Financial Economics*, 121(2),
 pp. 392–413.
-> **The citation supporting this study's premise.** Officers' approvals move with
-> mood (instrumented by sunshine), and the effect is larger where discretion is
-> higher and review less automated.
+> **READ IN FULL** — Federal Reserve Bank of Cleveland Working Paper 16-01
+> (January 2016), the open version of the same study. The journal text has not
+> been compared line by line.
+>
+> **The citation supporting this study's premise, and it holds.** Every claim the
+> thesis makes from it is in the abstract verbatim: sunshine as an instrument for
+> sentiment, positive sentiment raising approvals, negative sentiment having "the
+> opposite effect of a larger magnitude", effects "stronger when financial
+> decisions require more discretion, when reviews are less automated", and the
+> variation affecting ex-post performance with real effects.
+>
+> Two things the reading added. First, a finer result that is closer to this
+> study's target than the headline: examining officers' recorded reasons, a loan
+> with the same quantitative measures of risk is **less likely to be rejected for
+> subjective reasons on sunny days**. The arithmetic does not move; the
+> judgemental residue does.
+>
+> Second, a limit that must be declared. The setting is **US residential mortgage
+> applications** from the confidential HMDA registry — standardised consumer
+> lending, not SME appraisal and not Sri Lanka. §2.4 now says so. The transfer
+> argument rests on the direction of their cross-sectional result rather than on
+> the setting matching.
 
 ✅ **SharafEldin, M.A., Idrees, A.M. and Ouf, S.** (2025) 'A Proposed Framework
 for Loan Default Prediction Using Machine Learning Techniques', *International
@@ -248,11 +267,24 @@ algorithms
 
 ## 8. Data quality, leakage and reproducibility
 
-◐ **Kapoor, S. and Narayanan, A.** (2023) 'Leakage and the reproducibility crisis
+✅ **Kapoor, S. and Narayanan, A.** (2023) 'Leakage and the reproducibility crisis
 in machine-learning-based science', *Patterns*, 4(9), 100804.
 doi:10.1016/j.patter.2023.100804
-> Leakage across 17 fields affecting 294 papers; a taxonomy of eight types. The
-> frame within which Chapter 5's finding sits.
+> **READ IN FULL.** Leakage across 17 fields affecting 294 papers; a taxonomy of
+> eight types; model info sheets as the proposed remedy; a reproducibility case
+> study on civil war prediction. All verified against the published text.
+>
+> **Cite the published version's numbers, not the preprint's.** arXiv:2207.07048
+> v1 reports **329** papers where the *Patterns* version reports **294**. The
+> thesis and paper cite the journal version, so 294 is correct for them; a reader
+> checking against the preprint would find a different figure.
+>
+> The classification is now specific rather than vague. This study's finding is
+> **[L2], "model uses features that are not legitimate"**, in the instance they
+> name explicitly — "if a feature is a proxy for the outcome variable". Worth
+> noting for the paper's argument: their remedy is a model info sheet asking the
+> researcher to argue why each feature is legitimate, and for `Term` that
+> argument is available and sound from the codebook. The leakage survives it.
 
 ✅ **Li, M., Mickel, A. and Taylor, S.** (2018) '"Should This Loan be Approved or
 Denied?": A Large Dataset with Class Assignment Guidelines', *Journal of
@@ -385,9 +417,11 @@ details and obtain full text. Priority for that session, in order:
    rather than changing it.
 2. ~~Arvanitis et al. (2015)~~ — **done.** Read in full; the thesis's reading of
    it was wrong and has been corrected. See the entry above.
-3. Cortés et al. (2016) — the premise citation.
-4. Kapoor & Narayanan (2023) — for the leakage taxonomy classification.
-5. Li, Mickel & Taylor (2018) — the `Term` definition, quoted in the paper.
+3. ~~Cortés et al. (2016)~~ — **done.** Premise holds; setting limit now declared.
+4. ~~Kapoor & Narayanan (2023)~~ — **done.** Classification is [L2]; note the
+   published version says 294 papers where the preprint says 329.
+5. ~~Li, Mickel & Taylor (2018)~~ — **done.** Quotation verbatim, and the reading
+   produced §5.3.5.
 6. The candidate affected studies in `affected-work-search.md`.
 
 Everything else can be cited from verified bibliographic details for context,

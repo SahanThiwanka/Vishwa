@@ -141,17 +141,45 @@ properties and a linear model', *Omega*, 64, pp. 126–130.
 
 ## 5. MCDM applied to credit and finance
 
-◐ **Roy, P.K. and Shaw, K.** (2021) 'A multicriteria credit scoring model for
-SMEs using hybrid BWM and TOPSIS', *Financial Innovation*, 7(1).
+✅ **Roy, P.K. and Shaw, K.** (2021) 'A multicriteria credit scoring model for
+SMEs using hybrid BWM and TOPSIS', *Financial Innovation*, 7(1), article 77.
 doi:10.1186/s40854-021-00295-5
-> **The nearest precedent.** Establishes that BWM for SME credit scoring is not
-> novel. §2.3.3 withdraws that claim on this basis.
+> **READ IN FULL** (open access). **The nearest precedent, and the withdrawal it
+> prompted is correct** — the paper does exactly what an earlier draft of this
+> study claimed as novel: BWM for criteria weights, TOPSIS to score SME
+> applicants, financial and non-financial criteria together. §2.5.3 withdraws the
+> claim on this basis and the reading confirms the withdrawal rather than
+> softening it.
+>
+> Detail that matters for positioning: **30 subcriteria**, finalised by a panel of
+> **12 experts** (7 banking/SME lending, 5 from SMEs that had obtained credit);
+> validated against a commercial rating agency on a case study of **31 SMEs**,
+> reporting 90.32% accuracy and Type-II error 14.28% against the commercial
+> model's 28.57%.
+>
+> They have the elicitation this study lacks. This study has a validation sample
+> that can carry a conclusion — 31 firms means 90.32% accuracy is 28 of 31, and
+> the reported Type-II rate is one or two cases. They also aggregate to a single
+> TOPSIS closeness coefficient, where this study reports two objectives and
+> refuses to combine them.
 
-◐ **Gutiérrez-Nieto, B., Serrano-Cinca, C. and Camón-Cala, J.** (2016) 'A Credit
+✅ **Gutiérrez-Nieto, B., Serrano-Cinca, C. and Camón-Cala, J.** (2016) 'A Credit
 Score System for Socially Responsible Lending', *Journal of Business Ethics*,
 133(4), pp. 691–701. doi:10.1007/s10551-014-2448-5
-> Establishes that scoring social impact alongside credit risk is not novel
-> either. §2.4.1 withdraws that claim.
+> **READ IN FULL** (author e-offprint, obtained via the FIR-PRI awards site).
+> **The withdrawal it prompted is correct**: the paper does score social impact
+> alongside financial variables, so §2.6.1's claim stands as withdrawn.
+>
+> Specifics: the method is **AHP** in absolute-measurement mode, not BWM — chosen,
+> they say, largely because the algorithm was already in a spreadsheet and the
+> analysts found it easy. Social outcomes are valued through **Social Return on
+> Investment**. Weights come from the board of the lending cooperative, aggregated
+> by geometric mean. Demonstrated on **one** real application, a bike courier
+> company's loan request to the Spanish cooperative Coop57.
+>
+> They merge financial ratios and social indicators into a single assessment.
+> That is the difference this study can still claim: two objectives kept apart,
+> with §5.6b showing the separation changes the answer for 88.2% of facilities.
 
 ⬜ An integrated fuzzy credit rating model using fuzzy-BWM and fuzzy-TOPSIS-Sort-C,
 *Complex & Intelligent Systems* (2022), doi:10.1007/s40747-022-00823-5
@@ -341,9 +369,9 @@ whose origin has not been checked.
 The ⬜ entries are real and relevant; they need a library session to confirm
 details and obtain full text. Priority for that session, in order:
 
-1. Roy & Shaw (2021) and Gutiérrez-Nieto et al. (2016) — the two papers on which
-   claims were withdrawn. If either says something different from its abstract,
-   the withdrawal reasoning changes.
+1. ~~Roy & Shaw (2021) and Gutiérrez-Nieto et al. (2016)~~ — **done.** Both read
+   in full. Both withdrawals stand, and the readings sharpened the positioning
+   rather than changing it.
 2. ~~Arvanitis et al. (2015)~~ — **done.** Read in full; the thesis's reading of
    it was wrong and has been corrected. See the entry above.
 3. Cortés et al. (2016) — the premise citation.

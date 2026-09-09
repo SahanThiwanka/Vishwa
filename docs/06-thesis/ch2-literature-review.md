@@ -153,13 +153,31 @@ usable and unusable responses.
 **Roy and Shaw (2021) must be acknowledged plainly.** They construct a
 multicriteria credit scoring model for SMEs using exactly the hybrid this study's
 proposal treated as novel: BWM to determine criteria weights, combined with a
-ranking method (TOPSIS) to score applicants. They report credit history, cash
-liquidity and repayment period as dominant criteria.
+ranking method (TOPSIS) to score applicants. Their instrument has 30 subcriteria
+finalised by a panel of 12 experts — seven from banking and SME lending, five
+from SMEs that had obtained credit — and they validate it against a commercial
+rating agency's ratings on a real-life case study, reporting 90.32% accuracy and
+a Type-II error rate of 14.28% against the commercial model's 28.57%.
 
 The implication is direct: **applying BWM to SME credit scoring is not novel.** An
 earlier draft of this research claimed the fuzzy-MCDM combination as its
 methodological contribution. The literature does not support that claim, and it is
 withdrawn here.
+
+Two differences are worth stating precisely, because they cut in opposite
+directions and the honest positioning depends on both.
+
+Roy and Shaw **elicited their weights**; this study did not (§6.1), which is the
+more serious gap of the two and is theirs to claim. Against that, their
+validation rests on **31 SMEs** — an accuracy of 90.32% is 28 firms out of 31,
+and a Type-II rate of 14.28% is one or two misclassifications. A sample that size
+cannot separate a good model from a fortunate one. This study validates its
+scoring method on 652,284 facilities with realised outcomes, and reports that the
+expert-structured scorecard fails on them (§5.6).
+
+They also aggregate. TOPSIS returns a single closeness coefficient, so
+development and credit considerations, where both are present, are resolved into
+one number. This study reports two and refuses to combine them.
 
 Related work populates the space further: fuzzy BWM with fuzzy TOPSIS for
 sustainable credit scoring, fuzzy-BWM with TOPSIS-Sort-C for credit rating, fuzzy
@@ -182,10 +200,20 @@ environment and health, and using MCDM to combine them. Their system yields not
 only a score but an account of an application's strengths and weaknesses.
 
 This narrows the novelty claim again: **scoring social impact alongside credit
-risk has been done.** The difference here is institutional grounding — the
-development criteria in this study are not selected by the researcher from a
-development framework, but taken from clause 5 of an instrument a state bank
-already uses in production.
+risk has been done.** Their method is AHP in its absolute-measurement mode, with
+social outcomes valued through Social Return on Investment, and it is
+demonstrated on a single real application — a bike courier company's loan request
+to a Spanish financial services cooperative, whose board supplied the preference
+weights. AHP was chosen, they report, largely because the algorithm was already
+available in a spreadsheet and the cooperative's analysts found it easy to use.
+
+Two differences remain. The first is institutional grounding: the development
+criteria here are not selected by the researcher from a development framework but
+taken from clause 5 of an instrument a state bank already uses in production. The
+second is aggregation. Their system merges financial ratios and social indicators
+in one model to produce a single assessment; this study keeps the two objectives
+apart and never issues a combined figure, which §5.6b shows changes the answer for
+88.2% of facilities.
 
 ### 2.6.2 Development returns and credit risk
 

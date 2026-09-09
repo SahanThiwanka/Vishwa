@@ -83,13 +83,13 @@ development mandate cannot.
 > **Novelty claim corrected.** An earlier version of this file claimed no published model handles both
 > objectives at once. That is false — Gutiérrez-Nieto, Serrano-Cinca & Camón-Cala (2016, *J. Business
 > Ethics*) score social impact alongside credit risk, and Roy & Shaw (2021, *Financial Innovation*)
-> already apply BWM to SME credit scoring. Both claims are withdrawn in Chapter 2 (§2.3.3, §2.4.1).
+> already apply BWM to SME credit scoring. Both claims are withdrawn in the literature review (Sections 3.5.3 and 3.6.1).
 >
 > What survives: the two objectives are **never aggregated** here, which prior work does do — and that
 > is supported by Arvanitis et al. (2015), who find development and credit concerns to be empirically
 > independent in development-bank appraisal. The substantial contributions are instead the `Term`
 > contamination finding and the methodological result that instrument-specific models cannot be
-> validated on datasets lacking their variables (§2.7).
+> validated on datasets lacking their variables (Section 3.8).
 
 ---
 
@@ -112,14 +112,16 @@ Dataset download instructions: see `research/data/DATASETS.md`.
 | Criteria tree — 49 criteria, clause-traceable | ✅ |
 | `Term` contamination finding | ✅ reproducible, figures generated |
 | Weight sensitivity (Monte Carlo) | ✅ robust at ±25%; structural asymmetry found |
-| AUC confidence intervals, DeLong, calibration | 🔄 running |
+| AUC confidence intervals, DeLong, calibration | ✅ CIs non-overlapping, p < 0.001 |
 | Bibliography | ✅ 50 entries, details verified |
-| Thesis chapters 1–6 | ✅ ~13,000 words |
+| Thesis, NSBM Senate format | ✅ ~14,400 words, 26 checks pass |
 | Conference paper | ✅ drafted |
 | Model card | ✅ |
 | Systematic search for affected prior work | ◐ evidence gathered, **verification outstanding** |
 | **Criterion weights** | ⛔ **PLACEHOLDER — no respondents** |
-| Thesis §6.1–6.2 (elicitation results) | ⛔ **awaiting respondents** |
+| Objective separability (RQ4) | ✅ r = +0.40, bands disagree 88.2% |
+| Cost-sensitive evaluation | ✅ |
+| Elicitation responses | ⛔ **none — RQ2 as originally posed unanswered** |
 | Inter-rater reliability study | ⛔ needs officers |
 
 ### System
@@ -146,7 +148,7 @@ and should not be made to. Until practitioners complete `/elicitation`:
 - RQ2 is unanswered
 - every score stays labelled as computed under placeholder weights
 
-Three respondents changes that. §5.6a bounds how much the placeholders distort
+Three respondents changes that. Section 5.16 bounds how much the placeholders distort
 results meanwhile — ranking holds to ρ ≈ 0.98 at ±25% perturbation — but 6–7% of
 cases would still band differently.
 

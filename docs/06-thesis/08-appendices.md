@@ -82,6 +82,10 @@ python research/src/statistical_tests.py      # intervals, DeLong, calibration
 python research/src/weight_sensitivity.py     # weight perturbation study
 python research/src/objective_independence.py # objective separability
 python research/src/cost_analysis.py          # cost-sensitive evaluation
+python research/src/modulus_probe.py          # is twelve arbitrary?
+python research/src/realestate_probe.py       # the documentation's own feature
+python research/src/fairness_analysis.py      # disparate impact, bootstrapped
+python research/src/missingness_analysis.py   # what withholding does
 python research/src/make_figures.py           # all figures
 python research/src/test_parity.py            # engine agreement check
 python research/src/bwm.py                    # solver self-test

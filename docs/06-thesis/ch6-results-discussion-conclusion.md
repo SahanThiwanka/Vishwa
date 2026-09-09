@@ -107,9 +107,13 @@ stressed cohort (§5.5b).
 matters.**
 
 Across 652,284 facilities the two scores correlate at r = +0.40, or +0.36 with
-the shared-input confound removed. That is *moderate*, and it **partly
-contradicts** the Arvanitis et al. (2015) independence result the design was
-justified on (§5.6b.1).
+the shared-input confound removed. That is *moderate*, and it removes the strong
+form of the premise the design was justified on. It does not, however, overturn
+Arvanitis et al. (2015). Their estimate was also positive (slope 0.048) and
+merely non-significant in 109 observations; this study measures the same
+direction at a sample size able to resolve it (§5.6b.1). What went wrong was the
+reading of that paper — an underpowered null carried forward as an established
+independence result — and this thesis made that error before correcting it.
 
 The practical case survives by a different route. The two objectives place the
 same facility in different risk bands **88.2% of the time**, and 38.4% differ by
@@ -310,7 +314,8 @@ elicitation costs. And the two objectives, while moderately correlated, place th
 same facility in different bands 88.2% of the time — so reporting them separately
 preserves information that a combined score would destroy, even though the
 independence premise that originally justified the separation does not hold on
-this population.
+this population. The design decision survives; the argument for it had to be
+rebuilt.
 
 The claim this thesis does **not** make is that a better credit scoring model has
 been built. The evidence does not support it, and Chapter 2 establishes that the

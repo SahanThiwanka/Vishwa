@@ -190,16 +190,30 @@ already uses in production.
 ### 2.6.2 Development returns and credit risk
 
 Arvanitis, Stampini and Vencatachellum (2015) examine ex-ante appraisal at the
-African Development Bank and report a result of direct consequence: **development
-and risk concerns considered during project appraisal are empirically independent
-of one another**, and no assumption should be made about one from the other.
+African Development Bank, and their result is the closest thing in the literature
+to a test of whether the two objectives need to be reported separately. They
+conclude that the variables weighed at appraisal, "whether they pertain to
+development or risk concerns, are rather independent from each other and no
+assumption should be made on one variable given information on the others".
 
-This is the strongest available justification for the design decision in
-Chapter 4. If the two objectives were strongly correlated, a single combined score
-would lose little. Because they are independent, aggregation destroys real
-information: a facility strong on credit and weak on development is a materially
-different proposition from one moderate on both, and a combined score renders them
-indistinguishable.
+**What that conclusion rests on has to be stated precisely, because it is weaker
+than the wording suggests.** Comparing development outcome ratings against credit
+risk ratings for the 109 operations that carried both, they find a *positive but
+statistically non-significant* relationship — a slope of 0.048 with a p-value of
+0.49 — and read it as showing the two factors to be "somewhat independent". A
+non-significant association in 109 observations is an absence of evidence, not
+evidence of absence: a sample that size cannot detect a moderate correlation, so
+the finding is consistent both with genuine independence and with a real
+association the study was underpowered to see. Their measured association is
+positive, which is worth carrying forward.
+
+The distinction matters for how the design decision in Chapter 4 is justified.
+The strong reading — that the objectives are independent, so aggregating them
+destroys information — is not available on this evidence. The weaker and
+defensible reading is that no one has shown the two can be inferred from each
+other, and that a bank with a development mandate therefore has no warrant for
+collapsing them into one number. §5.6b tests the association directly on a sample
+large enough to resolve it.
 
 ## 2.7 Explainability, regulation, and data quality
 
@@ -278,8 +292,9 @@ What the literature leaves open, and what this study addresses:
    state bank's production appraisal form and derives a computable model from it
    clause by clause, with traceability maintained as a design constraint.
 3. **Keeping dual objectives unaggregated.** Prior dual-objective systems combine
-   social and financial scores. Given Arvanitis et al.'s independence result, this
-   study reports them separately by design and never produces a combined figure.
+   social and financial scores. This study reports them separately by design and
+   never produces a combined figure, and — unlike the prior work — tests whether
+   the separation is warranted rather than assuming it (§5.6b).
 4. **The Sri Lankan state-bank context**, documented as finance-constrained but
    not studied at the level of appraisal process.
 

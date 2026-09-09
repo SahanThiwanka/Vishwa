@@ -119,10 +119,12 @@ model.
 This study therefore scores two objectives and **reports them separately, never
 combining them into a single figure**. Prior work has scored social impact
 alongside credit risk (§2.4.1); what is done differently here is the refusal to
-aggregate. That refusal is supported by evidence: appraisal at a multilateral
-development bank shows development and credit concerns to be empirically
-independent (§2.4.2), so a combined score would discard real information rather
-than summarise it.
+aggregate. The refusal was originally justified on evidence that development
+and credit concerns are independent at appraisal (§2.4.2). Chapter 5 tests that
+premise and finds the two moderately associated, so the justification is rebuilt
+on what the data does support: the two objectives place the same facility in
+different risk bands 88.2% of the time, and a combined score would discard that
+disagreement rather than summarise it.
 
 ## 1.6 Scope and delimitations
 
@@ -185,6 +187,6 @@ incremental, and are described as such throughout.
 A note on presentation. This thesis reports several things that did not work: a
 claimed contribution withdrawn after the literature review, a scorecard that
 failed to discriminate, a mechanism hypothesis tested and rejected, an elicitation
-designed but not administered, and an independence premise that its own data
-partly contradicts. These are reported because a study that presents only its
+designed but not administered, an independence premise that its own data
+overturns, and a source this thesis initially over-read. These are reported because a study that presents only its
 successes gives the reader no way to judge the reliability of any of them.

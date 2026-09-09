@@ -559,11 +559,17 @@ development weights deserve more respondents rather than fewer.
 ## 5.17 Are the two objectives independent? (RQ4)
 
 The model reports two scores and refuses to combine them. That decision was
-justified in §5.2.2 on Arvanitis, Stampini and Vencatachellum's (2015) finding
-that development and credit concerns are empirically independent in
-development-bank appraisal. Their result comes from one multilateral
-institution's project portfolio. It can be tested here on 652,284 small-business
-facilities with realised outcomes.
+justified in §5.2.2 on Arvanitis, Stampini and Vencatachellum [24], who report
+that development and credit concerns in development-bank appraisal are "rather
+independent from each other".
+
+As §3.6.2 sets out, their evidence is a *positive but non-significant*
+relationship — slope 0.048, p = 0.49 — across the 109 African Development Bank
+operations carrying both ratings. That is an underpowered null. A sample of 109
+cannot distinguish independence from a moderate association, so the premise the
+design rests on has never actually been tested with the power to resolve it.
+
+It can be here, on 652,284 small-business facilities with realised outcomes.
 
 ### 5.17.1 The objectives are not independent
 
@@ -583,9 +589,19 @@ The two proxy scores do not draw on disjoint variables, which inflates this:
 score — raw jobs supported — gives **r = +0.3563**. The confound accounts for
 part of the association but not most of it.
 
-**This partly contradicts the premise the design was justified on**, and is
-reported as such rather than omitted. On this population the two objectives
-co-move more than Arvanitis et al. found.
+**This does not contradict Arvanitis et al.; it resolves them.** Their estimate
+was positive too — slope 0.048 — and simply could not be separated from zero in
+109 observations. The direction found here is the same direction they measured,
+at a sample size that can actually detect it. The correct reading is not that the
+earlier study was wrong, but that a non-significant result in a small sample was
+carried forward, by this study among others, as though it had established
+independence. It had not.
+
+What is contradicted is the *strong* form of the premise — that the objectives
+are independent and therefore that aggregation destroys information. On this
+population they are moderately associated, and that form of the argument is no
+longer available. §5.17.2 sets out why the design decision nevertheless stands,
+by a different route.
 
 ### 5.17.2 The practical case survives by a different route
 

@@ -168,12 +168,36 @@ credit risk assessment, *Scientific Reports* (2025), doi:10.1038/s41598-025-2144
 
 ## 6. Development finance and dual objectives
 
-◐ **Arvanitis, Y., Stampini, M. and Vencatachellum, D.** (2015) 'Balancing
+✅ **Arvanitis, Y., Stampini, M. and Vencatachellum, D.** (2015) 'Balancing
 development returns and credit risks: project appraisal in a multilateral
 development bank', *Impact Assessment and Project Appraisal*, 33(3), pp. 195–206.
 doi:10.1080/14615517.2015.1041837
-> **Supports the decision not to aggregate the two objectives**: development and
-> credit concerns are found to be empirically independent.
+> **READ IN FULL, and this study had over-read it.** The text obtained and read
+> is the African Development Bank working-paper version - Working Paper Series
+> No. 186, November 2013, same three authors and same title in the form
+> 'Evidence from the African Development Bank's Experience'. The journal version
+> is paywalled and has not been compared line by line; nothing below depends on
+> wording unique to it.
+>
+> What the paper actually reports: comparing development outcome ratings against
+> credit risk ratings across the **109** operations carrying both, a **positive
+> but statistically non-significant** relationship, **slope 0.048, p = 0.49**,
+> which the authors read as the two factors being "somewhat independent". Their
+> abstract generalises this to variables at appraisal being "rather independent
+> from each other" with "no assumption ... made on one variable given information
+> on the others".
+>
+> **This is an underpowered null, not a demonstration of independence.** n = 109
+> cannot separate independence from a moderate association. The thesis originally
+> cited it as an established independence result and justified the
+> non-aggregation design on it; §2.6.2, §5.6b and §6.2 were corrected after this
+> was read. Note also that the significant result in the same paper is a
+> *different* pair - development outcomes against **additionality** (0.4 points
+> per point, n = 121) - which is not the relationship this study relies on.
+>
+> Their measured association is positive, and §5.6b finds r = +0.40 on 652,284
+> facilities. Same direction, resolvable sample. The finding here corrects the
+> reading of this paper rather than contradicting the paper.
 
 ⬜ The Dual Nature of Multilateral Development Banks, Cambridge Elements
 
@@ -320,8 +344,8 @@ details and obtain full text. Priority for that session, in order:
 1. Roy & Shaw (2021) and Gutiérrez-Nieto et al. (2016) — the two papers on which
    claims were withdrawn. If either says something different from its abstract,
    the withdrawal reasoning changes.
-2. Arvanitis et al. (2015) — the independence result underpinning the
-   non-aggregation design.
+2. ~~Arvanitis et al. (2015)~~ — **done.** Read in full; the thesis's reading of
+   it was wrong and has been corrected. See the entry above.
 3. Cortés et al. (2016) — the premise citation.
 4. Kapoor & Narayanan (2023) — for the leakage taxonomy classification.
 5. Li, Mickel & Taylor (2018) — the `Term` definition, quoted in the paper.

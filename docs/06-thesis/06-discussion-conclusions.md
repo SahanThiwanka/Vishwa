@@ -237,7 +237,8 @@ elicitation costs. And the two objectives, while moderately correlated, place th
 same facility in different bands 88.2% of the time — so reporting them separately
 preserves information that a combined score would destroy, even though the
 independence premise that originally justified the separation does not hold on
-this population.
+this population. The design decision survives; the argument for it had to be
+rebuilt.
 
 The claim this thesis does **not** make is that a better credit scoring model has
 been built. The evidence does not support it, and Chapter 2 establishes that the

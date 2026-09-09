@@ -161,6 +161,42 @@ charged-off loans. **The contamination is established; its cause is not.** This
 study reports it accordingly and does not assert a mechanism it has not
 demonstrated.
 
+### 5.3.5 The contamination reaches the dataset's own documentation
+
+Li, Mickel and Taylor (2018), the paper that documents this dataset, derive a
+feature from `Term` themselves. They define a dummy `RealEstate`, set to 1 where
+`Term` ≥ 240 months, reasoning that only real-estate-backed loans run twenty
+years or more, and report those loans defaulting at 1.64% against 21.16% for the
+rest. The 1990–2010 cohort used here reproduces that closely: **1.45% against
+20.69%**.
+
+If `Term` carries outcome information, a feature derived from it does too. Two
+explanations were tested.
+
+**Right-censoring — tested and rejected.** A twenty-year loan approved after 1994
+cannot mature before the 2014 cut-off, and indeed **87.6%** of these facilities
+are censored. But restricting to the ones that did mature *lowers* their default
+rate, to **0.56%**, against 1.57% for the censored. Censoring does not explain the
+contrast, and the hypothesis is recorded as refuted rather than dropped.
+
+**Roundness — the dominant factor, but not a simple confound.** `Term` ≥ 240
+requires a value at or above a multiple of twelve, and the group is **95.96%**
+round-termed against 69.27% for the rest. Stratifying by roundness does not
+reduce the contrast so much as split it in two: among matured facilities the gap
+is 20.40 points unstratified, **2.51 points within round terms**, and **50.32
+points within irregular ones**.
+
+What actually dominates is roundness itself. Among matured facilities under 240
+months, round terms default at **2.58%** and irregular terms at **62.39%**. The
+documented `RealEstate` contrast is largely a restatement of that, and the
+separation surviving inside the irregular stratum is real and unexplained here.
+
+The point is not that Li, Mickel and Taylor made an error. Their paper documents
+a teaching dataset and derives a feature on entirely reasonable economic
+reasoning. The point is that a field carrying outcome information contaminates
+whatever is built from it, including the dataset's own documentation, and that
+nothing in the published description of either would let a reader detect it.
+
 ## 5.4 Consequences for reported performance
 
 Two model specifications were run. The **clean** specification excludes `Term`

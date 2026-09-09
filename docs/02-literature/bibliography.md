@@ -254,11 +254,22 @@ doi:10.1016/j.patter.2023.100804
 > Leakage across 17 fields affecting 294 papers; a taxonomy of eight types. The
 > frame within which Chapter 5's finding sits.
 
-◐ **Li, M., Mickel, A. and Taylor, S.** (2018) '"Should This Loan be Approved or
+✅ **Li, M., Mickel, A. and Taylor, S.** (2018) '"Should This Loan be Approved or
 Denied?": A Large Dataset with Class Assignment Guidelines', *Journal of
 Statistics Education*, 26(1), pp. 55–66. doi:10.1080/10691898.2018.1434342
-> The dataset paper. Its codebook defines `Term` as "loan term in months", which
-> is what makes the observed distribution anomalous.
+> **READ IN FULL.** The dataset paper. Table 1 defines `Term` as "Loan term in
+> months" — the quotation in §5.3.4 and in the paper is verbatim and correct.
+> Table 1 also confirms the three post-outcome fields this study drops:
+> `ChgOffDate` "the date when a loan is declared to be in default",
+> `ChgOffPrinGr` "charged-off amount", `BalanceGross` "gross amount outstanding".
+>
+> **The reading produced a finding, §5.3.5.** In section 4.1.5 the authors derive
+> a feature from `Term`: a dummy `RealEstate`, 1 where `Term` ≥ 240 months, and
+> report default rates of 1.64% against 21.16%. Our cohort reproduces this at
+> 1.45% against 20.69%, and the contrast turns out to be dominated by term
+> roundness rather than by real-estate backing. This is not a criticism of the
+> paper — it documents a teaching dataset and reasons soundly — but it shows the
+> contamination reaching the dataset's own documentation.
 
 ⬜ Candidate studies reporting inflated results on this dataset — see
 `docs/07-paper/affected-work-search.md`. **Must be obtained and read before

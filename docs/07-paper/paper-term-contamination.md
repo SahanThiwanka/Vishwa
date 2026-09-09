@@ -93,6 +93,23 @@ default, and uses them accordingly. The dataset's own codebook documents `Term` 
 "loan term in months" — that is, the contractual term agreed at origination, which
 is legitimately available at appraisal time and would properly be used.
 
+The same paper derives a feature from `Term`: a dummy `RealEstate`, set to 1
+where `Term` ≥ 240 months on the reasoning that only real-estate-backed lending
+runs twenty years or more, with reported default rates of 1.64% against 21.16%.
+Our 1990–2010 cohort reproduces this at 1.45% against 20.69%. Right-censoring is
+the obvious explanation and is not the answer — 87.6% of these facilities are
+censored, but the matured subset defaults *lower*, at 0.56%. Roundness accounts
+for more: the group is 95.96% round-termed against 69.27% for the rest, and
+stratifying splits the 20.40-point gap into 2.51 points among round terms and
+50.32 points among irregular ones. Among facilities under 240 months, round terms
+default at 2.58% and irregular ones at 62.39%.
+
+We draw no criticism of that paper from this. It documents a teaching dataset and
+derives a feature on sound economic reasoning. The observation is that a field
+carrying outcome information contaminates what is built from it, up to and
+including the dataset's own documentation, and that nothing in the published
+description of either would allow a reader to detect it.
+
 We located no source reporting that the field itself carries outcome information.
 We state this as a finding we have not found documented rather than as a claim of
 priority: our search was not exhaustive.

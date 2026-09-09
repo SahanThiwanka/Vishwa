@@ -290,6 +290,30 @@ def main() -> int:
         checks.append(check("two or more bands apart",
                             f"{indep['band_two_plus_apart'] * 100:.1f}%", docs))
 
+    # ---- the RealEstate feature in the dataset's own documentation ---------
+    re_probe = load_json("realestate_probe.json")
+    if re_probe:
+        BOTH_RE = ["ch5-empirical-validation.md", "05-results.md"]
+        checks.append(check("RealEstate default rate",
+                            f"{re_probe['default_real_estate'] * 100:.2f}%",
+                            docs, BOTH_RE))
+        checks.append(check("non-RealEstate default rate",
+                            f"{re_probe['default_other'] * 100:.2f}%",
+                            docs, BOTH_RE))
+        checks.append(check("RealEstate censored share",
+                            f"{re_probe['censored_share_real_estate'] * 100:.1f}%",
+                            docs, BOTH_RE))
+        checks.append(check("RealEstate matured default",
+                            f"{re_probe['default_real_estate_matured'] * 100:.2f}%",
+                            docs, BOTH_RE))
+        checks.append(check("RealEstate round-term share",
+                            f"{re_probe['round_share_real_estate'] * 100:.2f}%",
+                            docs, BOTH_RE))
+        irregular = re_probe["stratified"]["irregular term"]
+        checks.append(check("irregular-term default, non-RealEstate",
+                            f"{irregular['default_other'] * 100:.2f}%",
+                            docs, BOTH_RE))
+
     # ---- fairness / disparate impact ---------------------------------------
     BOTH = ["ch5-empirical-validation.md", "05-results.md"]
     fair = load_csv("fairness_groups.csv")

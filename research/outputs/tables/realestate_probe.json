@@ -1,0 +1,35 @@
+{
+  "source": "Li, Mickel and Taylor (2018) Table 1 and section 4.1.5; RealEstate = 1 where Term >= 240 months",
+  "reported_in_source": {
+    "real_estate": 0.0164,
+    "other": 0.2116
+  },
+  "cohort": [
+    1990,
+    2010
+  ],
+  "n_cohort": 847980,
+  "n_real_estate": 140695,
+  "default_real_estate": 0.014471,
+  "default_other": 0.206881,
+  "censored_share_real_estate": 0.876151,
+  "default_real_estate_censored": 0.01573,
+  "default_real_estate_matured": 0.005567,
+  "censoring_hypothesis": "refuted",
+  "round_share_real_estate": 0.959598,
+  "round_share_other": 0.692721,
+  "stratified": {
+    "round term (mod 12 == 0)": {
+      "n": 456501,
+      "n_real_estate": 16721,
+      "default_real_estate": 0.000718,
+      "default_other": 0.025802
+    },
+    "irregular term": {
+      "n": 195783,
+      "n_real_estate": 704,
+      "default_real_estate": 0.120739,
+      "default_other": 0.623927
+    }
+  }
+}

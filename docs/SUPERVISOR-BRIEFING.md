@@ -83,6 +83,14 @@ Excluding the field drops gradient-boosting temporal AUC from **0.9461 to
 0.6076**. Confidence intervals do not overlap; paired DeLong tests give
 p < 0.001.
 
+Twelve is not an arbitrary modulus. Across twenty tested, it leads at 0.8859 and
+its divisors fall away in the order 12 > 6 > 4 > 3 > 2 — the dilution expected if
+multiples of twelve are the carrier — while moduli that do not divide twelve sit
+at or below chance (11: 0.4660, 13: 0.4699). The contamination also reaches the
+dataset's **own documentation**: Li, Mickel and Taylor derive a `RealEstate`
+feature from `Term` and report default rates of 1.64% against 21.16%, a contrast
+largely restating roundness.
+
 The finding emerged because an AUC of 0.9726 was investigated rather than
 reported. The mechanism is **not** established — the obvious hypothesis (that
 `Term` records survival time) was tested and rejected — and the thesis reports it
@@ -100,22 +108,38 @@ is reported as it occurred.
 - **Weight sensitivity.** At ±25% perturbation, rank correlation holds at 0.982
   and 94% of risk bands are unchanged — bounding the placeholder-weight problem.
 - **Objective separability.** Across 652,284 facilities the two objectives
-  correlate at r = +0.40 — which **partly contradicts** the independence premise
-  the design was justified on, and is reported as such. They nonetheless band the
-  same facility differently **88.2%** of the time, which is the stronger argument
-  for separation.
+  correlate at r = +0.40. This removes the *strong* form of the premise the design
+  was justified on, but does **not** contradict Arvanitis et al. (2015): reading
+  that paper showed their estimate was also positive (slope 0.048) and merely
+  non-significant in 109 observations. This study measures the same direction at a
+  size that resolves it. The objectives nonetheless band the same facility
+  differently **88.2%** of the time, which is now the argument for separation.
 - **Development impact is positively associated with default** (10.8% lowest band
   vs 30.3% highest). Reported as association, not cause.
 - **Calibration degrades ~700-fold** across a temporal boundary while
   discrimination falls far less: models keep ranking while systematically
   under-pricing risk.
+- **Disparate impact, including in our own artefact.** The scorecard fails the
+  four-fifths rule on four of five credit-access attributes and would decline
+  **36.11% of creditworthy agricultural borrowers** — the worst of any sector —
+  though agriculture has the lowest default rate at 19.19%. Bootstrap intervals
+  are tight and a permutation floor (0.973–0.999) shows the measure's known bias
+  cannot explain it. These are credit-access proxies; the data holds no protected
+  characteristic, and no claim about lawful discrimination follows.
+- **Conventional models reward withholding information.** Blanking one field
+  scores 97.7% of applicants as less risky and moves 19.84% from decline to
+  approve. An applicant supplying **nothing** scores 0.0615 against a 0.2293
+  decline threshold and is approved. This is the empirical case for the
+  completeness gate: refusing is the only response that cannot be gamed.
 
 ### 3.4 The artefact
 
 A working system: 49 clause-traceable criteria, live dual-objective scoring,
 exact per-criterion explanation, a completeness gate, authenticated role-based
-sign-off mirroring clause 7, and export in the People's Bank report format. 62
-unit tests; the TypeScript and Python engines are parity-checked across 280 cases.
+sign-off mirroring clause 7, and export in the People's Bank report format. 89
+unit tests; the TypeScript and Python engines are parity-checked across 280 cases;
+62 automated checks verify every load-bearing figure in the thesis against the
+generated result tables, and CI runs all of it.
 
 ---
 
@@ -136,8 +160,13 @@ python research/src/statistical_tests.py    # CIs, DeLong, calibration
 python research/src/weight_sensitivity.py   # weight Monte Carlo
 python research/src/objective_independence.py
 python research/src/cost_analysis.py
-python scripts/verify_claims.py             # 25 consistency checks
-cd web && npm test                          # 62 unit tests
+python research/src/modulus_probe.py        # is twelve arbitrary?
+python research/src/realestate_probe.py     # the documentation's own feature
+python research/src/fairness_analysis.py    # disparate impact + bootstrap
+python research/src/missingness_analysis.py # what withholding does
+python research/src/bwm.py                  # BWM solver verification
+python scripts/verify_claims.py             # 62 consistency checks
+cd web && npm test                          # 89 unit tests
 ```
 
 ---
@@ -154,9 +183,10 @@ Listed here rather than buried, because they should shape the feedback.
 | Criteria tree not validated against outcomes | No dataset contains its variables |
 | Fuzzy layer not exercised by the validation | All observable criteria are quantitative |
 | Development objective thinly proxied | Only employment observable; 5 of 9 clause-5 items absent |
-| No fairness assessment | Serious gap for a credit model; recorded in the model card |
+| Fairness on protected characteristics untested | Not testable on this data — no race, sex or age field. Credit-access proxies **are** now tested, and the artefact fails four of five |
 | No field evaluation | No officer has used the system on live applications |
-| Contamination novelty not established | Search found no prior report but was not exhaustive |
+| Contamination novelty not established | One affected study now verified by full text (Yussuph, 2024); two candidates unobtainable without library access |
+| Literature only partly read | 8 of 58 sources read in full — the ones carrying substantive claims. Three of those corrections changed the text. One source could not be obtained at all and the claim on it was weakened accordingly |
 
 ---
 

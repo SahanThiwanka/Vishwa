@@ -303,10 +303,66 @@ acknowledged assumes you did not notice.
 | **Criteria tree not empirically validated** | "No dataset contains its variables. That is the methodological finding, not an oversight." |
 | **Development objective barely observable** | "Only job creation and retention proxy it. Five of the nine clause-5 items have no counterpart in the data. It is a design contribution, not a validated one." |
 | **No field evaluation** | "No officer has used it on live applications. There is no usability or acceptance evidence." |
+| **The scorecard shows disparate impact** | Volunteer this before they find it. "It fails the four-fifths rule on four of five credit-access attributes, and it would decline 36.11% of creditworthy agricultural borrowers — the worst of any sector — while agriculture has the lowest default rate in the cohort at 19.19%. It penalises the sector that performs best. That is a defect in my own artefact and it is reported in §5.18 rather than left for someone else to find." |
+| **Fairness is not tested on protected characteristics** | "It cannot be, on this data — the SBA file records no race, sex, age or disability field. What I tested are credit-access proxies. Passing on them establishes nothing about lawful discrimination, and I say so." |
+| **Disparity ratios are min/max statistics** | "Which are biased upward in apparent severity. I quantified that rather than arguing it away: assigning declines at random, the measure reads 0.973 to 0.999. The observed values sit far below that floor, the bootstrap intervals are tight, and resampling names the same worst-affected group 89–100% of the time." |
 
 ---
 
-## 7. If you are asked about the interim submissions
+## 7. Sources you re-read, and what changed
+
+Five sources carrying load-bearing claims were obtained and read in full late in
+the work. Three of them did not say quite what the thesis had said they said, and
+all three corrections are now in the text. **This is a strength if you present it
+as one and a disaster if you are caught not knowing it**, so learn these.
+
+**Arvanitis, Stampini and Vencatachellum (2015) — the important one.**
+
+> Q: "Your whole dual-objective design rests on their independence result. What
+> did they actually find?"
+
+> A: "A *positive but statistically non-significant* relationship — slope 0.048,
+> p = 0.49 — across the 109 African Development Bank operations carrying both a
+> development and a credit rating. They describe the factors as 'somewhat
+> independent'. That is an underpowered null, not a demonstration of
+> independence: 109 observations cannot separate independence from a moderate
+> association. An earlier draft of this thesis treated it as established and I
+> corrected that after reading the paper."
+
+Then the payoff, which is the part that earns credit:
+
+> "It also changes what my RQ4 result means. I found r = +0.40 across 652,284
+> facilities and had written that up as *contradicting* them. It doesn't. Their
+> point estimate was positive too. I measure the same direction at a sample size
+> that can resolve it. The design decision survives, but the argument for it is
+> now the 88.2% band-disagreement rate rather than an independence premise that
+> was never established."
+
+**Lessmann et al. (2015).** 41 classifiers across **seven** datasets, not eight —
+the eight belongs to Baesens et al. (2003), which they update, and the thesis had
+conflated the two. They report a *tendency* for homogeneous ensembles to lead,
+not uniform superiority; rotation forests and dynamic ensemble selection perform
+worse than plain logistic regression. Their data is retail credit, not SME.
+
+**Cortés, Duchin and Sosyura (2016).** Holds exactly as cited, but the setting is
+**US residential mortgages** from the confidential HMDA registry — not SME
+lending, not Sri Lanka. If pressed on transferability: "It doesn't transfer
+automatically. What supports the transfer is the direction of their own
+cross-sectional result — the effect grows as decisions become more discretionary
+and less automated, and a hand-completed narrative SME form is further along that
+dimension than a residential mortgage. That's an argument, not an observation,
+and the thesis says so."
+
+**If asked why you did not read everything.** Be straight: 8 of 58 entries are
+read in full, and they are the ones carrying substantive claims. The bibliography
+marks every entry by status, including one — Beck and Demirgüç-Kunt (2006) — that
+could not be obtained at all, where the claim resting on it was weakened to what
+an unread citation can carry. Do not overstate this. The honest line is that the
+reading is incomplete and the incompleteness is documented rather than hidden.
+
+---
+
+## 8. If you are asked about the interim submissions
 
 If discrepancies between the interim reports and this thesis come up, the only
 safe answer is a straight one:
@@ -322,7 +378,7 @@ work is real and reproducible — that is the ground you want to be standing on.
 
 ---
 
-## 8. When you do not know
+## 9. When you do not know
 
 You will be asked something you cannot answer. The good response is short:
 
@@ -336,7 +392,7 @@ invites three more questions.
 
 ---
 
-## 9. Numbers to memorise
+## 10. Numbers to memorise
 
 | | |
 |---|---|
@@ -351,12 +407,22 @@ invites three more questions.
 | Roundness AUC | 0.889 |
 | GBM temporal, with / without `Term` | 0.9461 / 0.6076 |
 | Random vs temporal optimism | 0.182 AUC |
+| Modulus 12 / 6 / 3 / 11 raw AUC | 0.8859 / 0.8600 / 0.7934 / 0.4660 |
+| Objectives correlation (RQ4) | r = +0.40, or +0.36 disjoint-input |
+| Bands disagree / by two or more | 88.2% / 38.4% |
+| Weight sensitivity at ±25% | ρ = 0.9822, band stability 94.0% |
+| Scorecard AUC, random / temporal | 0.4144 / 0.5275 |
+| Four-fifths failures (scorecard / GBM) | 4 of 5 / 3 of 5 |
+| Agriculture: creditworthy declined vs default rate | 36.11% vs 19.19% |
+| Micro-firm equal-opportunity ratio | 2.81× |
+| Withholding one field: scored less risky / flipped | 97.7% / 19.84% |
+| No-information applicant | P = 0.0615 vs 0.2293 threshold — approved |
 | Demo case scores | credit 80.2 (A), development 74.6 (B) |
-| Tests | 62 unit, 280 parity checks |
+| Tests | 89 unit, 280 parity checks, 62 claim checks |
 
 ---
 
-## 10. The evening before
+## 11. The evening before
 
 - Re-run everything: `npm test`, `python research/src/test_parity.py`,
   `python research/src/bwm.py`. Confirm green.

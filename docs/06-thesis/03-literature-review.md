@@ -26,21 +26,28 @@ label cannot (§5.12).
 Hand and Henley [4] reviewed the statistical methods then in use, and Thomas,
 Crook and Edelman [5] and Thomas, Edelman and Crook [6] provided the
 standard textbook treatments. The most useful modern reference point is Lessmann et al.
-[7], who benchmarked forty-one classifiers across eight credit datasets and
-found ensemble methods consistently ahead.
+[7], who benchmarked **forty-one classifiers across seven** real-world retail
+credit scoring datasets, updating Baesens et al. (2003). They report a *tendency*
+for homogeneous ensembles to outperform individual classifiers — the five best
+methods all belong to that family, with random forest giving the most accurate
+probability-of-default estimates — but the picture is not uniform, and they note
+that several sophisticated techniques, including rotation forests and dynamic
+ensemble selection, predict less accurately than plain logistic regression.
 
 **Two implications for this study.** First, the core idea here — combining
 weighted financial ratios into a score — is a sixty-year-old one, and any novelty
 claim must rest elsewhere. Second, Lessmann et al. establish what discrimination
-is realistically achievable on credit data, which is precisely the yardstick that
-made the anomalous result in Chapter 5 recognisable as anomalous.
+is realistically achievable on credit data, which is the yardstick that made the
+anomalous result in Chapter 5 recognisable as anomalous — with the caveat that
+their datasets are **retail** credit, not SME lending, so they bound expectations
+by analogy rather than directly.
 
 ## 3.3 SME credit assessment
 
 SMEs are harder than consumer credit. Financial statements are frequently
 unaudited or absent, trading histories are short, and collateral is thin. Beck and
-Demirgüç-Kunt [8] establish access to finance as a binding growth constraint
-for SMEs internationally.
+Demirgüç-Kunt [8] is the standard reference for access to finance as a binding
+growth constraint on SMEs internationally.
 
 Berger and Udell [9] provide the framework this study sits inside. They
 identify nine distinct SME lending technologies — relationship lending, financial

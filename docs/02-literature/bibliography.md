@@ -8,12 +8,22 @@ the paper.
 | Marker | Meaning |
 |---|---|
 | ✅ | Full text obtained and read |
-| ◐ | Bibliographic details verified; abstract read; **full text not yet read** |
+| ◐ | Bibliographic details verified; **full text not read** |
+| ⛔ | Details verified, but **retrieval attempted and failed** — see the entry |
 | ⬜ | Identified as relevant; details need confirming before citing |
 
-**Before submission, every ◐ that is cited for a substantive claim must become
-✅.** Citing a paper for what an abstract appeared to say is how a viva goes
-wrong: an examiner asks what the paper actually found, and there is no recovery.
+The ◐ wording used to promise that the abstract had been read. That was dropped:
+it could not be vouched for uniformly, and for at least one entry no abstract is
+published anywhere accessible. ⛔ exists because "not yet read" and "cannot be
+read without library access" are different problems with different remedies, and
+collapsing them hid which was which.
+
+**Before submission, every ◐ and ⛔ that is cited for a substantive claim must
+become ✅.** Citing a paper for what an abstract appeared to say is how a viva
+goes wrong: an examiner asks what the paper actually found, and there is no
+recovery. Where a source could not be obtained, the claim resting on it has been
+weakened to what the citation can carry unread — see Beck and Demirgüç-Kunt below
+for the worked example.
 
 ---
 
@@ -42,13 +52,28 @@ Credit Control*. Oxford: Clarendon Press.
 ◐ **Thomas, L.C., Edelman, D.B. and Crook, J.N.** (2002) *Credit Scoring and its
 Applications*. Philadelphia: SIAM.
 
-◐ **Lessmann, S., Baesens, B., Seow, H.-V. and Thomas, L.C.** (2015)
+✅ **Lessmann, S., Baesens, B., Seow, H.-V. and Thomas, L.C.** (2015)
 'Benchmarking state-of-the-art classification algorithms for credit scoring: An
 update of research', *European Journal of Operational Research*, 247(1),
 pp. 124–136.
-> 41 classifiers across 8 credit datasets. The reference point for what
-> discrimination is achievable, and therefore for judging when a reported AUC is
-> implausible.
+> **READ IN FULL** (accepted manuscript, University of Edinburgh Credit Research
+> Centre copy). **The thesis had two details wrong and both are now fixed.**
+>
+> It is 41 classifiers across **SEVEN** datasets, not eight. The eight belongs to
+> Baesens et al. (2003), the study this one updates — "17 state-of-the-art
+> classifiers on eight real-world credit scoring data sets". The two were
+> conflated.
+>
+> "Ensemble methods consistently ahead" was too strong. They report a *tendency*
+> for homogeneous ensembles to outperform individual classifiers, with the five
+> best methods in that family and random forest most accurate for PD, and the
+> overall best result from HCES-Bag. But they also observe rotation forests and
+> dynamic ensemble selection performing *worse* than logistic regression.
+>
+> Setting: **retail** credit scoring, not SME. It bounds expectations by analogy.
+> The specific AUC tables could not be extracted from the PDF, so no figure from
+> them is quoted anywhere — the anomaly argument in Chapter 5 rests on its own
+> permutation-importance evidence, not on a number borrowed from here.
 
 ◐ **Ciampi, F., Giannozzi, A., Marzi, G. and Altman, E.I.** (2021) 'Rethinking
 SME default prediction: a systematic literature review and future perspectives',
@@ -58,9 +83,20 @@ SME default prediction: a systematic literature review and future perspectives',
 
 ## 2. SME finance and access to credit
 
-◐ **Beck, T. and Demirgüç-Kunt, A.** (2006) 'Small and medium-size enterprises:
+⛔ **Beck, T. and Demirgüç-Kunt, A.** (2006) 'Small and medium-size enterprises:
 Access to finance as a growth constraint', *Journal of Banking & Finance*,
 30(11), pp. 2931–2943.
+> **DOWNGRADED — could not be obtained, and no abstract is published anywhere
+> accessible.** ScienceDirect is paywalled; RePEc/IDEAS states "No abstract is
+> available for this item"; the Tilburg repository copy returns 403. Secondary
+> summaries exist but summarising a summary is precisely the failure this
+> bibliography exists to prevent.
+>
+> §2.3 previously said Beck and Demirgüç-Kunt "establish" access to finance as a
+> binding growth constraint. That verb vouches for evidence nobody here has read.
+> It now reads "is the standard reference for", which is true independent of the
+> paper's internal argument. **Obtain through the university library and restore
+> the stronger wording only after reading it.**
 
 ◐ **Berger, A.N. and Udell, G.F.** (2006) 'A more complete conceptual framework
 for SME finance', *Journal of Banking & Finance*, 30(11), pp. 2945–2966.
@@ -361,8 +397,13 @@ Information Systems Research', *MIS Quarterly*, 28(1), pp. 75–105.
 ◐ **Peffers, K., Tuunanen, T., Rothenberger, M.A. and Chatterjee, S.** (2007) 'A
 Design Science Research Methodology for Information Systems Research', *Journal
 of Management Information Systems*, 24(3), pp. 45–77.
-> The six-step process this study follows: problem identification, objectives,
-> design, demonstration, evaluation, communication.
+> The six-step process this study follows: problem identification and motivation,
+> objectives of a solution, design and development, demonstration, evaluation,
+> communication. **The six activities and their order were cross-checked against
+> several independent secondary sources and match what §4.1 states; the full text
+> is behind a paywall and has not been read.** The risk here is low — the citation
+> names a methodology this study followed rather than borrowing a finding — but
+> it is recorded rather than assumed.
 
 ◐ **Davis, F.D.** (1989) 'Perceived Usefulness, Perceived Ease of Use, and User
 Acceptance of Information Technology', *MIS Quarterly*, 13(3), pp. 319–340.

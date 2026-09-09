@@ -52,6 +52,18 @@ jobs:
       - name: Generate Prisma client
         run: npx prisma generate
 
+      # The PostgreSQL schema is derived from the SQLite one and is what the
+      # Vercel deployment migrates against. It drifted once already: a
+      # LoginAttempt table was added for sign-in rate limiting and the Postgres
+      # variant was not regenerated, so a deployment would have created a
+      # database without it and every sign-in would have failed on a missing
+      # relation. Nothing caught that, because the app runs on SQLite locally.
+      - name: PostgreSQL schema is in sync
+        run: |
+          npm run db:gen-postgres
+          git diff --exit-code -- prisma/schema.postgres.prisma \
+            || (echo "::error::prisma/schema.postgres.prisma is out of date. Run 'npm run db:gen-postgres' and commit the result." && exit 1)
+
       - name: Typecheck
         run: npx tsc --noEmit
 

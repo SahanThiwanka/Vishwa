@@ -173,3 +173,27 @@ model User {
 
   @@index([username])
 }
+
+// Failed sign-in attempts, for rate limiting.
+//
+// Kept in the database rather than in process memory deliberately. An in-memory
+// counter is reset by every restart and is not shared between instances, so on
+// a serverless deployment - which is the intended target - it would be trivially
+// defeated by spreading attempts across cold starts. A row per failure costs
+// nothing at this volume and behaves identically wherever the app runs.
+//
+// `subject` is the username attempted, lowercased. `clientHash` is a salted hash
+// of the client address, never the address itself: rate limiting does not
+// require knowing who anyone is, and storing raw IPs against usernames would
+// create a record of who tried to sign in as whom.
+model LoginAttempt {
+  id String @id @default(cuid())
+
+  subject    String
+  clientHash String?
+
+  createdAt DateTime @default(now())
+
+  @@index([subject, createdAt])
+  @@index([clientHash, createdAt])
+}

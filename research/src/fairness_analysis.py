@@ -87,6 +87,12 @@ DECLINE_SHARE = 0.20
 MIN_GROUP_N = 500
 MIN_MINORITY_CLASS = 30
 
+# Bootstrap resamples for the disparity intervals. The disparity measures are
+# min/max ratios across groups, which are biased and noisy, so a point estimate
+# on its own is not reportable.
+N_BOOT = 400
+SEED = 42
+
 
 def size_band(n_emp: pd.Series) -> pd.Series:
     """Employee-count bands on the conventional SME definitions."""
@@ -204,6 +210,139 @@ def analyse(model_name: str, y_true: np.ndarray, risk: np.ndarray,
     return rows
 
 
+def bootstrap_disparities(model_name: str, y: np.ndarray, risk: np.ndarray,
+                          groups: dict[str, pd.Series], n_boot: int,
+                          seed: int) -> list[dict]:
+    """Confidence intervals for the disparity ratios, and a bias warning.
+
+    WHY THIS IS NOT OPTIONAL. Both headline measures are ratios of a MINIMUM to a
+    MAXIMUM taken across groups. That structure is biased even when every group
+    is identical in truth: sampling noise pushes the observed minimum down and
+    the observed maximum up, so a disparity ratio computed this way looks worse
+    than reality, and the smaller the groups the worse it looks. Reporting
+    "DI = 0.325" from subgroups as small as 752 without an interval invites
+    exactly the challenge it deserves.
+
+    Two things are therefore reported alongside each interval:
+
+    `selection_stability` - the share of resamples in which the SAME group comes
+    out worst. A disparity attached to a group that changes from resample to
+    resample is a statement about noise, not about that group.
+
+    `null_ratio_median` - the ratio obtained when the decision is permuted at
+    random within the sample, holding the group sizes fixed. This is what the
+    measure reads when there is no disparity at all. A observed ratio close to
+    this is not evidence of anything, and for small groups it can sit well below
+    the 0.8 threshold on its own.
+    """
+    rng = np.random.default_rng(seed)
+    n = len(y)
+    good = y == 0
+
+    coded = {}
+    for attribute, series in groups.items():
+        values = series.to_numpy()
+        labels, codes = np.unique(values, return_inverse=True)
+        coded[attribute] = (labels, codes)
+
+    def ratios(idx: np.ndarray, declined: np.ndarray, attribute: str):
+        labels, codes = coded[attribute]
+        k = len(labels)
+        c = codes[idx]
+        counts = np.bincount(c, minlength=k).astype(float)
+        declines = np.bincount(c, weights=declined, minlength=k)
+
+        g = good[idx]
+        good_counts = np.bincount(c[g], minlength=k).astype(float)
+        good_declines = np.bincount(c[g], weights=declined[g], minlength=k)
+
+        eligible = counts >= MIN_GROUP_N
+        if eligible.sum() < 2:
+            return None, None, None, None
+
+        with np.errstate(invalid="ignore", divide="ignore"):
+            approval = 1 - declines / counts
+            fpr = good_declines / good_counts
+
+        ap = np.where(eligible, approval, np.nan)
+        di = np.nanmin(ap) / np.nanmax(ap) if np.nanmax(ap) > 0 else np.nan
+        worst_ap = int(np.nanargmin(ap))
+
+        fp = np.where(eligible & (good_counts > 0), fpr, np.nan)
+        valid = np.isfinite(fp)
+        if valid.sum() >= 2 and np.nanmin(fp) > 0:
+            eo = np.nanmax(fp) / np.nanmin(fp)
+            worst_fp = int(np.nanargmax(fp))
+        else:
+            eo, worst_fp = np.nan, -1
+        return di, eo, worst_ap, worst_fp
+
+    collected: dict[str, dict[str, list]] = {
+        a: {"di": [], "eo": [], "worst_ap": [], "worst_fp": [], "null_di": []}
+        for a in groups
+    }
+
+    for _ in range(n_boot):
+        idx = rng.integers(0, n, n)
+        rb = risk[idx]
+        threshold = float(np.quantile(rb, 1 - DECLINE_SHARE))
+        declined = (rb >= threshold).astype(float)
+
+        # Null: same decline volume, assigned at random. Gives the reading the
+        # measure produces when no group is treated differently at all.
+        null_declined = np.zeros(n)
+        null_declined[rng.choice(n, size=int(DECLINE_SHARE * n),
+                                 replace=False)] = 1.0
+
+        for attribute in groups:
+            di, eo, wap, wfp = ratios(idx, declined, attribute)
+            if di is not None:
+                collected[attribute]["di"].append(di)
+                collected[attribute]["eo"].append(eo)
+                collected[attribute]["worst_ap"].append(wap)
+                collected[attribute]["worst_fp"].append(wfp)
+            ndi, _, _, _ = ratios(idx, null_declined, attribute)
+            if ndi is not None:
+                collected[attribute]["null_di"].append(ndi)
+
+    out = []
+    for attribute, c in collected.items():
+        di = np.array(c["di"], dtype=float)
+        eo = np.array(c["eo"], dtype=float)
+        if di.size == 0:
+            continue
+        labels, _ = coded[attribute]
+        wap = np.array(c["worst_ap"])
+        wfp = np.array([w for w in c["worst_fp"] if w >= 0])
+
+        mode_ap = np.bincount(wap).argmax() if wap.size else -1
+        mode_fp = np.bincount(wfp).argmax() if wfp.size else -1
+
+        out.append({
+            "model": model_name,
+            "attribute": attribute,
+            "n_boot": int(di.size),
+            "di_lo": round(float(np.nanpercentile(di, 2.5)), 4),
+            "di_hi": round(float(np.nanpercentile(di, 97.5)), 4),
+            "eo_lo": round(float(np.nanpercentile(eo, 2.5)), 4)
+            if np.isfinite(eo).any() else None,
+            "eo_hi": round(float(np.nanpercentile(eo, 97.5)), 4)
+            if np.isfinite(eo).any() else None,
+            "di_below_four_fifths_share": round(float((di < 0.8).mean()), 4),
+            "selection_stability_approval": round(
+                float((wap == mode_ap).mean()), 4) if wap.size else None,
+            "most_often_least_approved": str(labels[mode_ap])
+            if mode_ap >= 0 else None,
+            "selection_stability_error": round(
+                float((wfp == mode_fp).mean()), 4) if wfp.size else None,
+            "most_often_wrongly_declined": str(labels[mode_fp])
+            if mode_fp >= 0 else None,
+            "null_ratio_median": round(
+                float(np.nanmedian(c["null_di"])), 4) if c["null_di"] else None,
+        })
+    return out
+
+
 def disparities(rows: list[dict], model_name: str) -> list[dict]:
     """Reduce each attribute to the two disparity measures that matter."""
     out = []
@@ -314,19 +453,49 @@ def main() -> int:
     summary = (disparities(rows, "Gradient boosting (clean, temporal)")
                + disparities(rows, "Expert scorecard (unfitted)"))
 
+    print(f"\nBootstrapping disparity intervals ({N_BOOT} resamples)...")
+    intervals = (
+        bootstrap_disparities("Gradient boosting (clean, temporal)", y_test,
+                              p_default, groups, N_BOOT, SEED)
+        + bootstrap_disparities("Expert scorecard (unfitted)", y_test[valid],
+                                -card.to_numpy()[valid],
+                                {k: v[valid] for k, v in groups.items()},
+                                N_BOOT, SEED)
+    )
+    by_key = {(i["model"], i["attribute"]): i for i in intervals}
+    for s in summary:
+        s.update({k: v for k, v in
+                  by_key.get((s["model"], s["attribute"]), {}).items()
+                  if k not in ("model", "attribute")})
+
     print(f"\n{'=' * 74}")
     print("DISPARITY SUMMARY")
     print(f"{'=' * 74}")
     print("  Selection-rate disparity below 0.80 fails the four-fifths rule.")
     print("  The equal-opportunity ratio compares how often CREDITWORTHY")
-    print("  applicants are declined across groups; 1.0 is parity.\n")
+    print("  applicants are declined across groups; 1.0 is parity.")
+    print("  'null' is what the DI measure reads when declines are assigned at")
+    print("  random - the floor below which a ratio means nothing.\n")
     for s in summary:
         flag = "FAILS" if s["fails_four_fifths"] else "passes"
         eo = (f"{s['equal_opportunity_ratio']:.2f}x"
               if s["equal_opportunity_ratio"] else "   -")
-        print(f"  {s['model'][:28]:<28} {s['attribute'][:22]:<22} "
-              f"DI={s['disparate_impact_ratio']:.3f} {flag:<6} "
-              f"good-declined {eo:>7}  worst: {s['most_wrongly_declined_group']}")
+        ci = (f"[{s['di_lo']:.3f}, {s['di_hi']:.3f}]"
+              if s.get("di_lo") is not None else "-")
+        null = (f"{s['null_ratio_median']:.3f}"
+                if s.get("null_ratio_median") is not None else "-")
+        print(f"  {s['model'][:26]:<26} {s['attribute'][:22]:<22} "
+              f"DI={s['disparate_impact_ratio']:.3f} {ci:<16} {flag:<6} "
+              f"null={null}  EO {eo:>7}")
+
+    print("\n  Is the same group identified as worst across resamples?")
+    print(f"    {'model':<26} {'attribute':<22} {'stability':>10}  group")
+    for s in summary:
+        st = s.get("selection_stability_error")
+        if st is not None:
+            note = "" if st >= 0.8 else "   <-- unstable"
+            print(f"    {s['model'][:26]:<26} {s['attribute'][:22]:<22} "
+                  f"{st:>9.0%}  {s['most_often_wrongly_declined']}{note}")
 
     with open(OUT_TABLES / "fairness_summary.json", "w", encoding="utf-8") as fh:
         json.dump({
@@ -335,6 +504,7 @@ def main() -> int:
             "test_n": int(len(test)),
             "test_default_rate": round(float(test["default"].mean()), 4),
             "min_group_n": MIN_GROUP_N,
+            "n_boot": N_BOOT,
             "protected_characteristics_available": False,
             "note": ("The dataset records no legally protected characteristic. "
                      "These are credit-access proxies, not protected classes."),

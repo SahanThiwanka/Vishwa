@@ -114,6 +114,24 @@ optimal deviation ξ\* divided by the consistency index for the stated
 best-to-worst value gives a consistency ratio comparable across respondents and
 level sizes.
 
+**The solver is verified against an independent optimiser.** A weighting
+programme that silently returns the wrong answer would corrupt every result
+downstream of it, and property-based checks do not catch this: the worked example
+usually used to sanity-check a BWM implementation is perfectly consistent, so
+ξ\* = 0 and the weights follow from normalisation alone. The optimiser is never
+exercised, and an error would surface only on inconsistent responses — which is
+every real response.
+
+The implementation is therefore checked two further ways on deliberately
+inconsistent inputs. First, the maximum deviation is recomputed directly from the
+returned weights, written from the definition rather than from the programme's
+constraint matrix, and must equal the reported ξ\*. Second, the same objective is
+minimised by sequential least-squares from forty random starts; because the
+programme is convex, no general-purpose optimiser can beat it, so a lower value
+found that way would prove the formulation wrong. Across three inconsistent cases
+the two agree to six decimal places, and the returned weights exhibit exactly the
+deviation reported. The check runs as part of `research/src/bwm.py`.
+
 Responses with **CR > 0.25** are excluded rather than averaged in. The number
 excluded is reported: silently discarding respondents would make the study
 unreproducible.

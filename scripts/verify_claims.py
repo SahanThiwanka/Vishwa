@@ -123,16 +123,27 @@ def check_section_coverage() -> list[tuple[bool, str]]:
 
     # Contiguity: a gap in the generated numbering means a block was lost or
     # a remap entry is wrong, even when every title happens to be accounted for.
+    #
+    # Checked at EVERY depth, not just the top. Checking only two-part numbers
+    # let a subsection through with the wrong parent: a new 5.3.5 was added to
+    # the source chapter, no remap entry was written for it, and it appeared in
+    # the generated Results between 5.10.4 and 5.11 still numbered 5.3.5. Every
+    # other check passed - the title was present, the top-level numbering was
+    # contiguous, and nothing referenced it.
     gaps = []
     for path in sorted(CHAPTERS.glob("0[0-9]-*.md")):
-        tops = []
+        by_parent: dict[str, list[int]] = {}
         for num, _ in HEADING.findall(path.read_text(encoding="utf-8")):
             parts = num.split(".")
-            if len(parts) == 2 and parts[1].isdigit():
-                tops.append(int(parts[1]))
-        for prev, nxt in zip(tops, tops[1:]):
-            if nxt not in (prev, prev + 1):
-                gaps.append(f"{path.name}: {prev} -> {nxt}")
+            if not parts[-1].isdigit():
+                continue
+            parent = ".".join(parts[:-1])
+            by_parent.setdefault(parent, []).append(int(parts[-1]))
+        for parent, seq in by_parent.items():
+            for prev, nxt in zip(seq, seq[1:]):
+                if nxt not in (prev, prev + 1):
+                    label = f"{parent}." if parent else ""
+                    gaps.append(f"{path.name}: {label}{prev} -> {label}{nxt}")
     if gaps:
         out.append((False, f"FAIL  numbering gap in generated sections: "
                            f"{'; '.join(gaps[:4])}"))
@@ -290,6 +301,26 @@ def main() -> int:
         checks.append(check("two or more bands apart",
                             f"{indep['band_two_plus_apart'] * 100:.1f}%", docs))
 
+    # ---- is twelve doing the work? -----------------------------------------
+    mod = load_csv("modulus_probe.csv")
+    if mod:
+        BOTH_M = ["ch5-empirical-validation.md", "05-results.md"]
+        by_m = {int(r["modulus"]): r for r in mod}
+        for m in (12, 6, 4, 3, 2, 11, 13):
+            row = by_m.get(m)
+            if row and row["raw_auc"]:
+                checks.append(check(f"modulus {m} raw AUC",
+                                    f"{float(row['raw_auc']):.4f}", docs,
+                                    BOTH_M))
+        # The residual signal that refines the finding rather than breaking it.
+        for m in (3, 6):
+            row = by_m.get(m)
+            if row and row["auc_within_non_multiples_of_12"]:
+                checks.append(check(
+                    f"modulus {m} residual AUC",
+                    f"{float(row['auc_within_non_multiples_of_12']):.4f}",
+                    docs, BOTH_M))
+
     # ---- the RealEstate feature in the dataset's own documentation ---------
     re_probe = load_json("realestate_probe.json")
     if re_probe:
@@ -369,6 +400,29 @@ def main() -> int:
             checks.append(check("micro/large equal-opportunity ratio",
                                 f"{d['equal_opportunity_ratio']:.2f}", docs,
                                 BOTH))
+
+        # Bootstrap intervals and the permutation floor. Without these the
+        # disparity ratios are min/max statistics quoted without uncertainty.
+        for model, attr, label in (
+            ("Gradient boosting (clean, temporal)", "Rurality",
+             "GBM rurality DI interval"),
+            ("Expert scorecard (unfitted)", "Rurality",
+             "scorecard rurality DI interval"),
+            ("Expert scorecard (unfitted)", "Firm size (employees)",
+             "scorecard firm-size DI interval"),
+        ):
+            d = by_key.get((model, attr))
+            if d and d.get("di_lo") is not None:
+                checks.append(check(
+                    label, f"[{d['di_lo']:.3f}, {d['di_hi']:.3f}]", docs, BOTH))
+
+        nulls = [d["null_ratio_median"] for d in fair_sum["disparities"]
+                 if d.get("null_ratio_median") is not None]
+        if nulls:
+            checks.append(check("permutation floor, lowest",
+                                f"{min(nulls):.3f}", docs, BOTH))
+            checks.append(check("permutation floor, highest",
+                                f"{max(nulls):.3f}", docs, BOTH))
 
     # ---- what the models do with withheld information ----------------------
     miss = load_json("missingness_summary.json")

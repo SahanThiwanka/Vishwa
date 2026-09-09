@@ -156,6 +156,58 @@ def progressive(model, name: str, X: pd.DataFrame, base: np.ndarray,
     return rows
 
 
+def threshold_sweep(model, name: str, X: pd.DataFrame,
+                    base: np.ndarray) -> list[dict]:
+    """Does the result depend on where the decline threshold is put?
+
+    The headline figures use one policy - decline the riskiest 20%. That is a
+    reasonable choice and an arbitrary one, and a finding that only holds at a
+    single threshold is not a finding. This sweeps the policy across the
+    plausible range and, more usefully, locates the point at which withholding
+    everything STOPS working.
+
+    An applicant who supplies nothing receives a single fixed score, because
+    there is nothing left for the model to vary on. Whether that score is
+    approved depends entirely on where it falls in the distribution of real
+    applicants' scores. That percentile is the exact answer: withholding
+    everything is a winning strategy under any policy that declines less than
+    that share of the portfolio, and a losing one beyond it.
+    """
+    blank = X.copy()
+    for field in CLEAN_FEATURES:
+        blank[field] = np.nan
+    p_blank = float(model.predict_proba(blank)[:, 1][0])
+
+    # Where a no-information applicant sits among real applicants.
+    percentile = float((base < p_blank).mean())
+    crossover = 1 - percentile
+
+    rows = []
+    for share in (0.05, 0.10, 0.15, 0.20, 0.30, 0.40, 0.50):
+        threshold = float(np.quantile(base, 1 - share))
+        rows.append({
+            "model": name,
+            "decline_share": share,
+            "threshold": round(threshold, 5),
+            "p_no_information": round(p_blank, 5),
+            "no_information_approved": bool(p_blank < threshold),
+        })
+
+    print(f"\n  Threshold sweep - {name}")
+    print(f"    no-information score {p_blank:.4f}, which is the "
+          f"{percentile * 100:.1f}th percentile of real applicants")
+    print(f"    {'decline share':>14} {'threshold':>10}  supplying nothing")
+    for r in rows:
+        verdict = "APPROVED" if r["no_information_approved"] else "declined"
+        print(f"    {r['decline_share']:>13.0%} {r['threshold']:>10.4f}  {verdict}")
+    print(f"    crossover: withholding everything wins under any policy")
+    print(f"    declining less than {crossover * 100:.1f}% of the portfolio")
+
+    return rows, {"p_no_information": round(p_blank, 5),
+                  "percentile_among_real_applicants": round(percentile, 4),
+                  "crossover_decline_share": round(crossover, 4)}
+
+
 def main() -> int:
     if not PROCESSED.exists():
         print(f"Missing {PROCESSED}. Run prepare_sba.py first.")
@@ -183,6 +235,8 @@ def main() -> int:
 
     all_rows: list[dict] = []
     progressive_rows: list[dict] = []
+    sweep_rows: list[dict] = []
+    crossovers: dict = {}
     summary: dict = {}
 
     for model, name in ((gbm, "Gradient boosting (native NaN)"),
@@ -208,6 +262,10 @@ def main() -> int:
 
         prog = progressive(model, name, X, base, threshold)
         progressive_rows.extend(prog)
+
+        sweep, crossover = threshold_sweep(model, name, X, base)
+        sweep_rows.extend(sweep)
+        crossovers[name] = crossover
 
         worst = max(rows, key=lambda r: r["share_scored_less_risky"])
         biggest_flip = max(rows, key=lambda r: r["decline_to_approve"])
@@ -244,6 +302,8 @@ def main() -> int:
         OUT_TABLES / "missingness_per_field.csv", index=False)
     pd.DataFrame(progressive_rows).to_csv(
         OUT_TABLES / "missingness_progressive.csv", index=False)
+    pd.DataFrame(sweep_rows).to_csv(
+        OUT_TABLES / "missingness_threshold_sweep.csv", index=False)
 
     with open(OUT_TABLES / "missingness_summary.json", "w",
               encoding="utf-8") as fh:
@@ -254,6 +314,7 @@ def main() -> int:
             "n_features": len(CLEAN_FEATURES),
             "draws_per_k": N_DRAWS,
             "models": summary,
+            "no_information_applicant": crossovers,
         }, fh, indent=2)
 
     print(f"\nSaved missingness_per_field.csv, missingness_progressive.csv "

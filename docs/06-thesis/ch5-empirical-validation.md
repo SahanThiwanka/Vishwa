@@ -161,7 +161,51 @@ charged-off loans. **The contamination is established; its cause is not.** This
 study reports it accordingly and does not assert a mechanism it has not
 demonstrated.
 
-### 5.3.5 The contamination reaches the dataset's own documentation
+### 5.3.5 Is twelve doing the work?
+
+The finding rests on one boolean, so the obvious challenge is whether twelve
+matters at all. If "multiple of two" or "multiple of five" discriminated equally
+well, this would not be about round contractual terms and the interpretation
+above would be wrong.
+
+Twenty moduli were tested on the 651,501 matured facilities with a positive term.
+The strata overlap by construction — every multiple of twelve is also a multiple
+of six, four, three and two — so raw discrimination is reported alongside
+*residual* discrimination computed within the multiples of twelve and within the
+non-multiples separately, which strips out whatever a modulus inherits from
+twelve.
+
+| Modulus | Share ≡ 0 | Raw AUC |
+|---:|---:|---:|
+| **12** | 70.07% | **0.8859** |
+| 6 | 74.39% | 0.8600 |
+| 4 | 74.74% | 0.8109 |
+| 3 | 80.24% | 0.7934 |
+| 2 | 84.04% | 0.7125 |
+| 7 | 34.90% | 0.6291 |
+| 5 | 33.24% | 0.5856 |
+| 13 | 2.23% | 0.4699 |
+| 11 | 2.91% | 0.4660 |
+
+Twelve is the strongest, and the ordering of its divisors — 12 > 6 > 4 > 3 > 2 —
+is exactly the dilution pattern expected if multiples of twelve are the carrier:
+each coarser modulus admits more non-annual terms and loses discrimination in
+proportion. The moduli that do *not* divide twelve behave quite differently.
+Eleven and thirteen sit at or below chance, at 0.4660 and 0.4699. It is not the
+case that any modulus would do.
+
+One qualification, and it refines rather than threatens the finding. Within the
+facilities that are *not* multiples of twelve, "multiple of three" still reaches
+**0.5888** and "multiple of six" **0.5684**. Some signal therefore attaches to
+quarter- and half-year terms independently of whole years. The pattern is
+roundness on a calendar grid rather than annual roundness alone, which is if
+anything the more natural reading of a contractual convention.
+
+(The 0.8859 here and the 0.8894 in §5.3.2 differ because this probe additionally
+excludes facilities with a term of zero; both are produced by code in
+`research/src/`.)
+
+### 5.3.6 The contamination reaches the dataset's own documentation
 
 Li, Mickel and Taylor (2018), the paper that documents this dataset, derive a
 feature from `Term` themselves. They define a dummy `RealEstate`, set to 1 where
@@ -594,15 +638,37 @@ between 2004 and 2010, default rate 35.89%.
 ### 5.6c.2 Results
 
 The trained gradient booster fails the four-fifths rule on three of the five
-attributes; the expert scorecard fails on four of five.
+attributes; the expert scorecard fails on four of five. Intervals are 95%
+bootstrap percentiles over 400 resamples of the test cohort, with the decline
+threshold recomputed inside each resample.
 
 | Attribute | Gradient boosting | Expert scorecard |
 |---|---|---|
-| Rurality | 0.325 — fails | 0.183 — fails |
-| Firm size | 0.832 — passes | 0.729 — fails |
-| Firm age | 0.993 — passes | 0.711 — fails |
-| Sector | 0.773 — fails | 0.731 — fails |
-| Facility size | 0.789 — fails | 0.831 — passes |
+| Rurality | **0.325** [0.308, 0.344] — fails | **0.183** [0.170, 0.209] — fails |
+| Firm size | 0.832 [0.820, 0.838] — passes | **0.729** [0.711, 0.746] — fails |
+| Firm age | 0.993 [0.989, 0.997] — passes | **0.711** [0.707, 0.714] — fails |
+| Sector | **0.773** [0.752, 0.783] — fails | **0.731** [0.702, 0.758] — fails |
+| Facility size | **0.789** [0.785, 0.793] — fails | 0.831 [0.828, 0.836] — passes |
+
+**Both measures are ratios of a minimum to a maximum across groups, and that
+structure is biased.** Sampling noise pushes the observed minimum down and the
+maximum up, so a disparity ratio computed this way reads worse than reality even
+when no group is treated differently — and the smaller the groups, the worse it
+reads. This has to be quantified rather than asserted away, since one group here
+has only 752 members.
+
+It was quantified by permuting the decisions: assigning the same volume of
+declines at random, holding group sizes fixed, and re-measuring. **Under random
+assignment the ratio reads 0.973 to 0.999** across the five attributes. That is
+the floor the measure produces with no disparity present. The observed values —
+0.325, 0.711, 0.729, 0.773, 0.789 — are nowhere near it, so the bias is real but
+far too small to account for the findings.
+
+The identification is also stable. Resampling the cohort names the same group as
+worst-affected in **89% to 100%** of draws, depending on the attribute; only
+sector under the gradient booster falls below 100%, at 89%. A disparity attached
+to a group that changed between resamples would be a statement about noise, and
+none of these are.
 
 The error-rate disparities are the substantive finding. Under the gradient
 booster, **17.96% of micro-enterprises that repaid would have been declined,

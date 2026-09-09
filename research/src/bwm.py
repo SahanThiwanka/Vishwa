@@ -158,6 +158,64 @@ def aggregate(results: list[BWMResult], drop_inconsistent: bool = True) -> dict[
     return {k: v / total for k, v in out.items()}
 
 
+def max_deviation(items, best, worst, best_to_others, others_to_worst,
+                  weights: np.ndarray) -> float:
+    """The linear-model objective, computed directly from a weight vector.
+
+    This is deliberately written from the definition rather than from the LP's
+    constraint matrix, so that it can disagree with it. If the matrix has a sign
+    error or a mis-set coefficient, the xi that linprog reports and the deviation
+    the returned weights actually exhibit come apart, and the check in the
+    self-test catches it.
+    """
+    idx = {item: i for i, item in enumerate(items)}
+    b, w = idx[best], idx[worst]
+    worst_dev = 0.0
+    for item, a in best_to_others.items():
+        j = idx[item]
+        if j != b:
+            worst_dev = max(worst_dev, abs(weights[b] - a * weights[j]))
+    for item, a in others_to_worst.items():
+        j = idx[item]
+        if j != w:
+            worst_dev = max(worst_dev, abs(weights[j] - a * weights[w]))
+    return float(worst_dev)
+
+
+def _independent_optimum(items, best, worst, best_to_others,
+                         others_to_worst, restarts: int = 40) -> float:
+    """Minimise the same objective with a different algorithm.
+
+    The linear programme is convex, so `linprog` returns the global optimum and a
+    general-purpose optimiser cannot beat it. That is exactly what makes this a
+    test: if sequential least-squares finds a LOWER maximum deviation than the LP
+    reports, the LP is not encoding the problem it claims to encode.
+
+    Property-based checks cannot catch that. The existing self-test uses a fully
+    consistent example whose answer is fixed by normalisation alone (xi* = 0), so
+    the optimiser is never exercised. Errors would only show on inconsistent
+    responses - which is every real response.
+    """
+    from scipy.optimize import minimize
+
+    n = len(items)
+    rng = np.random.default_rng(0)
+    fn = lambda x: max_deviation(items, best, worst, best_to_others,
+                                 others_to_worst, x)
+    constraints = [{"type": "eq", "fun": lambda x: x.sum() - 1.0}]
+    bounds = [(0.0, 1.0)] * n
+
+    best_value = np.inf
+    for _ in range(restarts):
+        x0 = rng.dirichlet(np.ones(n))
+        res = minimize(fn, x0, method="SLSQP", bounds=bounds,
+                       constraints=constraints,
+                       options={"maxiter": 500, "ftol": 1e-12})
+        if res.success:
+            best_value = min(best_value, float(fn(res.x)))
+    return best_value
+
+
 def _self_test() -> int:
     print("BWM self-test\n" + "=" * 60)
 
@@ -201,6 +259,42 @@ def _self_test() -> int:
     print(f"\nContradictory example: CR = {bad.consistency_ratio:.4f} "
           f"({'flagged' if not bad.reliable else 'NOT flagged'})")
     checks.append(("contradictory response flagged inconsistent", not bad.reliable))
+
+    # ---- optimality on INCONSISTENT responses ----------------------------
+    # The example above is perfectly consistent (xi* = 0) and its weights follow
+    # from normalisation alone, so it tests no optimisation. These do.
+    print("\nOptimality on inconsistent responses:")
+    print(f"  {'case':<34} {'xi* (LP)':>10} {'independent':>12} {'agree':>7}")
+    inconsistent_cases = [
+        ("mild inconsistency",
+         {"price": 1, "quality": 3, "brand": 7, "design": 4},
+         {"price": 7, "quality": 3, "brand": 1, "design": 2}),
+        ("moderate inconsistency",
+         {"price": 1, "quality": 2, "brand": 9, "design": 3},
+         {"price": 6, "quality": 5, "brand": 1, "design": 2}),
+        ("strong inconsistency",
+         {"price": 1, "quality": 5, "brand": 4, "design": 2},
+         {"price": 3, "quality": 2, "brand": 1, "design": 8}),
+    ]
+    for label, b2o, o2w in inconsistent_cases:
+        r = solve_bwm(items, best="price", worst="brand",
+                      best_to_others=b2o, others_to_worst=o2w)
+        w_vec = np.array([r.weights[i] for i in items])
+
+        # 1. Do the returned weights actually exhibit the reported deviation?
+        realised = max_deviation(items, "price", "brand", b2o, o2w, w_vec)
+        consistent_pair = abs(realised - r.xi) < 1e-6
+
+        # 2. Can a different algorithm do better? It should not be able to.
+        independent = _independent_optimum(items, "price", "brand", b2o, o2w)
+        agree = independent >= r.xi - 1e-6
+
+        print(f"  {label:<34} {r.xi:>10.6f} {independent:>12.6f} "
+              f"{'yes' if agree else 'NO':>7}")
+        checks.append((f"{label}: xi matches the weights' own deviation",
+                       consistent_pair))
+        checks.append((f"{label}: no better solution exists", agree))
+        checks.append((f"{label}: xi is strictly positive", r.xi > 1e-9))
 
     # Aggregation across respondents.
     group = aggregate([result, result])

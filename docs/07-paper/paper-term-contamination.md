@@ -59,7 +59,7 @@ Our contributions:
 2. Quantification of the resulting inflation in reported performance, with a
    meaningless-variable probe establishing an artefact ceiling (§V).
 3. Rejection of the natural mechanism hypothesis, leaving the cause open and
-   stated as such (§IV-D).
+   stated as such (§IV-E).
 4. Three further validation hazards in the same dataset: right-censoring, the
    optimism of random splitting, and a roughly 700-fold degradation in
    calibration across a temporal boundary (§VI).
@@ -222,7 +222,36 @@ does not. Computed within each approval year:
 
 The association holds in every year within 0.859–0.900.
 
-### D. The mechanism is not established
+### D. Twelve is not an arbitrary choice
+
+If any modulus discriminated comparably, the pattern would not be about round
+contractual terms. Twenty moduli were tested on the 651,501 matured facilities
+with a positive term. Because the strata overlap — every multiple of twelve is
+also a multiple of six, four, three and two — discrimination is reported both raw
+and residually, the latter computed within the multiples of twelve and within the
+non-multiples separately.
+
+| Modulus | Raw AUC | | Modulus | Raw AUC |
+|---:|---:|---|---:|---:|
+| **12** | **0.8859** | | 7 | 0.6291 |
+| 6 | 0.8600 | | 5 | 0.5856 |
+| 4 | 0.8109 | | 13 | 0.4699 |
+| 3 | 0.7934 | | 11 | 0.4660 |
+| 2 | 0.7125 | | | |
+
+Twelve leads, and its divisors decline in the order 12 > 6 > 4 > 3 > 2 — the
+dilution pattern expected when multiples of twelve are the carrier and each
+coarser modulus admits more non-annual terms. Moduli that do not divide twelve
+behave differently: eleven and thirteen sit at or below chance.
+
+One qualification. Within facilities that are *not* multiples of twelve,
+"multiple of three" still reaches 0.5888 and "multiple of six" 0.5684, so some
+signal attaches to quarter- and half-year terms independently. The pattern is
+roundness on a calendar grid rather than strictly annual roundness — which is the
+more natural reading of a contractual convention, and does not affect the
+argument that the field carries outcome information.
+
+### E. The mechanism is not established
 
 The natural hypothesis is that `Term` for charged-off facilities has been
 overwritten with elapsed time to charge-off. **We tested and rejected it.** Among
@@ -323,7 +352,7 @@ frequently conflated.
 
 ## VII. Limitations
 
-We have not established the mechanism of the contamination (§IV-D), and we do not
+We have not established the mechanism of the contamination (§IV-E), and we do not
 claim priority for the finding — our literature search was not exhaustive.
 
 Restricting to fully-matured facilities removes censoring but over-represents
@@ -431,7 +460,8 @@ All results are produced by the following, in order, against the public dataset:
 
 ```
 research/src/prepare_sba.py        # cleaning, leakage-column removal, censoring flags
-research/src/leakage_analysis.py   # Sections IV-B, IV-C, IV-D
+research/src/leakage_analysis.py   # Sections IV-B, IV-C, IV-E
+research/src/modulus_probe.py      # Section IV-D
 research/src/benchmark.py          # Section V
 research/src/make_figures.py       # figures
 ```
@@ -453,7 +483,7 @@ No value in this paper was entered by hand.
    has still not been run and is what a reviewer will expect of a claim framed as
    systematic.
 2. **Contact the SBA or the dataset authors** about the mechanism. A reply
-   converts §IV-D from an open question into a complete account and materially
+   converts §IV-E from an open question into a complete account and materially
    strengthens the paper.
 3. **Complete the leakage literature review** — reference [4] onward. Kapoor and
    Narayanan's taxonomy is cited; position this case explicitly against the

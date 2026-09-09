@@ -1,9 +1,0 @@
-level,respondent,consistency_ratio,usable
-dimension:borrower_management,TESTDATA-DELETE-ME,0.0379,True
-dimension:credit_conduct,TESTDATA-DELETE-ME,0.0417,True
-dimension:dev_impact,TESTDATA-DELETE-ME,0.0329,True
-dimension:historic_financials,TESTDATA-DELETE-ME,0.0309,True
-dimension:market_position,TESTDATA-DELETE-ME,0.0352,True
-dimension:project_viability,TESTDATA-DELETE-ME,0.0329,True
-dimension:risk_security,TESTDATA-DELETE-ME,0.0379,True
-objective:credit_risk,TESTDATA-DELETE-ME,0.0379,True

@@ -78,11 +78,26 @@ validated on datasets lacking their variables.
 Further results show model output robust to weight perturbation within realistic
 expert disagreement, calibration degrading roughly 700-fold across a temporal
 boundary while discrimination falls far less, and the two objectives assigning the
-same facility different risk bands 88.2% of the time. Weight elicitation was
-instrumented but not administered, and that limitation is reported throughout.
+same facility different risk bands 88.2% of the time.
+
+Two findings concern the conduct of automated credit assessment rather than this
+dataset. First, both a gradient booster and a median-imputing logistic regression
+score information the applicant withheld as *favourable* rather than as unknown:
+omitting a single field moves 19.84% of applicants from decline to approval, and
+an applicant supplying nothing at all is approved outright. This is an empirical
+argument for refusing to score an incomplete file rather than scoring it with a
+caveat. Second, subgroup analysis across credit-access proxies finds the expert
+scorecard failing the four-fifths rule on four of five attributes and declining
+36.11% of creditworthy agricultural borrowers, the worst rate of any sector,
+though agriculture defaults least. The dataset records no protected
+characteristic, so no claim about lawful discrimination follows.
+
+Weight elicitation was instrumented but not administered, and that limitation is
+reported throughout.
 
 **Keywords:** SME credit appraisal, multi-criteria decision analysis, fuzzy sets,
-decision support systems, data leakage, development banking
+decision support systems, data leakage, algorithmic fairness, missing data,
+development banking
 
 <<<PAGEBREAK>>>
 

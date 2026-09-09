@@ -3,6 +3,36 @@
 Written after the first complete draft. The thesis is defensible as it stands;
 this is about moving it from *defensible* to *strong*.
 
+> **STATUS — kept as a record of what was planned against what was delivered.**
+> Tracks A, B and C are complete except where noted below; Track D remains
+> blocked. Three things were done that this plan did not anticipate, because they
+> only became visible once the planned work was under way: a disparate-impact
+> assessment (the model card's own flagged gap), a counterfactual analysis of
+> what models do with withheld information, and a robustness check on whether
+> twelve is an arbitrary modulus. The literature track produced three corrections
+> to the thesis text, which was its point.
+>
+> | Item | Status |
+> |---|---|
+> | A1 Confidence intervals and significance tests | **done** |
+> | A2 Calibration | **done** |
+> | A3 Cost-sensitive evaluation | **done** |
+> | A4 Weight sensitivity | **done** |
+> | A5 Second dataset | **not done** — no comparable public SME dataset located |
+> | B1 Bibliography to 50–80 sources | **done** — 58 entries; 8 read in full, 21 unconfirmed and uncitable |
+> | B2 Systematic search for affected work | **partly** — one study verified by full text, four excluded, two unobtainable |
+> | B3 Position against the SME literature | **done** — two novelty claims withdrawn, both confirmed by reading |
+> | C1 Classical benchmark | **done** |
+> | C2 Band sensitivity | **done** |
+> | C3 Model card | **done**, and updated with the fairness results |
+> | C4 System hardening | **done** — rate limiting, pagination, accessibility, CI |
+> | D  Elicitation, reliability, field evaluation | **blocked** — needs people |
+>
+> Unplanned additions: fairness and disparate impact (§5.18), what models do with
+> withheld information (§5.19), modulus robustness (§5.10.5), the dataset's own
+> `RealEstate` feature (§5.10.6), and verification of the BWM solver against an
+> independent optimiser.
+
 **Honest framing first.** Some weaknesses cannot be fixed by more work at a
 keyboard. They need people — practitioners completing an elicitation, officers
 scoring cases for a reliability study. Those are marked ⛔ and no amount of
@@ -16,6 +46,7 @@ lot of it.
 | Weakness | Severity | Fixable without people? |
 |---|---|---|
 | Bibliography has ~6 verified sources | **High** — an MSc expects 50+ | ✅ yes |
+| No fairness or disparate-impact assessment | **High** — unacceptable in a credit model | ✅ yes *(added later; not in the original plan)* |
 | Novelty of the `Term` finding unestablished | **High** — the paper's central claim | ✅ yes |
 | No confidence intervals or significance tests on any AUC | **High** | ✅ yes |
 | Single validation dataset | Medium | ✅ yes |

@@ -12,7 +12,7 @@ what was not done, and what follows.
   comparisons, approximately fifteen minutes — with a participation and
   confidentiality notice, collecting a self-chosen participant code, years of
   experience, institution type and role, and **no name or customer information**.
-- A linear BWM solver (Rezaei, 2016) verified against the published worked
+- A linear BWM solver [21] verified against the published worked
   example, reproducing its weights exactly (ξ\* = 0, CR = 0) and flagging a
   deliberately contradictory response at CR = 1.18.
 - An analysis pipeline computing per-respondent consistency ratios, excluding
@@ -63,7 +63,7 @@ emerged only because an AUC of 0.9726 was investigated rather than reported. Had
 it been published it would have exceeded every benchmark it would have been
 compared against — which is precisely why it would not have been questioned.
 
-Kapoor and Narayanan (2023) found leakage affecting 294 papers across seventeen
+Kapoor and Narayanan [27] found leakage affecting 294 papers across seventeen
 fields. This case is harder to catch than the textbook forms: the offending field
 is documented as legitimate, is available at prediction time under its documented
 meaning, and is economically meaningful. It is caught only by noticing that the
@@ -131,11 +131,13 @@ dimension, not the whole objective.
 business age are plausible confounders and were not adjusted for.
 
 **No inter-rater reliability study.** The premise that manual appraisal is
-inconsistent is supported from the literature (Cortés et al., 2016) but not
+inconsistent is supported from the literature [1] but not
 measured here. This remains the single most significant omission.
 
 **No field evaluation and no fairness assessment.** No officer has used the
-system on live applications, and no disparate-impact analysis has been performed.
+system on live applications, so neither perceived usefulness [34] nor
+usability [35] has been measured, and no disparate-impact analysis has
+been performed.
 For a credit model the second is a serious gap, recorded in the model card.
 
 **Novelty of the contamination finding is not established as priority.** A

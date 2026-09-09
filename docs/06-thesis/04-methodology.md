@@ -2,10 +2,10 @@
 
 ## 4.1 Research design
 
-This study follows **Design Science Research** (Hevner et al., 2004): knowledge is
+This study follows **Design Science Research** [29]: knowledge is
 produced by building an artefact and evaluating it, rather than by testing
 hypotheses about existing phenomena. The process follows the six activities set
-out by Peffers et al. (2007) — problem identification, objectives, design and
+out by Peffers et al. [30] — problem identification, objectives, design and
 development, demonstration, evaluation, and communication. The artefact is a dual-objective decision-support
 system for SME credit appraisal, together with the criteria model beneath it.
 
@@ -87,11 +87,11 @@ attention, and response quality degrades well before the end. Inconsistency
 introduced by fatigue would make the resulting weights unusable regardless of how
 carefully the instrument was designed.
 
-The Best-Worst Method (Rezaei, 2015) requires 2n−3 comparisons per level,
+The Best-Worst Method [20] requires 2n−3 comparisons per level,
 reducing the instrument to **86 comparisons** — roughly fifteen minutes. Because
 every comparison is anchored to a fixed reference rather than a rotating partner,
 BWM also tends to yield more consistent responses. The linear formulation
-(Rezaei, 2016) is used, giving a unique solution.
+[21] is used, giving a unique solution.
 
 The choice is a response to a real constraint on practitioner time, not a
 convenience.
@@ -152,8 +152,13 @@ determines what Chapter 5 is entitled to conclude.
   places the same economic cycle on both sides and overstates performance.
 - The unfitted expert scorecard is compared against logistic regression and
   gradient boosting, both trained on hundreds of thousands of labelled outcomes.
-- Metrics: AUC, Kolmogorov-Smirnov separation, average precision, Brier score,
-  F1 at the Youden-optimal threshold.
+- Metrics: area under the ROC curve [31], Kolmogorov-
+  Smirnov separation, average precision, the Brier score [32] with
+  Murphy's decomposition, and F1 at the Youden-optimal threshold.
+- Paired comparisons of AUC use DeLong's test [33], which accounts for the correlation induced by
+  evaluating both models on identical cases.
+- Interval estimates are stratified bootstrap percentile intervals, resampling
+  positives and negatives separately.
 
 The comparison is deliberately asymmetric. The scorecard never sees a default
 label; its bands were fixed from a priori reasoning before outcomes were

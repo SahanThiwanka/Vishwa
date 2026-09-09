@@ -18,6 +18,9 @@ Undergraduate and Postgraduate Degree Programmes":
                1.1.1 Heading (plain, first letter capitalised only)
   captions     tables captioned ABOVE, figures captioned BELOW, numbered by
                section as Table 2.1, Figure 1.2; no cell shading
+  references   IEEE numbered style, applied by to_ieee.py
+
+Pipeline:  restructure_thesis.py  ->  to_ieee.py  ->  this script
 
 The Table of Contents and the Lists of Figures and Tables are inserted as Word
 field codes. They appear empty until the document is opened in Word and the

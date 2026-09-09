@@ -48,7 +48,7 @@ computations are performed by hand for every application.
 **It is inconsistent.** Two officers with the same file may reach different
 conclusions, because the method for combining the evidence lives in each
 officer's head rather than in the instrument. This is not speculation: Cortés,
-Duchin and Sosyura (2016) show that officers' credit approvals move with their
+Duchin and Sosyura [1] show that officers' credit approvals move with their
 mood — instrumented by local sunshine — and that the effect is **larger where
 decisions carry more discretion and reviews are less automated**, which is
 exactly the regime this form operates in.

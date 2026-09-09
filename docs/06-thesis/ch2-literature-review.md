@@ -32,8 +32,8 @@ matters here, because a probability can be checked for *calibration* while a cla
 label cannot (§5.5).
 
 Hand and Henley (1997) reviewed the statistical methods then in use, and Thomas,
-Crook and Edelman (1992; Thomas, Edelman and Crook, 2002) provided the standard
-textbook treatments. The most useful modern reference point is Lessmann et al.
+Crook and Edelman (1992) and Thomas, Edelman and Crook (2002) provided the
+standard textbook treatments. The most useful modern reference point is Lessmann et al.
 (2015), who benchmarked forty-one classifiers across eight credit datasets and
 found ensemble methods consistently ahead.
 
@@ -120,8 +120,8 @@ instruments a proper measurement would use.
 ### 2.5.1 Foundations
 
 Zadeh (1965) introduced fuzzy sets, providing a representation for gradations of
-membership rather than binary classification. Saaty (1980, 1990) introduced the
-Analytic Hierarchy Process, deriving priority weights from pairwise comparisons on
+membership rather than binary classification. Saaty (1980) introduced the
+Analytic Hierarchy Process, later defending it against criticism (Saaty, 1990), deriving priority weights from pairwise comparisons on
 a 1–9 scale — still the most widely used weighting method.
 
 Fuzzy extensions followed. Chang (1996) proposed extent analysis for fuzzy AHP,

@@ -189,7 +189,7 @@ observable subset of criteria.
 
 ## 5.9 Dataset
 
-The SBA National dataset (Li, Mickel and Taylor, 2018) records 899,164 loan
+The SBA National dataset [28] records 899,164 loan
 guarantees issued by the U.S. Small Business Administration between 1987 and
 2014, with realised outcomes in `MIS_Status` (`P I F` = paid in full, `CHGOFF` =
 charged off). It is the largest public dataset of small-business lending with

@@ -208,7 +208,9 @@ inconsistent is supported from the literature (Cortés et al., 2016) but not
 measured here. This remains the single most significant omission.
 
 **No field evaluation and no fairness assessment.** No officer has used the
-system on live applications, and no disparate-impact analysis has been performed.
+system on live applications, so neither perceived usefulness (Davis, 1989) nor
+usability (Brooke, 1996) has been measured, and no disparate-impact analysis has
+been performed.
 For a credit model the second is a serious gap, recorded in the model card.
 
 **Novelty of the contamination finding is not established as priority.** A

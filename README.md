@@ -178,6 +178,7 @@ python research/src/weight_sensitivity.py # weight perturbation Monte Carlo
 python research/src/make_figures.py       # all figures
 python research/src/derive_weights.py     # weights (needs responses)
 python scripts/restructure_thesis.py      # chapters -> NSBM section order
+python scripts/to_ieee.py                 # author-date -> IEEE numbered
 python scripts/build_thesis_nsbm.py       # assemble THESIS-NSBM.docx
 python scripts/build_paper.py             # paper + supervisor briefing
 cd web && npm test && npm run dev

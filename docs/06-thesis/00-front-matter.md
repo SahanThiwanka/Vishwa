@@ -35,8 +35,8 @@ foundation of this work. The *Project / Business Appraisal Report for SME Credit
 Facility* is a carefully constructed document, and the analysis here rests
 entirely on the institutional expertise embedded in it.
 
-I acknowledge Li, Mickel and Taylor (2018) for placing the SBA National dataset
-in the public domain. The principal finding of this thesis is a caution about
+I acknowledge the authors of the SBA National dataset for placing it in the
+public domain. The principal finding of this thesis is a caution about
 that dataset, and it could not have been made had they not published it. Making
 data open invites exactly this kind of scrutiny, and the field is better for it.
 

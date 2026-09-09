@@ -152,8 +152,14 @@ determines what Chapter 5 is entitled to conclude.
   places the same economic cycle on both sides and overstates performance.
 - The unfitted expert scorecard is compared against logistic regression and
   gradient boosting, both trained on hundreds of thousands of labelled outcomes.
-- Metrics: AUC, Kolmogorov-Smirnov separation, average precision, Brier score,
-  F1 at the Youden-optimal threshold.
+- Metrics: area under the ROC curve (Hanley and McNeil, 1982), Kolmogorov-
+  Smirnov separation, average precision, the Brier score (Brier, 1950) with
+  Murphy's decomposition, and F1 at the Youden-optimal threshold.
+- Paired comparisons of AUC use DeLong's test (DeLong, DeLong and
+  Clarke-Pearson, 1988), which accounts for the correlation induced by
+  evaluating both models on identical cases.
+- Interval estimates are stratified bootstrap percentile intervals, resampling
+  positives and negatives separately.
 
 The comparison is deliberately asymmetric. The scorecard never sees a default
 label; its bands were fixed from a priori reasoning before outcomes were

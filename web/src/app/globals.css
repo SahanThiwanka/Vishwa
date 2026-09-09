@@ -24,6 +24,36 @@ body {
   color: var(--foreground);
 }
 
+/*
+ * A visible focus indicator on every interactive element.
+ *
+ * Tailwind's reset removes the browser default outline, and this application is
+ * substantially keyboard-driven: an officer works down a long appraisal form
+ * with the keyboard, and losing the focus ring makes that impossible to follow.
+ * WCAG 2.2 requires focus to remain visible (2.4.7) and not be wholly obscured.
+ */
+:focus-visible {
+  outline: 2px solid #0f172a;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/*
+ * Visible only when focused. Used by the skip link in the root layout so a
+ * keyboard user can jump past the header nav on every page.
+ */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 50;
+}
+
+.skip-link:focus {
+  left: 0.5rem;
+  top: 0.5rem;
+}
+
 @layer components {
   .input {
     @apply w-full rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-sm

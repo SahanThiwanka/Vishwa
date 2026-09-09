@@ -104,9 +104,47 @@ The gate is a refusal to answer rather than a score adjustment, because a
 discounted score would preserve the false impression that the system had an
 opinion.
 
+That was a safety argument, and §5.19 shows it was the weaker of the two
+available. The stronger one is that the alternative is exploitable: both
+conventional models tested score a withheld field as favourable rather than as
+unknown, so under a fixed threshold an applicant improves their assessment by
+answering less. A design decision taken on cautionary grounds turned out to have
+an incentive justification that is harder to argue with.
+
 **Authenticated sign-off** (§4.13) replaced a typed name. An audit trail of
 self-declared signatories records nothing; the signatory is now the authenticated
 user and roles are enforced server-side.
+
+### 6.3.5 Who the models serve worst
+
+Two findings sit outside the research questions and are reported because they
+bear directly on whether any of this should be deployed.
+
+The first is that **the artefact discriminates against the applicants it was
+designed to serve**. The scorecard fails the four-fifths rule on four of five
+credit-access attributes, and would decline 36.11% of creditworthy agricultural
+borrowers — the worst rate of any sector — while agriculture has the lowest
+default rate in the cohort at 19.19%. The trained model is not much better:
+creditworthy micro-enterprises are declined at 2.81 times the rate of large
+firms, and the smallest facility quartile at 3.42 times the largest. Micro-firms,
+small facilities and agriculture are precisely the segments that SME and
+development finance exist to reach.
+
+This has to be stated carefully. These are credit-access proxies; the dataset
+records no protected characteristic, so no claim about lawful discrimination
+follows. Group default rates genuinely differ, so selection-rate gaps are not by
+themselves evidence of injustice — which is why the error-rate comparison, taken
+only over borrowers who actually repaid, is the one reported as the finding.
+
+The second is that both conventional models **reward applicants for withholding
+information** (§5.19), which is the empirical case for the completeness gate
+discussed above.
+
+Neither finding was sought. Both emerged from taking the model card's own list of
+untested risks seriously, and the first of them is a defect in this study's own
+artefact rather than in someone else's. It is reported for that reason: an
+appraisal instrument that penalises the best-performing sector is not ready to
+inform decisions, and saying so is more useful than not having looked.
 
 ## 6.4 Limitations
 
@@ -118,6 +156,12 @@ variables.
 
 **No weight elicitation was carried out** (§6.1). RQ2 as originally posed is
 unanswered.
+
+**Fairness is assessed only on credit-access proxies.** The SBA file records no
+race, sex, age, disability or marital-status field. Passing — or failing — on
+rurality, firm size, sector and facility size establishes nothing about
+discrimination on protected characteristics, which remains untested and is a
+precondition for any deployment.
 
 **The fuzzy layer is not exercised by the validation.** All SBA-observable
 criteria are quantitative and enter as degenerate fuzzy numbers, under which the

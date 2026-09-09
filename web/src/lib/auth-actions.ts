@@ -1,11 +1,19 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
 import { getSession } from "@/lib/dal";
 import { prisma } from "@/lib/db";
+import {
+  checkSignInAllowed,
+  clearFailedSignIns,
+  clientAddress,
+  hashClient,
+  pruneOldAttempts,
+  recordFailedSignIn,
+} from "@/lib/rate-limit";
 import {
   createSessionToken,
   sessionCookieName,
@@ -43,6 +51,19 @@ export async function signIn(
       "credentials",
     );
 
+    const client = hashClient(clientAddress(await headers()));
+
+    // Checked BEFORE the user lookup, so a locked-out response cannot be used
+    // to tell an existing username from a missing one.
+    const limit = await checkSignInAllowed(username, client);
+    if (!limit.allowed) {
+      return {
+        error:
+          `Too many sign-in attempts. Try again in ` +
+          `${limit.retryAfterMinutes} minutes.`,
+      };
+    }
+
     const user = await prisma.user.findUnique({ where: { username } });
 
     if (!user || !user.active) {
@@ -52,12 +73,17 @@ export async function signIn(
         password,
         "00000000000000000000000000000000:" + "0".repeat(128),
       );
+      await recordFailedSignIn(username, client);
       return { error: "Incorrect username or password" };
     }
 
     if (!verifyPassword(password, user.passwordHash)) {
+      await recordFailedSignIn(username, client);
       return { error: "Incorrect username or password" };
     }
+
+    await clearFailedSignIns(username);
+    void pruneOldAttempts();
 
     const token = createSessionToken({
       userId: user.id,

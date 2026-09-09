@@ -1,0 +1,30 @@
+# Python dependencies for the research and document pipelines.
+#
+# Install:  pip install -r requirements.txt
+#
+# Versions are pinned to the ones the reported results were produced under. A
+# thesis that says "every number comes from code in this repository" has to say
+# which versions of that code's dependencies, or the claim cannot be checked:
+# scikit-learn in particular has changed default behaviour between minor
+# releases often enough that an unpinned environment is not a reproduction.
+#
+# Python 3.13 was used. Earlier versions are untested here.
+
+# Analysis
+numpy==2.4.3
+pandas==3.0.1
+scikit-learn==1.8.0
+scipy==1.17.1
+
+# Parquet, for the prepared dataset
+pyarrow==24.0.0
+
+# Figures
+matplotlib==3.10.8
+
+# Thesis and paper builds (scripts/build_thesis_nsbm.py)
+python-docx==1.2.0
+
+# Reading candidate studies during the affected-work search
+# (scripts/read_pdf.py)
+pypdf==6.14.2

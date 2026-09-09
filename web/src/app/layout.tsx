@@ -28,6 +28,15 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
+        {/* First focusable element on the page, so a keyboard user can reach
+            the content without tabbing through the whole header nav. */}
+        <a
+          href="#main"
+          className="skip-link rounded-md bg-slate-900 px-3 py-2 text-sm text-white"
+        >
+          Skip to main content
+        </a>
+
         <header className="border-b border-slate-200 bg-white">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
             <Link href="/" className="flex items-baseline gap-2.5">
@@ -38,7 +47,7 @@ export default async function RootLayout({
                 decision support &middot; prototype
               </span>
             </Link>
-            <nav className="flex items-center gap-4 text-sm">
+            <nav aria-label="Main" className="flex items-center gap-4 text-sm">
               {user ? (
                 <>
                   <Link href="/" className="text-slate-600 hover:text-slate-900">
@@ -75,7 +84,13 @@ export default async function RootLayout({
           </div>
         </header>
 
-        <main className="mx-auto w-full max-w-7xl flex-1 px-6 py-6">{children}</main>
+        <main
+          id="main"
+          tabIndex={-1}
+          className="mx-auto w-full max-w-7xl flex-1 px-6 py-6"
+        >
+          {children}
+        </main>
 
         <footer className="border-t border-slate-200 bg-white">
           <div className="mx-auto max-w-7xl px-6 py-3 text-xs text-slate-400">

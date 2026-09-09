@@ -1,0 +1,139 @@
+name: CI
+
+# What this is for
+#
+# Two kinds of regression have actually happened in this repository, and both
+# were invisible until someone looked:
+#
+#   1. A chapter was edited and the generated thesis sections were not
+#      regenerated, so the submitted document quietly carried stale numbers.
+#   2. The restructure silently dropped five whole sections while every claim
+#      check still passed.
+#
+# Neither produces a broken build or a failing test in the ordinary sense. The
+# document just becomes wrong. So the document pipeline is checked here in the
+# same way the code is.
+#
+# The raw SBA file (~200 MB) is not committed, so the analyses are not re-run in
+# CI. The result tables they produce ARE committed, and every claim in the
+# thesis is verified against those.
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  web:
+    name: Web application
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - run: npm ci
+
+      # The criteria tree lives outside web/ and is copied in by this script.
+      # It is what `predev` and `prebuild` run, so CI must run it too or the
+      # build sees a stale model.
+      - name: Sync criteria model
+        run: npm run sync-model
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Production build
+        run: npm run build
+        env:
+          # Any valid connection string: the build does not read the database,
+          # but the Prisma adapter refuses to construct without one.
+          DATABASE_URL: file:./ci.db
+
+  research:
+    name: Research and thesis
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      # Fails if any figure quoted in the thesis no longer matches the committed
+      # result tables, if a drafted section is missing from the generated
+      # document, if the section numbering has a gap, or if a cross-reference
+      # points at a section that does not exist.
+      - name: Verify thesis claims against generated results
+        run: python scripts/verify_claims.py
+
+      # The generated sections are derived files. If a source chapter was edited
+      # without re-running the restructure, regenerating here produces a diff and
+      # this step fails - which is exactly the case that used to ship silently.
+      - name: Document pipeline is reproducible
+        run: |
+          python scripts/restructure_thesis.py
+          python scripts/to_ieee.py
+          git diff --exit-code -- docs/06-thesis/ \
+            || (echo "::error::Generated thesis sections are out of date. Run scripts/restructure_thesis.py and scripts/to_ieee.py and commit the result." && exit 1)
+
+      - name: Build the thesis document
+        run: python scripts/build_thesis_nsbm.py
+
+      - name: Upload built thesis
+        uses: actions/upload-artifact@v4
+        with:
+          name: thesis-docx
+          path: docs/06-thesis/THESIS-NSBM.docx
+
+  parity:
+    name: Scoring engine parity
+    runs-on: ubuntu-latest
+
+    # The TypeScript engine in the application and the Python engine used for
+    # the research must agree. If they diverge, the thesis is describing a
+    # different model from the one the system runs, and nothing else in this
+    # workflow would notice.
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - run: npm ci
+        working-directory: web
+
+      - run: pip install -r requirements.txt
+
+      - name: TypeScript and Python engines agree
+        run: python research/src/test_parity.py

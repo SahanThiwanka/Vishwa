@@ -167,22 +167,30 @@ def clean(text: str) -> str:
 
 
 def rich_paragraph(doc, text: str, style: str | None = None, indent: float = 0):
+    # A markdown-escaped asterisk (as in the symbol xi-star) must reach the page
+    # as a plain asterisk, not as backslash-asterisk.
+    text = text.replace("\\*", "*")
     p = doc.add_paragraph(style=style)
     p.paragraph_format.line_spacing = 1.5
     p.paragraph_format.space_after = Pt(6)
     if indent:
         p.paragraph_format.left_indent = Inches(indent)
 
-    for part in re.split(r"(\*\*.+?\*\*|`.+?`)", text):
+    # Single-asterisk italics matter here: IEEE reference entries italicise the
+    # journal or book title, and without this they render as literal asterisks.
+    for part in re.split(r"(\*\*.+?\*\*|\*[^*]+?\*|`.+?`)", text):
         if not part:
             continue
         if part.startswith("**") and part.endswith("**"):
             run = p.add_run(LINK.sub(r"\1", part[2:-2]))
             run.bold = True
+        elif part.startswith("*") and part.endswith("*") and len(part) > 2:
+            run = p.add_run(LINK.sub(r"\1", part[1:-1]))
+            run.italic = True
         elif part.startswith("`") and part.endswith("`"):
             run = p.add_run(part[1:-1])
         else:
-            run = p.add_run(LINK.sub(r"\1", part))
+            run = p.add_run(LINK.sub(r"", part))
         run.font.name = "Times New Roman"
         run.font.size = Pt(12)
     return p
@@ -317,10 +325,17 @@ def render(doc, path: Path, counters: dict) -> None:
             continue
 
         if line.startswith(">"):
-            text = clean(line.lstrip(">").strip())
-            if text:
-                rich_paragraph(doc, text, indent=0.4)
-            i += 1
+            # Buffer the whole quote before rendering. Rendering one source line
+            # at a time broke inline markup spanning a line break, so a bold run
+            # written as **not\nadministered** reached the document with its
+            # asterisks intact.
+            quote: list[str] = []
+            while i < len(lines) and lines[i].strip().startswith(">"):
+                quote.append(lines[i].strip().lstrip(">").strip())
+                i += 1
+            joined = " ".join(q for q in quote if q)
+            if joined:
+                rich_paragraph(doc, joined, indent=0.4)
             continue
 
         m3 = re.match(r"^(\s*)([-*]|\d+\.)\s+(.*)", raw)

@@ -43,21 +43,41 @@ def blocks(path: Path) -> list[tuple[str, str]]:
 
 
 def number_of(head: str) -> str:
-    m = re.match(r"^#+\s+(\d+(?:\.\d+)*[a-z]?)", head)
+    """The section number a heading opens with, e.g. 5.6a.2.
+
+    The trailing `(?:\\.\\d+)*` is not decoration: the draft numbers subsections
+    of a suffixed section as 5.6a.1, and without it the match stopped at the
+    letter. The ".1" was then left behind in the title, producing headings that
+    read "5.16 .1 Method" one level too shallow.
+    """
+    m = re.match(r"^#+\s+(\d+(?:\.\d+)*[a-z]?(?:\.\d+)*)", head)
     return m.group(1) if m else ""
+
+
+def _matches(num: str, prefix: str) -> bool:
+    """Does heading number `num` fall under `prefix`?
+
+    Must accept the draft's letter-suffixed headings: 5.5a and 5.6b are
+    subsections of 5.5 and 5.6. An earlier version tested only `num == prefix`
+    or `num.startswith(prefix + ".")`, which silently dropped four whole
+    sections - calibration, cost analysis, weight sensitivity and objective
+    separability - from the generated Results. They were still present in the
+    source chapter, so nothing failed; the numbering simply jumped 5.12 to 5.15.
+    """
+    return re.match(rf"^{re.escape(prefix)}(\.|[a-z]|$)", num) is not None
 
 
 def select(src: list[tuple[str, str]], prefixes: tuple[str, ...],
            exclude: tuple[str, ...] = ()) -> list[tuple[str, str]]:
-    """Blocks whose heading number starts with one of `prefixes`."""
+    """Blocks whose heading number falls under one of `prefixes`."""
     chosen = []
     for head, body in src:
         num = number_of(head)
         if not num:
             continue
-        if any(num == e or num.startswith(e + ".") for e in exclude):
+        if any(_matches(num, e) for e in exclude):
             continue
-        if any(num == p or num.startswith(p + ".") for p in prefixes):
+        if any(_matches(num, p) for p in prefixes):
             chosen.append((head, body))
     return chosen
 
@@ -173,7 +193,8 @@ def main() -> int:
                                     "4.4": "4.11", "4.4.1": "4.11.1",
                                     "4.4.2": "4.11.2", "4.4.3": "4.11.3",
                                     "4.4.4": "4.11.4",
-                                    "4.6": "4.12", "4.6.1": "4.12.1"})
+                                    "4.6": "4.12", "4.6.1": "4.12.1",
+                                    "4.6a": "4.13", "4.6a.1": "4.13.1"})
     write(CH / "04-methodology.md", "4 METHODOLOGY", method + design_method)
 
     # ---- 5 RESULTS ---------------------------------------------------------
@@ -211,8 +232,8 @@ def main() -> int:
         "2.8": "3.8", "2.2.1": "3.4",
         "3.5": "4.5", "3.5.1": "4.5.1", "3.6.3": "4.6.3",
         "4.2.2": "4.10.2", "4.3.2": "5.2.2", "4.4.2": "4.11.2",
-        "4.4.3": "4.11.3", "4.5": "5.3", "4.6": "4.12", "4.6a": "4.12",
-        "4.6a.1": "4.12.2", "4.7": "5.4", "4.9": "5.6", "4.10": "5.7",
+        "4.4.3": "4.11.3", "4.5": "5.3", "4.6": "4.12", "4.6a": "4.13",
+        "4.6a.1": "4.13.1", "4.7": "5.4", "4.9": "5.6", "4.10": "5.7",
         "5.3": "5.10", "5.3.4": "5.10.4", "5.4": "5.11", "5.5": "5.12",
         "5.5a": "5.13", "5.5b": "5.14", "5.6": "5.15", "5.6a": "5.16",
         "5.6b": "5.17", "5.6b.1": "5.17.1", "5.6b.3": "5.17.3",

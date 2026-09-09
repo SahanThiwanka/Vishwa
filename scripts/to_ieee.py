@@ -196,6 +196,10 @@ REFERENCES: dict[str, tuple[tuple[str, ...], str, str]] = {
         'G. W. Brier, "Verification of forecasts expressed in terms of '
         'probability," *Monthly Weather Review*, vol. 78, no. 1, pp. 1-3, '
         "1950."),
+    "murphy1973": (
+        ("Murphy",), "1973",
+        'A. H. Murphy, "A new vector partition of the probability score," '
+        "*Journal of Applied Meteorology*, vol. 12, no. 4, pp. 595-600, 1973."),
     "cohen1960": (
         ("Cohen",), "1960",
         'J. Cohen, "A coefficient of agreement for nominal scales," '

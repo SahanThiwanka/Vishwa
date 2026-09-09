@@ -19,6 +19,7 @@ Exit code 1 on any mismatch, so it can gate a build.
 
 from __future__ import annotations
 
+import collections
 import csv
 import io
 import json
@@ -81,11 +82,84 @@ def check_restructure_current() -> tuple[bool, str]:
     return True, "OK    generated sections are current with source chapters"
 
 
+HEADING = re.compile(r"^#{1,4}\s+(\d+(?:\.\d+)*[a-z]?(?:\.\d+)*)\s+(.*)$", re.M)
+
+
+def check_section_coverage() -> list[tuple[bool, str]]:
+    """Did every drafted section survive into the generated document?
+
+    THIS EXISTS BECAUSE THE VERIFIER ONCE PASSED 26/26 WHILE FOUR WHOLE SECTIONS
+    WERE MISSING. restructure_thesis.py selected blocks by heading prefix and
+    silently skipped the letter-suffixed ones (5.5a, 5.5b, 5.6a, 5.6b), so
+    calibration, cost analysis, weight sensitivity and objective separability
+    never reached the submitted document. Every numeric check still passed: the
+    values were quoted in the ch*.md originals, which this script also reads.
+
+    Matching is by heading title, not number, because the whole point of the
+    restructure is that the numbers change.
+    """
+    def titles(pattern: str) -> collections.Counter:
+        found: collections.Counter = collections.Counter()
+        for path in sorted(CHAPTERS.glob(pattern)):
+            for _, title in HEADING.findall(path.read_text(encoding="utf-8")):
+                found[title.strip().lower()] += 1
+        return found
+
+    source = titles("ch*.md")
+    generated = titles("0[0-9]-*.md")
+    if not source or not generated:
+        return [(True, "OK    section coverage skipped (files absent)")]
+
+    missing = sorted(t for t in source if generated[t] < source[t])
+    out = []
+    if missing:
+        out.append((False, f"FAIL  {len(missing)} drafted section(s) missing "
+                           f"from the generated document"))
+        for title in missing[:8]:
+            out.append((False, f"        dropped: {title[:64]}"))
+    else:
+        out.append((True, f"OK    all {len(source)} drafted sections present "
+                          f"in the generated document"))
+
+    # Contiguity: a gap in the generated numbering means a block was lost or
+    # a remap entry is wrong, even when every title happens to be accounted for.
+    gaps = []
+    for path in sorted(CHAPTERS.glob("0[0-9]-*.md")):
+        tops = []
+        for num, _ in HEADING.findall(path.read_text(encoding="utf-8")):
+            parts = num.split(".")
+            if len(parts) == 2 and parts[1].isdigit():
+                tops.append(int(parts[1]))
+        for prev, nxt in zip(tops, tops[1:]):
+            if nxt not in (prev, prev + 1):
+                gaps.append(f"{path.name}: {prev} -> {nxt}")
+    if gaps:
+        out.append((False, f"FAIL  numbering gap in generated sections: "
+                           f"{'; '.join(gaps[:4])}"))
+    else:
+        out.append((True, "OK    generated section numbering is contiguous"))
+    return out
+
+
 def check(label: str, expected: str, docs: dict[str, str],
           required_in: list[str] | None = None) -> tuple[bool, str]:
-    """Is `expected` present verbatim in the documents that should carry it?"""
+    """Is `expected` present verbatim in the documents that should carry it?
+
+    With no `required_in`, the value must appear somewhere - it is quoted in
+    whichever chapters happen to discuss it. With `required_in`, it must appear
+    in *every* named document. That distinction matters: naming both the source
+    chapter and the generated section is how a value that is dropped during the
+    restructure gets caught, and an any-of test would not catch it.
+    """
     targets = required_in or list(docs)
     found = [name for name in targets if expected in docs.get(name, "")]
+
+    if required_in:
+        absent = [name for name in targets if name not in found]
+        if absent:
+            return False, (f"FAIL  {label:<46} {expected:>10}  "
+                           f"missing from {', '.join(absent)}")
+        return True, f"OK    {label:<46} {expected:>10}  ({', '.join(found)})"
 
     if found:
         return True, f"OK    {label:<46} {expected:>10}  ({', '.join(found)})"
@@ -154,20 +228,20 @@ def main() -> int:
         if row["objective"] == "credit_risk" and float(row["perturbation"]) == 0.25:
             checks.append(check("weight sensitivity rho at +/-25%",
                                 f"{float(row['spearman_mean']):.4f}", docs,
-                                ["ch5-empirical-validation.md"]))
+                                ["ch5-empirical-validation.md", "05-results.md"]))
             checks.append(check("band stability at +/-25%",
                                 f"{float(row['band_agreement_mean']) * 100:.1f}%", docs,
-                                ["ch5-empirical-validation.md"]))
+                                ["ch5-empirical-validation.md", "05-results.md"]))
 
     # ---- objective separability (RQ4) --------------------------------------
     indep = load_json("objective_independence.json")
     if indep:
         checks.append(check("objectives Pearson r",
                             f"+{indep['pearson_r']:.4f}", docs,
-                            ["ch5-empirical-validation.md"]))
+                            ["ch5-empirical-validation.md", "05-results.md"]))
         checks.append(check("disjoint-input r",
                             f"+{indep['disjoint_pearson_r']:.4f}", docs,
-                            ["ch5-empirical-validation.md"]))
+                            ["ch5-empirical-validation.md", "05-results.md"]))
         checks.append(check("bands disagree",
                             f"{(1 - indep['band_same']) * 100:.1f}%", docs))
         checks.append(check("two or more bands apart",
@@ -194,6 +268,7 @@ def main() -> int:
     checks.append(check("dimension count", str(n_dims), docs))
 
     checks.append(check_restructure_current())
+    checks.extend(check_section_coverage())
 
     # ---- placeholder-weight guard -----------------------------------------
     state = tree["weightStatus"]["state"]

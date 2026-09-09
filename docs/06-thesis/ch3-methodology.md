@@ -153,8 +153,8 @@ determines what Chapter 5 is entitled to conclude.
 - The unfitted expert scorecard is compared against logistic regression and
   gradient boosting, both trained on hundreds of thousands of labelled outcomes.
 - Metrics: area under the ROC curve (Hanley and McNeil, 1982), Kolmogorov-
-  Smirnov separation, average precision, the Brier score (Brier, 1950) with
-  Murphy's decomposition, and F1 at the Youden-optimal threshold.
+  Smirnov separation, average precision, the Brier score (Brier, 1950) under
+  Murphy's decomposition (Murphy, 1973), and F1 at the Youden-optimal threshold.
 - Paired comparisons of AUC use DeLong's test (DeLong, DeLong and
   Clarke-Pearson, 1988), which accounts for the correlation induced by
   evaluating both models on identical cases.

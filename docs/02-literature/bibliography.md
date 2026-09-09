@@ -224,8 +224,19 @@ a receiver operating characteristic (ROC) curve', *Radiology*, 143(1), pp. 29–
 
 ◐ **Brier, G.W.** (1950) 'Verification of forecasts expressed in terms of
 probability', *Monthly Weather Review*, 78(1), pp. 1–3.
-> The calibration score used in §5. Its decomposition into reliability and
-> resolution is what separates "ranks well" from "predicts well".
+> The calibration score used in §5. What separates "ranks well" from "predicts
+> well" is its decomposition, which is Murphy's rather than Brier's — see below.
+
+◐ **Murphy, A.H.** (1973) 'A New Vector Partition of the Probability Score',
+*Journal of Applied Meteorology*, 12(4), pp. 595–600.
+doi:10.1175/1520-0450(1973)012<0595:ANVPOT>2.0.CO;2
+> The reliability / resolution / uncertainty partition of the Brier score, which
+> §5.13 and §4.6 both name as "Murphy's decomposition". It was named in the text
+> with no source attached until this was audited; the attribution was being made
+> to Brier (1950), which does not contain it.
+> Bibliographic details confirmed against the AMS journal record, NASA ADS and
+> Crossref, which agree. The abstract could not be retrieved (the publisher
+> returns 403), so this is a details-verified entry, not an abstract-read one.
 
 ◐ **Cohen, J.** (1960) 'A coefficient of agreement for nominal scales',
 *Educational and Psychological Measurement*, 20(1), pp. 37–46.
@@ -238,8 +249,12 @@ for categorical data', *Biometrics*, 33(1), pp. 159–174.
 ⬜ **Krippendorff, K.** *Content Analysis: An Introduction to Its Methodology*.
 Sage — confirm edition and year before citing.
 
-⬜ Sun, X. and Xu, W. (2014) 'Fast implementation of DeLong's algorithm', *IEEE
-Signal Processing Letters* — the algorithm actually implemented
+◐ **Sun, X. and Xu, W.** (2014) 'Fast Implementation of DeLong's Algorithm for
+Comparing the Areas Under Correlated Receiver Operating Characteristic Curves',
+*IEEE Signal Processing Letters*, 21(11), pp. 1389–1393.
+> The algorithm actually implemented in `statistical_tests.py` — DeLong (1988)
+> gives the test, this gives the O(n log n) computation of it. Volume, issue and
+> pages confirmed against NASA ADS and the IEEE record.
 
 ## 10. Design science and system evaluation
 

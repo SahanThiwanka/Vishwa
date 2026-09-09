@@ -105,6 +105,8 @@ Default rates by exact term value, 2007 approvals:
 A one-month difference in contractual term cannot produce an eight-fold change in
 default rate. Sixty months is not economically distinct from fifty-nine.
 
+[Image: adjacent_terms.png | Default rate by exact contractual term, 2007 approvals. Terms that are multiples of twelve are shown in blue.]
+
 The pattern is roundness. Across the 1990–2010 cohort:
 
 - **86.4%** of repaid loans have a term that is an exact multiple of twelve
@@ -115,6 +117,8 @@ The pattern is roundness. Across the 1990–2010 cohort:
 
 The single boolean *"is the term a multiple of twelve"* — a quantity with no
 economic content whatsoever — achieves **AUC 0.8894**.
+
+[Image: term_leakage.png | Distribution across Term mod 12 (left) and default rate by term roundness within each approval year (right). Repaid facilities cluster at residue zero; charged-off facilities spread almost uniformly.]
 
 ### 5.3.3 Ruling out cohort composition
 
@@ -135,6 +139,8 @@ within each approval year separately:
 
 The association holds in every year, within a band of 0.859–0.900. Cohort
 composition is excluded.
+
+[Image: roundness_by_year.png | Discrimination achieved by the term-roundness boolean alone, computed separately within each approval year.]
 
 ### 5.3.4 The mechanism is not established
 
@@ -209,6 +215,8 @@ in term, gains 0.33 AUC from contamination; gradient boosting, free to split on
 exact values, gains more and reaches further. Published results on this dataset
 using tree ensembles with `Term` should be read with this in mind.
 
+[Image: leakage_inflation.png | Discrimination with and without the Term field under both validation protocols. The dashed line marks the AUC reached by the roundness boolean alone.]
+
 ## 5.5 Validation protocol matters independently
 
 Under the clean specification, gradient boosting scores 0.7898 on a random split
@@ -229,7 +237,8 @@ whether a predicted probability means what it says. A bank pricing risk, setting
 provisions, or reporting expected loss needs the second property, and a model can
 have the first without it.
 
-Calibration is reported here as the Brier score under Murphy's decomposition,
+Calibration is reported here as the Brier score (Brier, 1950) under Murphy's
+decomposition (Murphy, 1973),
 *Brier = reliability − resolution + uncertainty*, where **reliability** measures
 how far predicted probabilities sit from observed rates (lower is better; zero is
 perfect) and **resolution** measures how far the model separates cases from the
@@ -252,6 +261,8 @@ predicted probability of 0.2 the observed default rate is approximately 0.45.
 The mechanism is straightforward. The model is trained on 1990–2003 approvals
 defaulting at 9.1% and tested on 2004–2010 approvals defaulting at 35.9%. It has
 learned the base rate of a benign period and carries it into a stressed one.
+
+[Image: calibration.png | Reliability diagrams under random and temporal validation. Marker area is proportional to the number of facilities in each bin. Under temporal validation the curve lifts above the diagonal, indicating systematic under-prediction of default.]
 
 ### Why this matters more than the AUC result
 
@@ -378,6 +389,8 @@ ranking is essentially preserved (ρ ≈ 0.98–0.99) and roughly 93–94% of ca
 their risk band. Degradation beyond that is gradual rather than abrupt; even at
 ±100%, where a weight may be scaled anywhere in [0, 2], rank correlation remains
 above 0.75.
+
+[Image: weight_sensitivity.png | Ranking stability and risk-band stability against the magnitude of weight perturbation. Shaded bands show the range down to the 5th percentile across draws. The dotted line marks the level of disagreement practitioners plausibly exhibit.]
 
 **Interpretation.** The model's conclusions do not hinge on the precise weight
 vector within the range over which experts plausibly disagree. This does not make

@@ -104,7 +104,7 @@ The gate is a refusal to answer rather than a score adjustment, because a
 discounted score would preserve the false impression that the system had an
 opinion.
 
-**Authenticated sign-off** (§4.12) replaced a typed name. An audit trail of
+**Authenticated sign-off** (§4.13) replaced a typed name. An audit trail of
 self-declared signatories records nothing; the signatory is now the authenticated
 user and roles are enforced server-side.
 
@@ -135,8 +135,8 @@ inconsistent is supported from the literature [1] but not
 measured here. This remains the single most significant omission.
 
 **No field evaluation and no fairness assessment.** No officer has used the
-system on live applications, so neither perceived usefulness [34] nor
-usability [35] has been measured, and no disparate-impact analysis has
+system on live applications, so neither perceived usefulness [35] nor
+usability [36] has been measured, and no disparate-impact analysis has
 been performed.
 For a credit model the second is a serious gap, recorded in the model card.
 

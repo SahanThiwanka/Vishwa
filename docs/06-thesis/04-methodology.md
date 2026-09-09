@@ -153,9 +153,9 @@ determines what Chapter 5 is entitled to conclude.
 - The unfitted expert scorecard is compared against logistic regression and
   gradient boosting, both trained on hundreds of thousands of labelled outcomes.
 - Metrics: area under the ROC curve [31], Kolmogorov-
-  Smirnov separation, average precision, the Brier score [32] with
-  Murphy's decomposition, and F1 at the Youden-optimal threshold.
-- Paired comparisons of AUC use DeLong's test [33], which accounts for the correlation induced by
+  Smirnov separation, average precision, the Brier score [32] under
+  Murphy's decomposition [33], and F1 at the Youden-optimal threshold.
+- Paired comparisons of AUC use DeLong's test [34], which accounts for the correlation induced by
   evaluating both models on identical cases.
 - Interval estimates are stratified bootstrap percentile intervals, resampling
   positives and negatives separately.
@@ -356,3 +356,43 @@ bands may be revised. Without versioned storage, every historical recommendation
 would silently re-interpret under the current model, and an appraisal signed in
 March could not be explained in September. Storing the result document makes past
 decisions permanently reconstructible.
+
+## 4.13 Access control and the integrity of the audit trail
+
+An audit trail is only worth as much as the identity behind each entry.
+
+An earlier iteration of the sign-off panel accepted a typed name. It recorded
+who *claimed* to have signed, which is no record at all: anyone could enter any
+name, and the trail would look complete while proving nothing. The system now
+authenticates users and takes the signatory from the session.
+
+Roles map directly onto the chain in clause 7 of the form:
+
+| Role | Permitted |
+|---|---|
+| `OFFICER` | prepare an appraisal |
+| `RECOMMENDER` | endorse |
+| `HEAD_OFFICE` | approve or decline |
+| `ADMIN` | all of the above, plus user administration |
+
+Three properties are enforced rather than merely displayed. The interface offers
+only the actions a user's role permits; the **server re-checks the role before
+writing**, so the restriction cannot be bypassed by calling the action directly;
+and an appraisal that has been approved or declined rejects further decisions —
+a correction is made by raising a new appraisal, never by rewriting a signed one.
+
+**The elicitation instrument is deliberately left public.** Requiring accounts of
+practitioners completing a fifteen-minute voluntary study would collapse the
+response rate, and the instrument collects no name and no customer data, so there
+is nothing behind it to protect. The research instrument and the operational
+system have different threat models and are treated differently.
+
+### 4.13.1 What this is not
+
+Session cookies are HMAC-signed and passwords are hashed with scrypt, with no
+external authentication dependency, so the system runs without network access for
+demonstration purposes. It is **not** a production authentication system: there
+is no password reset, no multi-factor authentication, no account lockout, no rate
+limiting on sign-in attempts, and no password policy. A banking deployment would
+require all of these, along with penetration testing and an accessibility audit.
+These are recorded as limitations rather than presented as complete.

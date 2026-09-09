@@ -256,6 +256,8 @@ Default rates by exact term value, 2007 approvals:
 A one-month difference in contractual term cannot produce an eight-fold change in
 default rate. Sixty months is not economically distinct from fifty-nine.
 
+[Image: adjacent_terms.png | Default rate by exact contractual term, 2007 approvals. Terms that are multiples of twelve are shown in blue.]
+
 The pattern is roundness. Across the 1990–2010 cohort:
 
 - **86.4%** of repaid loans have a term that is an exact multiple of twelve
@@ -266,6 +268,8 @@ The pattern is roundness. Across the 1990–2010 cohort:
 
 The single boolean *"is the term a multiple of twelve"* — a quantity with no
 economic content whatsoever — achieves **AUC 0.8894**.
+
+[Image: term_leakage.png | Distribution across Term mod 12 (left) and default rate by term roundness within each approval year (right). Repaid facilities cluster at residue zero; charged-off facilities spread almost uniformly.]
 
 ### 5.10.3 Ruling out cohort composition
 
@@ -286,6 +290,8 @@ within each approval year separately:
 
 The association holds in every year, within a band of 0.859–0.900. Cohort
 composition is excluded.
+
+[Image: roundness_by_year.png | Discrimination achieved by the term-roundness boolean alone, computed separately within each approval year.]
 
 ### 5.10.4 The mechanism is not established
 
@@ -360,6 +366,8 @@ in term, gains 0.33 AUC from contamination; gradient boosting, free to split on
 exact values, gains more and reaches further. Published results on this dataset
 using tree ensembles with `Term` should be read with this in mind.
 
+[Image: leakage_inflation.png | Discrimination with and without the Term field under both validation protocols. The dashed line marks the AUC reached by the roundness boolean alone.]
+
 ## 5.12 Validation protocol matters independently
 
 Under the clean specification, gradient boosting scores 0.7898 on a random split
@@ -372,6 +380,76 @@ Logistic regression falls to 0.4565 temporally — below chance. Trained on
 model does not merely lose accuracy; its ranking inverts. This is a substantive
 finding about credit-scoring practice: **a linear scorecard fitted to a benign
 cycle can rank borrowers backwards in a stressed one.**
+
+## 5.13 Calibration: ranking is not the same as being right
+
+AUC measures whether a model *orders* borrowers correctly. It says nothing about
+whether a predicted probability means what it says. A bank pricing risk, setting
+provisions, or reporting expected loss needs the second property, and a model can
+have the first without it.
+
+Calibration is reported here as the Brier score [32] under Murphy's
+decomposition [33],
+*Brier = reliability − resolution + uncertainty*, where **reliability** measures
+how far predicted probabilities sit from observed rates (lower is better; zero is
+perfect) and **resolution** measures how far the model separates cases from the
+base rate (higher is better).
+
+| Model | Protocol | Brier | Reliability | Resolution |
+|---|---|---:|---:|---:|
+| Gradient boosting (clean) | random | 0.1319 | **0.00005** | 0.03003 |
+| Logistic regression (clean) | random | 0.1539 | 0.00091 | 0.00838 |
+| Gradient boosting (clean) | temporal | 0.2592 | **0.03705** | 0.00729 |
+| Logistic regression (clean) | temporal | 0.2882 | 0.05803 | 0.00121 |
+
+**Reliability degrades by roughly 700× for gradient boosting** — 0.00005 to
+0.03705 — and 64× for logistic regression. Under random splitting the boosted
+model is almost perfectly calibrated: its reliability diagram sits on the
+diagonal. Under temporal validation the entire curve lifts **above** the
+diagonal, meaning the model **systematically under-predicts default**. At a
+predicted probability of 0.2 the observed default rate is approximately 0.45.
+
+The mechanism is straightforward. The model is trained on 1990–2003 approvals
+defaulting at 9.1% and tested on 2004–2010 approvals defaulting at 35.9%. It has
+learned the base rate of a benign period and carries it into a stressed one.
+
+[Image: calibration.png | Reliability diagrams under random and temporal validation. Marker area is proportional to the number of facilities in each bin. Under temporal validation the curve lifts above the diagonal, indicating systematic under-prediction of default.]
+
+## 5.14 What the models are worth to a lender
+
+AUC weights both error types equally; a lender does not. Approving a facility
+that charges off costs the loss given default; declining a sound one costs the
+margin forgone. The ratio between them determines where the cut-off belongs.
+
+Expected cost is reported in units of one false positive, so a cost ratio of
+10:1 means one bad approval costs as much as ten good declines. The ratio is
+swept rather than assumed, because the right value is a policy question for the
+lender.
+
+Two fixed policies provide the floor: approve everything, or decline everything.
+
+| Temporal split, 10:1 | Expected cost | vs best fixed policy |
+|---|---:|---:|
+| "Decline all" baseline | 0.6411 | — |
+| Gradient boosting | 0.6455 | **−0.7%** |
+| Logistic regression | 0.6475 | **−1.0%** |
+| Expert scorecard | 0.6413 | −0.0% |
+
+**Under temporal validation, 12 of 15 model/cost-ratio combinations fail to beat
+the better fixed policy.** At the discrimination levels the clean specification
+achieves — AUC 0.6076 against a 35.9% default rate — none of these models earns
+its place economically on that cohort. Under random splitting, where
+discrimination is higher, the picture improves: gradient boosting saves 10.2% at
+a 2:1 ratio.
+
+**An important caveat.** "Decline all" is a floor for comparison, not a strategy.
+A bank that declines every application has no business, so this is not a claim
+that lenders should stop lending. It is a claim that a model must clear a low bar
+before it is worth the process it adds, and on the stressed cohort these models
+do not clear it.
+
+The finding is consistent with everything else in this chapter and is reported
+without softening.
 
 ## 5.15 The expert scorecard: a negative result
 
@@ -405,6 +483,159 @@ individual result:
 This is why the criterion weights are established by expert elicitation
 (Chapter 6) rather than fitted to borrowed outcome data, and why that choice is a
 methodological requirement rather than a fallback.
+
+## 5.16 How much do the weights matter?
+
+The criteria model carries placeholder weights until elicitation is complete
+(§5.18), and that is ordinarily treated as blocking: no elicited weights, no
+reportable result. But the question underneath — *how much does the output depend
+on the weight vector at all?* — is answerable now, and answering it bounds the
+damage the placeholders can be doing.
+
+### 5.16.1 Method
+
+Two thousand complete appraisals were simulated by drawing each criterion across
+its plausible range. The population is **synthetic**: the object of study is the
+model's mathematical behaviour, not any real portfolio, and no claim is made
+about real borrowers. Simulation is appropriate precisely because the question is
+about the model rather than the world.
+
+Each weight was then perturbed multiplicatively by up to ±p and renormalised, for
+p ∈ {10%, 25%, 50%, 75%, 100%}, with 400 draws at each level. For every draw the
+whole population was rescored and compared against the equal-weight baseline on
+three measures: Spearman rank correlation, the proportion of cases keeping their
+risk band, and the largest score shift.
+
+### 5.16.2 Results
+
+| Perturbation | Credit risk ρ | Band unchanged | Development ρ | Band unchanged |
+|---:|---:|---:|---:|---:|
+| ±10% | 0.9971 | 97.6% | 0.9982 | 97.1% |
+| **±25%** | **0.9822** | **94.0%** | **0.9890** | **92.7%** |
+| ±50% | 0.9314 | 88.2% | 0.9586 | 85.5% |
+| ±75% | 0.8517 | 82.2% | 0.9121 | 78.3% |
+| ±100% | 0.7547 | 76.1% | 0.8543 | 71.2% |
+
+At ±25% — a spread wider than experienced practitioners typically differ by — the
+ranking is essentially preserved (ρ ≈ 0.98–0.99) and roughly 93–94% of cases keep
+their risk band. Degradation beyond that is gradual rather than abrupt; even at
+±100%, where a weight may be scaled anywhere in [0, 2], rank correlation remains
+above 0.75.
+
+[Image: weight_sensitivity.png | Ranking stability and risk-band stability against the magnitude of weight perturbation. Shaded bands show the range down to the 5th percentile across draws. The dotted line marks the level of disagreement practitioners plausibly exhibit.]
+
+**Interpretation.** The model's conclusions do not hinge on the precise weight
+vector within the range over which experts plausibly disagree. This does not make
+elicitation optional — the weights still need to be defensible, and the 6–7% of
+cases whose band changes at ±25% are real appraisals that would receive a
+different recommendation. What it does is bound the distortion: results reported
+under placeholder weights are unlikely to be qualitatively wrong, and that can be
+stated rather than hoped.
+
+### 5.16.3 An unanticipated structural finding
+
+Estimating each criterion's influence separately — by doubling its weight within
+its dimension and measuring the shift — exposed an asymmetry in the tree itself.
+
+| Objective | Dimensions | One criterion's share of the objective |
+|---|---:|---|
+| Credit risk | 6 | 0.0185 – 0.0333 |
+| Development impact | 1 | 0.1250 |
+
+A development-impact criterion carries roughly **four to seven times the leverage**
+of a credit-risk criterion over its own objective. Doubling `employment_generation`
+moves the development score by 3.06 points and changes the risk band for 19.2% of
+cases; doubling `account_turnover`, the most influential credit criterion, moves
+the credit score by 0.71 points and changes 5.1% of bands.
+
+This is not an error. It follows directly from the source instrument: clause 5 of
+the People's Bank form is a single section of nine items, while the credit-risk
+material is spread across six sections. The tree faithfully reproduces that
+shape. But the consequence should be stated plainly — **the development objective
+is materially more sensitive to individual weight choices than the credit
+objective**, so elicitation error there carries more consequence, and the
+development weights deserve more respondents rather than fewer.
+
+## 5.17 Are the two objectives independent? (RQ4)
+
+The model reports two scores and refuses to combine them. That decision was
+justified in §5.2.2 on Arvanitis, Stampini and Vencatachellum's (2015) finding
+that development and credit concerns are empirically independent in
+development-bank appraisal. Their result comes from one multilateral
+institution's project portfolio. It can be tested here on 652,284 small-business
+facilities with realised outcomes.
+
+### 5.17.1 The objectives are not independent
+
+| Measure | Value |
+|---|---|
+| Pearson r | **+0.4003** |
+| Spearman ρ | +0.4213 |
+| Shared variance (r²) | 0.1602 |
+
+With n this large every correlation is statistically significant, so effect size
+is what carries meaning. An r of 0.40 is **moderate**, not negligible.
+
+The two proxy scores do not draw on disjoint variables, which inflates this:
+`NoEmp` feeds both the credit criterion *employees* and the development criterion
+*job creation rate*, and `GrAppv` feeds both *loan per employee* and *jobs per
+100k*. Recomputing with a development measure sharing no inputs with the credit
+score — raw jobs supported — gives **r = +0.3563**. The confound accounts for
+part of the association but not most of it.
+
+**This partly contradicts the premise the design was justified on**, and is
+reported as such rather than omitted. On this population the two objectives
+co-move more than Arvanitis et al. found.
+
+### 5.17.2 The practical case survives by a different route
+
+Correlation describes average co-movement across a population. It does not say
+whether the two objectives agree about any *particular* facility, which is the
+question a combined score actually settles.
+
+| Relationship between the two bands | Share of facilities |
+|---|---:|
+| Same band | **11.8%** |
+| One band apart | 49.7% |
+| Two or more bands apart | **38.4%** |
+| **Disagree at all** | **88.2%** |
+
+An r of 0.40 leaves enormous scatter. The two objectives place the same facility
+in different risk bands **88.2% of the time**, and more than a third differ by
+two bands or more.
+
+That is the argument for reporting them separately, and it is stronger than the
+independence argument it replaces. **A combined score would issue one number for
+the 88% of cases where the objectives disagree**, making a strong-credit,
+weak-development facility indistinguishable from one that is middling on both.
+Whether the underlying scores correlate on average is beside the point; what a
+decision-maker needs is whether *this* application is one of the many where they
+diverge.
+
+### 5.17.3 Development impact is associated with higher default
+
+| Development band | n | Default rate |
+|---|---:|---:|
+| Lowest | 326,491 | **10.80%** |
+| Middle | 162,746 | 29.77% |
+| Highest | 163,047 | **30.32%** |
+
+Facilities supporting more employment default **substantially more** — a spread
+of 19.5 percentage points.
+
+**Read this as association, not cause.** It is very likely confounded: facilities
+creating more jobs tend to be larger, newer, and more expansionary, and each of
+those independently raises credit risk. Establishing a causal relationship would
+require controls this study has not applied, and the claim is not made.
+
+But if the association holds under proper controls, it has a direct implication
+for a state bank with a development mandate: **the developmental objective and
+the credit objective may genuinely pull against each other.** Development-oriented
+lending would then carry a real and measurable credit cost.
+
+That is precisely the trade-off the dual-objective design exists to surface. A
+model that averaged the two into one figure would report a middling score and
+conceal the fact that the institution is being asked to choose.
 
 ## 5.18 Limitations
 

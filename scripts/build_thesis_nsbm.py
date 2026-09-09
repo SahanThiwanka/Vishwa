@@ -286,6 +286,28 @@ def render(doc, path: Path, counters: dict) -> None:
             i += 1
             continue
 
+        # Embedded figure:  [Image: file.png | Caption text]
+        m_img = re.match(r"^\[Image:\s*([^|\]]+?)\s*\|\s*(.+?)\]$", line)
+        if m_img:
+            src = ROOT / "docs" / "05-results" / "figures" / m_img.group(1).strip()
+            if src.exists():
+                counters["figure"] += 1
+                para = doc.add_paragraph()
+                para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                para.paragraph_format.space_before = Pt(10)
+                para.paragraph_format.space_after = Pt(2)
+                # Sized to the 6.02in text column (A4 less 1.25in + 1in margins).
+                para.add_run().add_picture(str(src), width=Inches(5.9))
+                # The guideline puts figure captions BELOW the figure.
+                caption(doc,
+                        f"Figure {counters['section']}.{counters['figure']}: "
+                        f"{m_img.group(2).strip()}",
+                        above=False)
+            else:
+                print(f"    ! missing figure: {src.name}")
+            i += 1
+            continue
+
         # Explicit caption markers, e.g.  [Table: Benchmark results]
         m = re.match(r"^\[(Table|Figure):\s*(.+?)\]$", line)
         if m:

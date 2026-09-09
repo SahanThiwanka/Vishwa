@@ -134,16 +134,34 @@ def write(path: Path, title: str, blocks_out: list[tuple[str, str]],
     print(f"  {path.name:<32} {len(blocks_out):>3} blocks  ~{words:,} words")
 
 
+NUM = r"\d+(?:\.\d+)*[a-z]?(?:\.\d+)*"
+REFERENCE = re.compile(
+    rf"(?P<lead>§|\b[Ss]ection )(?P<a>{NUM})"
+    rf"(?P<dash>\s*[–—-]\s*(?P<b>{NUM}))?"
+)
+
+
 def fix_cross_references(path: Path, mapping: dict[str, str]) -> None:
     """Update section cross-references after renumbering.
 
-    Longest-first so that replacing 5.6 does not corrupt 5.6.1.
+    ONE simultaneous pass, deliberately. Substituting the mapping entry by entry
+    let the output of one rule become the input of another: "4.5" -> "5.3" was
+    applied, and then the rule "5.3" -> "5.10" rewrote what the first rule had
+    just produced, so a reference to the completeness gate came out pointing at
+    the contaminated-predictor section instead. Matching every reference once and
+    translating each captured number exactly once makes that impossible.
+
+    Ranges are handled explicitly. "§5.3-5.5" previously mapped only the half
+    carrying the section mark and emerged as "§5.10-5.5".
     """
-    text = path.read_text(encoding="utf-8")
-    for old in sorted(mapping, key=len, reverse=True):
-        text = re.sub(rf"§{re.escape(old)}\b", f"§{mapping[old]}", text)
-        text = re.sub(rf"[Ss]ection {re.escape(old)}\b",
-                      f"Section {mapping[old]}", text)
+    def translate(m: re.Match) -> str:
+        out = m.group("lead") + mapping.get(m.group("a"), m.group("a"))
+        if m.group("dash"):
+            sep = m.group("dash")[:m.group("dash").index(m.group("b"))]
+            out += sep + mapping.get(m.group("b"), m.group("b"))
+        return out
+
+    text = REFERENCE.sub(translate, path.read_text(encoding="utf-8"))
     path.write_text(text, encoding="utf-8")
 
 
@@ -215,7 +233,12 @@ def main() -> int:
                "5.6": "5.15", "5.6a": "5.16", "5.6a.1": "5.16.1",
                "5.6a.2": "5.16.2", "5.6a.3": "5.16.3",
                "5.6b": "5.17", "5.6b.1": "5.17.1", "5.6b.2": "5.17.2",
-               "5.6b.3": "5.17.3", "5.7": "5.18", "5.8": "5.19"})
+               "5.6b.3": "5.17.3",
+               "5.6c": "5.18", "5.6c.1": "5.18.1", "5.6c.2": "5.18.2",
+               "5.6c.3": "5.18.3",
+               "5.6d": "5.19", "5.6d.1": "5.19.1", "5.6d.2": "5.19.2",
+               "5.6d.3": "5.19.3", "5.6d.4": "5.19.4",
+               "5.7": "5.20", "5.8": "5.21"})
     write(CH / "05-results.md", "5 RESULTS", artefact + empirical)
 
     # ---- 6 DISCUSSION AND CONCLUSIONS -------------------------------------
@@ -237,7 +260,8 @@ def main() -> int:
         "5.3": "5.10", "5.3.4": "5.10.4", "5.4": "5.11", "5.5": "5.12",
         "5.5a": "5.13", "5.5b": "5.14", "5.6": "5.15", "5.6a": "5.16",
         "5.6b": "5.17", "5.6b.1": "5.17.1", "5.6b.3": "5.17.3",
-        "5.7": "5.18", "6.1": "6.1", "6.4": "6.3",
+        "5.6c": "5.18", "5.6d": "5.19",
+        "5.7": "5.20", "5.8": "5.21", "6.1": "6.1", "6.4": "6.3",
     }
     for name in ("01-introduction.md", "03-literature-review.md",
                  "04-methodology.md", "05-results.md",

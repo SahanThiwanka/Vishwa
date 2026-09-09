@@ -141,6 +141,49 @@ def check_section_coverage() -> list[tuple[bool, str]]:
     return out
 
 
+CROSSREF = re.compile(r"(?:§|\b[Ss]ection )(\d+(?:\.\d+)+[a-z]?(?:\.\d+)*)")
+
+
+def check_cross_references() -> tuple[bool, str]:
+    """Does every section a generated chapter points at actually exist?
+
+    The restructure renumbers sections and rewrites references to match. It got
+    this wrong twice in ways nothing detected: substitutions were applied one
+    mapping entry at a time, so a reference rewritten by one rule was rewritten
+    again by the next, and a reference to the completeness gate ended up pointing
+    at the contaminated-predictor section. Both targets existed, so the document
+    read perfectly and was wrong.
+
+    This cannot catch a reference that points at a real but incorrect section. It
+    does catch every reference pointing at a section that is not there at all,
+    which is what a renumbering slip usually produces.
+    """
+    numbers: set[str] = set()
+    refs: dict[str, set[str]] = {}
+    for path in sorted(CHAPTERS.glob("0[0-9]-*.md")):
+        text = path.read_text(encoding="utf-8")
+        numbers.update(n for n, _ in HEADING.findall(text))
+        refs[path.name] = set(CROSSREF.findall(text))
+
+    if not numbers:
+        return True, "OK    cross-reference check skipped (files absent)"
+
+    dangling = sorted(
+        f"{name}:{ref}"
+        for name, found in refs.items()
+        for ref in found
+        # A reference may name a parent of a numbered heading (5.16 exists as
+        # 5.16.1) - only flag what matches nothing at any depth.
+        if ref not in numbers
+        and not any(n.startswith(ref + ".") for n in numbers)
+    )
+    if dangling:
+        return False, (f"FAIL  {len(dangling)} cross-reference(s) point at "
+                       f"sections that do not exist: {', '.join(dangling[:6])}")
+    total = sum(len(v) for v in refs.values())
+    return True, f"OK    all {total} cross-references resolve to real sections"
+
+
 def check(label: str, expected: str, docs: dict[str, str],
           required_in: list[str] | None = None) -> tuple[bool, str]:
     """Is `expected` present verbatim in the documents that should carry it?
@@ -247,6 +290,77 @@ def main() -> int:
         checks.append(check("two or more bands apart",
                             f"{indep['band_two_plus_apart'] * 100:.1f}%", docs))
 
+    # ---- fairness / disparate impact ---------------------------------------
+    BOTH = ["ch5-empirical-validation.md", "05-results.md"]
+    fair = load_csv("fairness_groups.csv")
+    if fair:
+        GBM = "Gradient boosting (clean, temporal)"
+        CARD = "Expert scorecard (unfitted)"
+
+        def cell(model: str, attribute: str, group: str, field: str) -> str:
+            row = next(r for r in fair if r["model"] == model
+                       and r["attribute"] == attribute and r["group"] == group)
+            return row[field]
+
+        # The error-rate disparities - creditworthy applicants declined.
+        for label, model, attr, grp in (
+            ("micro-enterprise good declined", GBM,
+             "Firm size (employees)", "Micro (1-4)"),
+            ("large-firm good declined", GBM,
+             "Firm size (employees)", "Large (100+)"),
+            ("smallest-facility good declined", GBM,
+             "Facility size", "Smallest 25%"),
+            ("largest-facility good declined", GBM,
+             "Facility size", "Largest 25%"),
+        ):
+            checks.append(check(
+                label,
+                f"{float(cell(model, attr, grp, 'fpr_good_declined')) * 100:.2f}%",
+                docs, BOTH))
+
+        # The scorecard penalises the best-performing sector hardest.
+        checks.append(check(
+            "agriculture good declined (scorecard)",
+            f"{float(cell(CARD, 'Sector', 'Agriculture/Forestry/Fishing', 'fpr_good_declined')) * 100:.2f}%",
+            docs, BOTH))
+        checks.append(check(
+            "agriculture default rate",
+            f"{float(cell(CARD, 'Sector', 'Agriculture/Forestry/Fishing', 'default_rate')) * 100:.2f}%",
+            docs, BOTH))
+
+    fair_sum = load_json("fairness_summary.json")
+    if fair_sum:
+        by_key = {(d["model"], d["attribute"]): d
+                  for d in fair_sum["disparities"]}
+        for model, attr in (("Gradient boosting (clean, temporal)", "Rurality"),
+                            ("Expert scorecard (unfitted)", "Rurality")):
+            d = by_key.get((model, attr))
+            if d:
+                checks.append(check(
+                    f"disparate impact, {model.split()[0].lower()} {attr.lower()}",
+                    f"{d['disparate_impact_ratio']:.3f}", docs, BOTH))
+        d = by_key.get(("Gradient boosting (clean, temporal)",
+                        "Firm size (employees)"))
+        if d:
+            checks.append(check("micro/large equal-opportunity ratio",
+                                f"{d['equal_opportunity_ratio']:.2f}", docs,
+                                BOTH))
+
+    # ---- what the models do with withheld information ----------------------
+    miss = load_json("missingness_summary.json")
+    if miss:
+        gbm = miss["models"]["Gradient boosting (native NaN)"]
+        checks.append(check("no-information decline threshold",
+                            f"{gbm['decline_threshold']:.4f}", docs, BOTH))
+        checks.append(check("baseline mean P(default)",
+                            f"{gbm['baseline_mean_p'] * 100:.2f}%", docs, BOTH))
+        checks.append(check(
+            "share scored less risky when withholding",
+            f"{gbm['share_scored_less_risky_when_withheld'] * 100:.1f}%",
+            docs, BOTH))
+        checks.append(check("complete records analysed",
+                            f"{miss['n_complete_records']:,}", docs, BOTH))
+
     # ---- calibration --------------------------------------------------------
     calib = load_csv("calibration.csv")
     for row in calib:
@@ -269,6 +383,7 @@ def main() -> int:
 
     checks.append(check_restructure_current())
     checks.extend(check_section_coverage())
+    checks.append(check_cross_references())
 
     # ---- placeholder-weight guard -----------------------------------------
     state = tree["weightStatus"]["state"]

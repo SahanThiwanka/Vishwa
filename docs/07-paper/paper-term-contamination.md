@@ -336,9 +336,36 @@ against, which is precisely why it would not have been questioned.
 The `Term` field in the SBA National dataset carries information about the outcome
 it is used to predict. Its roundness alone predicts default at AUC 0.889, within
 every approval year, despite carrying no economic meaning. Its inclusion inflates
-gradient-boosting temporal discrimination by 0.339 AUC. Published results on this
-dataset obtained from tree-based models with `Term` included warrant
-re-examination.
+gradient-boosting temporal discrimination by 0.339 AUC.
+
+### A. Published work in the affected region
+
+We examined seven candidate studies against four criteria: use of the SBA
+National file, inclusion of `Term` among the predictors, a model class able to
+split on exact values, and a reported result in the region the roundness probe
+alone can reach. Four were excluded on reading, as they use other datasets. Two
+could not be obtained.
+
+One meets every criterion. Yussuph [5] uses the SBA National file — "27 columns
+and 899164 rows" — and ranks `Term` the **most important feature for both** a
+random forest and an XGBoost model, reporting ROC-AUC of 0.961 and 0.97
+respectively under a 70/15/15 random split.
+
+Two qualifications are necessary. We did not reproduce that study's pipeline. And
+its description of preprocessing leaves a second leakage path open: it reports
+type-converting `ChgOffDate`, `Balance Gross` and `ChgOffPrinGr` — all populated
+only after charge-off — and does not state that they were excluded from the
+feature set. Either path would produce a result of this magnitude.
+
+We therefore make the narrow claim the evidence supports. A result in this
+region, from a model able to split on exact term values and ranking that field
+first, **cannot be distinguished from the artefact on published information
+alone**. That this cannot be settled from a published methods section is itself
+the argument for recommendation 4 below: without a meaningless-variable probe, a
+reader has no way to tell an artefact from a finding.
+
+Published results on this dataset obtained from tree-based models with `Term`
+included warrant re-examination.
 
 ---
 
@@ -360,10 +387,15 @@ nonparametric approach," *Biometrics*, vol. 44, no. 3, pp. 837-845, 1988.
 machine-learning-based science," *Patterns*, vol. 4, no. 9, 100804, 2023,
 doi:10.1016/j.patter.2023.100804.
 
+[5] T. T. Yussuph, "Leveraging machine learning algorithm to enable access to
+credit for small businesses in the United States of America," *International
+Journal on Cybernetics & Informatics*, vol. 13, no. 1, pp. 53-66, 2024,
+doi:10.5121/ijci.2024.130105.
+
 *Additional references to be completed on submission: general treatments of target
-leakage in applied machine learning; prior published results on the SBA National
-dataset that would be affected by this finding, identified through a systematic
-search.*
+leakage in applied machine learning. The search for affected published work is
+recorded in `docs/07-paper/affected-work-search.md`; two candidates remain
+unobtainable without library access.*
 
 ---
 
@@ -386,10 +418,14 @@ No value in this paper was entered by hand.
 
 **Before submitting, complete these:**
 
-1. **Systematic search for affected published work.** §VIII asserts that published
-   results warrant re-examination. Identify specific papers reporting tree-based
-   models on this dataset with `Term` included, and cite them. Reviewers will
-   expect this and the claim is weak without it.
+1. **Systematic search for affected published work — PARTLY DONE.** One study
+   (Yussuph 2024) is verified by full text and cited in §VIII-A; four are excluded
+   by full text; two could not be retrieved without library access (Zhou et al.
+   2023 via ResearchGate, and *Mathematics* 12(21) 3423, which returns 403).
+   Retrieve both before submission and re-run the check with
+   `scripts/read_pdf.py`. A database search (Scopus, Web of Science, IEEE Xplore)
+   has still not been run and is what a reviewer will expect of a claim framed as
+   systematic.
 2. **Contact the SBA or the dataset authors** about the mechanism. A reply
    converts §IV-D from an open question into a complete account and materially
    strengthens the paper.

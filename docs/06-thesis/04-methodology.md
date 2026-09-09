@@ -15,18 +15,18 @@ Three activities make up the design:
 |---|---|---|---|
 | Formalisation | RQ1 | Clause-by-clause derivation from the bank's form | 49-criterion model, working system |
 | Weight sensitivity | RQ2 | Monte Carlo over perturbed weight vectors | §5.16 |
-| Empirical validation | RQ3 | Benchmarking against realised outcomes, with CIs and paired tests | §5.10–5.6 |
+| Empirical validation | RQ3 | Benchmarking against realised outcomes, with CIs and paired tests | §5.10–5.15 |
 | Objective separability | RQ4 | Correlation and band agreement across 652,284 facilities | §5.17 |
 
 Weight elicitation by Best-Worst Method was designed and instrumented but not
-administered; §5.10 documents it as a prepared method and §6.1 reports it as not
+administered; §4.5 documents it as a prepared method and §6.1 reports it as not
 carried out.
 
 ## 4.2 Research questions
 
 The questions were revised from the original proposal after the literature review
 established that the initially claimed contribution was already published
-(§5.10.3). The revised set:
+(§3.5.3). The revised set:
 
 - **RQ1** — How can the narrative, multi-section appraisal instrument used by a
   Sri Lankan state bank be formalised into a computable multi-criteria model
@@ -47,7 +47,7 @@ for SME Credit Facility* (Annexure I–V), an operational form in current use.
 
 Each clause was classified as directly computable, structured judgement,
 unstructured judgement, or administrative, and criteria were derived accordingly
-(§5.18.2). One constraint governed the process:
+(§4.10.2). One constraint governed the process:
 
 > **No criterion may exist without a source clause.**
 
@@ -73,7 +73,7 @@ Three rules govern edge cases, each chosen deliberately:
 1. **Unassessed criteria are excluded and weights renormalised**, never treated as
    zero — an incomplete appraisal is not a bad one.
 2. **Below a completeness threshold, no recommendation is issued** — rule 1 alone
-   allows a sparse file to produce a confident score (§5.10).
+   allows a sparse file to produce a confident score (§5.3).
 3. **Critical criteria are evaluated on raw values** and surfaced separately, so a
    DSCR below 1.0 cannot be averaged away.
 
@@ -315,7 +315,7 @@ renormalised** — never treated as zero. Scoring an incomplete file as though t
 missing sections had scored nothing would misrepresent an unfinished appraisal as
 a bad one.
 
-This choice creates a hazard addressed in §5.10.
+This choice creates a hazard addressed in §5.3.
 
 ### 4.11.4 Critical criteria
 

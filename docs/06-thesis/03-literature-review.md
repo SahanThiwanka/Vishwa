@@ -133,10 +133,10 @@ comparison vectors — the best criterion against all others, and all others aga
 the worst — requiring 2n−3 comparisons rather than AHP's n(n−1)/2. Anchoring every
 comparison to a fixed reference tends to produce more consistent responses.
 Rezaei [21] gave a linear formulation with a unique solution, which is the form
-implemented here (§5.10).
+implemented here (§4.5).
 
 For this study's criteria tree the difference is decisive: **168 comparisons under
-pairwise AHP against 86 under BWM** (§5.10.1). That is the difference between an
+pairwise AHP against 86 under BWM** (§4.5.1). That is the difference between an
 hour of a practitioner's attention and fifteen minutes, and therefore between
 usable and unusable responses.
 
@@ -211,7 +211,7 @@ with uniqueness guarantees.
 **This study takes a different route, and the distinction is worth stating.**
 LIME and SHAP explain an opaque model after the fact. The model here is additive
 by construction, so per-criterion contributions are exact rather than
-approximated, and they sum precisely to the score (§5.11). That is a stronger
+approximated, and they sum precisely to the score (§5.4). That is a stronger
 guarantee than a post-hoc method can offer — at the cost of the discrimination a
 flexible model might achieve, which Chapter 5 shows to be a real cost.
 
@@ -251,7 +251,7 @@ the original proposal:
 - combining weighted financial ratios into a credit score ([2], and
   sixty years of work after it);
 - applying BWM or fuzzy MCDM to SME credit scoring ([22], and the
-  surrounding literature in §5.10.3);
+  surrounding literature in §3.5.3);
 - scoring social or developmental impact alongside credit risk [23];
 - observing that development banks appraise against two objectives [24].
 

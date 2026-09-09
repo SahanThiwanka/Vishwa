@@ -1,0 +1,29 @@
+{
+  "protocol": "temporal",
+  "n_complete_records": 201566,
+  "decline_share": 0.2,
+  "n_features": 14,
+  "draws_per_k": 30,
+  "models": {
+    "Gradient boosting (native NaN)": {
+      "baseline_mean_p": 0.16837,
+      "decline_threshold": 0.22926,
+      "fields_that_reduce_risk_when_withheld": 11,
+      "field_most_rewarding_to_withhold": "is_urban",
+      "share_scored_less_risky_when_withheld": 0.9774,
+      "field_flipping_most_decisions": "is_urban",
+      "decline_to_approve_share": 0.1984,
+      "fields_to_halve_assessed_risk": 7
+    },
+    "Logistic regression (median imputation)": {
+      "baseline_mean_p": 0.13023,
+      "decline_threshold": 0.15491,
+      "fields_that_reduce_risk_when_withheld": 9,
+      "field_most_rewarding_to_withhold": "sba_guarantee_share",
+      "share_scored_less_risky_when_withheld": 0.9055,
+      "field_flipping_most_decisions": "sba_guarantee_share",
+      "decline_to_approve_share": 0.19608,
+      "fields_to_halve_assessed_risk": null
+    }
+  }
+}

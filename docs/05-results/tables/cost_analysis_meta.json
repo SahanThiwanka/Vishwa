@@ -1,0 +1,11 @@
+{
+  "cost_ratios": [
+    2,
+    5,
+    10,
+    20,
+    50
+  ],
+  "n_loans": 652284,
+  "unit": "one false positive"
+}

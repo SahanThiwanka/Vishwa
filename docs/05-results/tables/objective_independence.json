@@ -1,0 +1,20 @@
+{
+  "n": 652284,
+  "pearson_r": 0.4003,
+  "spearman_rho": 0.4213,
+  "r_squared": 0.1602,
+  "verdict": "moderately related",
+  "dev_quartile_default_spread": 0.1952,
+  "dev_quartile_rates": {
+    "(-0.001, 25.278]": 0.108,
+    "(25.278, 54.506]": 0.2977,
+    "(54.506, 100.0]": 0.3032
+  },
+  "n_dev_bins": 3,
+  "disjoint_pearson_r": 0.3563,
+  "disjoint_spearman_rho": 0.4495,
+  "disjoint_verdict": "moderately related",
+  "band_same": 0.118176,
+  "band_one_apart": 0.497332,
+  "band_two_plus_apart": 0.384492
+}

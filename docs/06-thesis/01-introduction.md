@@ -77,7 +77,7 @@ codifies what to look at without codifying how to judge it.
 These differ from the questions in the original research proposal, for two
 reasons, both stated openly.
 
-First, the literature review (§5.10.3) established that the contribution
+First, the literature review (§3.5.3) established that the contribution
 originally claimed — applying fuzzy multi-criteria methods to SME credit scoring —
 is already published. The questions were revised rather than restated in a form
 the literature no longer supports.
@@ -146,7 +146,7 @@ follows from that honestly, including a negative result.
    exporting them in the bank's own report format.
 5. **A design finding**: weight renormalisation over unassessed criteria allows a
    sparse appraisal to produce a confident score, requiring an explicit
-   completeness gate (§5.10).
+   completeness gate (§5.3).
 6. **Evidence on objective separability**: across 652,284 facilities the two
    objectives correlate moderately (r = +0.40) yet band the same facility
    differently 88.2% of the time — and development impact is positively

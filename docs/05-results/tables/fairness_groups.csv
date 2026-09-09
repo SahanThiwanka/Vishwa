@@ -1,0 +1,73 @@
+model,attribute,group,n,default_rate,decline_rate,auc,brier,mean_predicted,calibration_gap,fpr_good_declined,fnr_bad_approved
+"Gradient boosting (clean, temporal)",Rurality,Not recorded,2590,0.3475,0.7197,0.6779,0.20807,0.3132,-0.0343,0.6414,0.1333
+"Gradient boosting (clean, temporal)",Rurality,Rural,49457,0.2779,0.1374,0.5723,0.21513,0.1511,-0.1268,0.1231,0.8254
+"Gradient boosting (clean, temporal)",Rurality,Urban,223440,0.377,0.2078,0.6111,0.26961,0.1695,-0.2075,0.1603,0.7137
+"Gradient boosting (clean, temporal)",Firm size (employees),Large (100+),752,0.1676,0.0731,0.6009,0.14326,0.096,-0.0716,0.0639,0.881
+"Gradient boosting (clean, temporal)",Firm size (employees),Medium (20-99),16105,0.2493,0.0964,0.613,0.19601,0.1294,-0.1199,0.0782,0.8486
+"Gradient boosting (clean, temporal)",Firm size (employees),Micro (1-4),174587,0.3753,0.2264,0.6051,0.26727,0.1751,-0.2002,0.1796,0.6958
+"Gradient boosting (clean, temporal)",Firm size (employees),Not reported (0),3597,0.3353,0.0703,0.5661,0.26311,0.131,-0.2043,0.064,0.9171
+"Gradient boosting (clean, temporal)",Firm size (employees),Small (5-19),80446,0.3483,0.1705,0.5997,0.25542,0.1612,-0.1871,0.1349,0.7629
+"Gradient boosting (clean, temporal)",Firm age,Existing,196084,0.3661,0.2016,0.6086,0.26253,0.1714,-0.1947,0.159,0.7246
+"Gradient boosting (clean, temporal)",Firm age,New business,79289,0.3414,0.1962,0.6051,0.25128,0.1582,-0.1832,0.1538,0.722
+"Gradient boosting (clean, temporal)",Firm age,Not recorded,114,0.1842,0.0439,,0.16026,0.0949,-0.0893,0.0538,1.0
+"Gradient boosting (clean, temporal)",Sector,Accommodation/Food,25038,0.365,0.232,0.5817,0.26055,0.1838,-0.1813,0.1908,0.6963
+"Gradient boosting (clean, temporal)",Sector,Admin/Waste,17131,0.3456,0.1861,0.6063,0.25503,0.1576,-0.188,0.1498,0.7451
+"Gradient boosting (clean, temporal)",Sector,Agriculture/Forestry/Fishing,1412,0.1919,0.0907,0.5468,0.16249,0.1182,-0.0738,0.0815,0.8708
+"Gradient boosting (clean, temporal)",Sector,Arts/Entertainment,5417,0.3651,0.2442,0.5807,0.26016,0.1846,-0.1806,0.2076,0.6921
+"Gradient boosting (clean, temporal)",Sector,Construction,31510,0.3853,0.1763,0.592,0.27897,0.1663,-0.219,0.1409,0.7671
+"Gradient boosting (clean, temporal)",Sector,Education,3341,0.3439,0.1871,0.5874,0.25475,0.16,-0.1839,0.1565,0.7546
+"Gradient boosting (clean, temporal)",Sector,Finance/Insurance,5136,0.4416,0.182,0.5902,0.32118,0.1599,-0.2817,0.143,0.7685
+"Gradient boosting (clean, temporal)",Sector,Health Care,15766,0.2276,0.0771,0.5932,0.18639,0.1043,-0.1234,0.0567,0.854
+"Gradient boosting (clean, temporal)",Sector,Information,5612,0.3849,0.2678,0.5957,0.26943,0.1879,-0.197,0.2193,0.6546
+"Gradient boosting (clean, temporal)",Sector,Management,49,0.4694,0.1429,,0.37476,0.1274,-0.342,0.1538,0.8696
+"Gradient boosting (clean, temporal)",Sector,Manufacturing,21392,0.3025,0.1582,0.6115,0.22494,0.1586,-0.1439,0.1251,0.7653
+"Gradient boosting (clean, temporal)",Sector,Mining,542,0.1697,0.0683,0.6182,0.14096,0.1023,-0.0674,0.0489,0.837
+"Gradient boosting (clean, temporal)",Sector,Not recorded,1,0.0,0.0,,0.01689,0.13,0.13,0.0,
+"Gradient boosting (clean, temporal)",Sector,Other Services,26410,0.3647,0.2123,0.5753,0.26498,0.172,-0.1927,0.1756,0.7239
+"Gradient boosting (clean, temporal)",Sector,Professional/Scientific,30217,0.3284,0.1434,0.6192,0.24886,0.1372,-0.1911,0.1066,0.7814
+"Gradient boosting (clean, temporal)",Sector,Public Admin,67,0.3433,0.3881,,0.26339,0.181,-0.1623,0.3864,0.6087
+"Gradient boosting (clean, temporal)",Sector,Real Estate,6811,0.4594,0.1909,0.5848,0.32053,0.1783,-0.2811,0.141,0.7504
+"Gradient boosting (clean, temporal)",Sector,Retail Trade,48338,0.3976,0.2802,0.5928,0.27403,0.1966,-0.201,0.2273,0.6396
+"Gradient boosting (clean, temporal)",Sector,Transportation,13032,0.3662,0.2716,0.5826,0.25796,0.1907,-0.1754,0.2339,0.663
+"Gradient boosting (clean, temporal)",Sector,Utilities,247,0.2955,0.0931,,0.23851,0.1128,-0.1827,0.0632,0.8356
+"Gradient boosting (clean, temporal)",Sector,Wholesale Trade,18018,0.3832,0.1673,0.6424,0.26943,0.1674,-0.2158,0.113,0.7454
+"Gradient boosting (clean, temporal)",Facility size,Largest 25%,68852,0.2949,0.0823,0.6285,0.22427,0.1404,-0.1546,0.062,0.8693
+"Gradient boosting (clean, temporal)",Facility size,Lower-mid,64421,0.4076,0.2323,0.5608,0.29524,0.1715,-0.2361,0.1959,0.7149
+"Gradient boosting (clean, temporal)",Facility size,Smallest 25%,73333,0.3655,0.2756,0.6452,0.25517,0.1781,-0.1874,0.2122,0.6145
+"Gradient boosting (clean, temporal)",Facility size,Upper-mid,68881,0.3704,0.2071,0.5826,0.26489,0.1799,-0.1904,0.1715,0.7325
+Expert scorecard (unfitted),Rurality,Not recorded,2590,0.3475,0.8506,0.484,,,,0.8296,0.11
+Expert scorecard (unfitted),Rurality,Rural,49457,0.2779,0.2397,0.529,,,,0.2419,0.766
+Expert scorecard (unfitted),Rurality,Urban,223440,0.377,0.1847,0.5305,,,,0.1667,0.7855
+Expert scorecard (unfitted),Firm size (employees),Large (100+),752,0.1676,0.0997,0.4259,,,,0.1102,0.9524
+Expert scorecard (unfitted),Firm size (employees),Medium (20-99),16105,0.2493,0.0842,0.5025,,,,0.0911,0.9367
+Expert scorecard (unfitted),Firm size (employees),Micro (1-4),174587,0.3753,0.2416,0.5296,,,,0.224,0.7291
+Expert scorecard (unfitted),Firm size (employees),Not reported (0),3597,0.3353,0.3328,0.6172,,,,0.2894,0.5813
+Expert scorecard (unfitted),Firm size (employees),Small (5-19),80446,0.3483,0.1307,0.508,,,,0.1324,0.8726
+Expert scorecard (unfitted),Firm age,Existing,196084,0.3661,0.128,0.5329,,,,0.1196,0.8574
+Expert scorecard (unfitted),Firm age,New business,79289,0.3414,0.3804,0.5506,,,,0.351,0.5629
+Expert scorecard (unfitted),Firm age,Not recorded,114,0.1842,0.5263,,,,,0.4946,0.3333
+Expert scorecard (unfitted),Sector,Accommodation/Food,25038,0.365,0.2741,0.5644,,,,0.2458,0.6767
+Expert scorecard (unfitted),Sector,Admin/Waste,17131,0.3456,0.1794,0.5272,,,,0.1696,0.8019
+Expert scorecard (unfitted),Sector,Agriculture/Forestry/Fishing,1412,0.1919,0.3562,0.5125,,,,0.3611,0.6642
+Expert scorecard (unfitted),Sector,Arts/Entertainment,5417,0.3651,0.2869,0.5315,,,,0.2719,0.6871
+Expert scorecard (unfitted),Sector,Construction,31510,0.3853,0.1196,0.5168,,,,0.1197,0.8805
+Expert scorecard (unfitted),Sector,Education,3341,0.3439,0.2559,0.5587,,,,0.224,0.6832
+Expert scorecard (unfitted),Sector,Finance/Insurance,5136,0.4416,0.1542,0.5086,,,,0.1468,0.8364
+Expert scorecard (unfitted),Sector,Health Care,15766,0.2276,0.2313,0.5422,,,,0.2177,0.7225
+Expert scorecard (unfitted),Sector,Information,5612,0.3849,0.2974,0.5509,,,,0.2627,0.6472
+Expert scorecard (unfitted),Sector,Management,49,0.4694,0.1633,,,,,0.1923,0.8696
+Expert scorecard (unfitted),Sector,Manufacturing,21392,0.3025,0.1888,0.5149,,,,0.1876,0.8084
+Expert scorecard (unfitted),Sector,Mining,542,0.1697,0.2638,0.4403,,,,0.2778,0.8043
+Expert scorecard (unfitted),Sector,Not recorded,1,0.0,1.0,,,,,1.0,
+Expert scorecard (unfitted),Sector,Other Services,26410,0.3647,0.2076,0.5383,,,,0.1918,0.7649
+Expert scorecard (unfitted),Sector,Professional/Scientific,30217,0.3284,0.1689,0.5272,,,,0.1522,0.7969
+Expert scorecard (unfitted),Sector,Public Admin,67,0.3433,0.2388,,,,,0.1591,0.6087
+Expert scorecard (unfitted),Sector,Real Estate,6811,0.4594,0.137,0.4996,,,,0.1453,0.8728
+Expert scorecard (unfitted),Sector,Retail Trade,48338,0.3976,0.2421,0.5443,,,,0.2118,0.7121
+Expert scorecard (unfitted),Sector,Transportation,13032,0.3662,0.1713,0.5466,,,,0.1616,0.812
+Expert scorecard (unfitted),Sector,Utilities,247,0.2955,0.1822,,,,,0.1897,0.8356
+Expert scorecard (unfitted),Sector,Wholesale Trade,18018,0.3832,0.1605,0.4369,,,,0.1783,0.8684
+Expert scorecard (unfitted),Facility size,Largest 25%,68852,0.2949,0.2795,0.4955,,,,0.2825,0.7278
+Expert scorecard (unfitted),Facility size,Lower-mid,64421,0.4076,0.1387,0.5607,,,,0.1185,0.8321
+Expert scorecard (unfitted),Facility size,Smallest 25%,73333,0.3655,0.245,0.601,,,,0.1812,0.6443
+Expert scorecard (unfitted),Facility size,Upper-mid,68881,0.3704,0.1333,0.4874,,,,0.1515,0.8977

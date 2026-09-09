@@ -2,7 +2,7 @@
 
 ## 6.1 Weight elicitation: prepared, not administered
 
-The methodology in §5.10 specifies weight elicitation by Best-Worst Method. **That
+The methodology in §4.5 specifies weight elicitation by Best-Worst Method. **That
 elicitation was not carried out.** This section states plainly what was built,
 what was not done, and what follows.
 
@@ -97,7 +97,7 @@ volatility, this is the most directly actionable result in the thesis.
 
 Two design decisions proved more consequential than expected.
 
-The **completeness gate** (§5.10) arose from a defect found in testing: a
+The **completeness gate** (§5.3) arose from a defect found in testing: a
 14%-complete file produced a confident recommendation. Weight renormalisation
 keeps a sparse appraisal's score plausible while its evidential basis collapses.
 The gate is a refusal to answer rather than a score adjustment, because a

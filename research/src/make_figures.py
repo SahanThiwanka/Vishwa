@@ -210,6 +210,64 @@ def figure_calibration() -> None:
     print("  calibration.png")
 
 
+def figure_missingness() -> None:
+    """What withholding information does to the assessed risk of the same applicant.
+
+    Left: mean predicted default as fields are withheld. Right: the share of the
+    declined population that withholding converts into approvals. Both curves end
+    at the same place - an applicant who supplies nothing is approved outright.
+    """
+    prog = pd.read_csv(TABLES / "missingness_progressive.csv")
+    meta = json.loads((TABLES / "missingness_summary.json").read_text(encoding="utf-8"))
+
+    styles = {
+        "Gradient boosting (native NaN)": (CLEAN, "-", "Gradient boosting\n(native missing handling)"),
+        "Logistic regression (median imputation)": (CONTAM, "--", "Logistic regression\n(median imputation)"),
+    }
+
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4.4))
+
+    for model, (colour, ls, label) in styles.items():
+        sub = prog[prog["model"] == model].sort_values("fields_withheld")
+        x = sub["fields_withheld"]
+
+        axes[0].plot(x, sub["mean_p_default"], ls, color=colour, lw=2, label=label)
+        axes[0].fill_between(x, sub["mean_p_low"], sub["mean_p_high"],
+                             color=colour, alpha=0.15, lw=0)
+
+        base = meta["models"][model]["baseline_mean_p"]
+        axes[0].axhline(base, color=colour, lw=0.9, alpha=0.5)
+
+        axes[1].plot(x, sub["decline_to_approve"] * 100, ls, color=colour, lw=2,
+                     label=label)
+
+    axes[0].set_xlabel("Fields withheld (of 14)")
+    axes[0].set_ylabel("Mean assessed probability of default")
+    axes[0].set_title("Assessed risk falls as information is withheld", fontsize=10)
+    axes[0].set_ylim(0, None)
+    axes[0].legend(fontsize=8, loc="lower left")
+    axes[0].grid(alpha=0.25)
+
+    # The decline share is the ceiling: reaching it means every applicant who
+    # would have been declined has been converted into an approval.
+    ceiling = meta["decline_share"] * 100
+    axes[1].axhline(ceiling, color=PROBE, ls=":", lw=1.4)
+    # Bottom right: the curves occupy the upper left and converge on the ceiling.
+    axes[1].text(len(prog["fields_withheld"].unique()) - 0.2, ceiling * 0.12,
+                 "ceiling = every declined\napplicant now approved",
+                 fontsize=8, color=PROBE, style="italic", ha="right")
+    axes[1].set_xlabel("Fields withheld (of 14)")
+    axes[1].set_ylabel("Share of all applicants (%)")
+    axes[1].set_title("Withholding converts declines into approvals", fontsize=10)
+    axes[1].set_ylim(0, ceiling * 1.15)
+    axes[1].grid(alpha=0.25)
+
+    fig.tight_layout()
+    fig.savefig(FIGURES / "missingness.png", dpi=200)
+    plt.close(fig)
+    print("  missingness.png")
+
+
 def main() -> int:
     if not (TABLES / "benchmark_results.csv").exists():
         print("Missing result tables. Run benchmark.py and leakage_analysis.py first.")
@@ -224,6 +282,8 @@ def main() -> int:
         figure_weight_sensitivity()
     if (TABLES / 'reliability_curves.csv').exists():
         figure_calibration()
+    if (TABLES / 'missingness_progressive.csv').exists():
+        figure_missingness()
 
     # Mirror into the thesis results folder.
     dest = ROOT / "docs" / "05-results" / "figures"

@@ -505,6 +505,158 @@ That is precisely the trade-off the dual-objective design exists to surface. A
 model that averaged the two into one figure would report a middling score and
 conceal the fact that the institution is being asked to choose.
 
+## 5.6c Who the models work less well for
+
+The model card recorded, as a stated weakness, that no disparate-impact analysis
+had been performed, and that a credit model untested for disparate impact should
+not touch real applicants. This section closes as much of that gap as the data
+permits.
+
+### 5.6c.1 What can and cannot be tested
+
+The SBA file records no legally protected characteristic. There is no race, sex,
+age, disability or marital-status field, and nothing that follows is a
+protected-attribute audit. Describing it as one would be false.
+
+What the data does carry are the axes along which SME credit exclusion actually
+operates in development finance: rurality, firm size, firm age, sector, and
+facility size. These are proxies for credit access, not for protected class, and
+a model can be clean on every one of them and still discriminate unlawfully. The
+analysis is reported for what it is.
+
+Two distinct quantities are measured and must not be conflated. The first is
+**selection-rate disparity** — whether a group is declined more often — assessed
+against the four-fifths rule. On its own this is weak evidence, because the
+groups have genuinely different default rates and a model that declines a
+riskier group more often is doing its job. The second is **error-rate
+disparity**: among borrowers who actually repaid, what share would have been
+declined. That measure has no base-rate defence. If creditworthy firms in one
+group are turned away at three times the rate of another, the model is worse for
+that group.
+
+A single portfolio-wide threshold is applied — decline the riskiest 20% — because
+that is what a bank does, and it is the condition under which disparate impact
+arises. The temporal test cohort is used throughout: 275,487 facilities approved
+between 2004 and 2010, default rate 35.89%.
+
+### 5.6c.2 Results
+
+The trained gradient booster fails the four-fifths rule on three of the five
+attributes; the expert scorecard fails on four of five.
+
+| Attribute | Gradient boosting | Expert scorecard |
+|---|---|---|
+| Rurality | 0.325 — fails | 0.183 — fails |
+| Firm size | 0.832 — passes | 0.729 — fails |
+| Firm age | 0.993 — passes | 0.711 — fails |
+| Sector | 0.773 — fails | 0.731 — fails |
+| Facility size | 0.789 — fails | 0.831 — passes |
+
+The error-rate disparities are the substantive finding. Under the gradient
+booster, **17.96% of micro-enterprises that repaid would have been declined,
+against 6.39% of firms with 100 or more employees — a ratio of 2.81**. By
+facility size the gap is wider: 21.22% of creditworthy applicants in the smallest
+quartile declined, against 6.20% in the largest, **a ratio of 3.42**. Micro-firms
+and small facilities are precisely the segment that SME finance policy exists to
+serve, and they are the segment the model serves worst.
+
+The scorecard's failure is sharper and less defensible. It would decline **36.11%
+of creditworthy agricultural borrowers — the highest rate of any sector — even
+though agriculture has the lowest default rate in the cohort at 19.19%**. The
+model penalises most heavily the sector that performs best. This is not a
+base-rate artefact; it is the a priori bands mis-scoring a sector.
+
+Discrimination is also unevenly distributed. The booster's within-group AUC
+ranges from 0.5468 in agriculture to 0.6424 in wholesale trade. The scorecard is
+worse than a coin toss inside several substantial groups — 0.4369 for wholesale
+trade (n = 18,018), 0.4874 for the upper-middle facility quartile (n = 68,881),
+0.4955 for the largest quartile (n = 68,852). Within those groups its ranking is
+inverted: it is not merely uninformative but actively misleading.
+
+### 5.6c.3 A confound that had to be ruled out
+
+The largest single disparity looked at first like the clearest finding and turned
+out not to be. Applicants whose rurality was not recorded are declined at 71.97%
+against 20.78% for urban and 13.74% for rural firms, with 64.14% of the
+creditworthy among them declined — while their default rate, 34.75%, sits
+slightly *below* the urban group's 37.70%. The natural reading is that the model
+punishes missing data.
+
+That reading does not survive inspection. The group is confounded: its records
+are mostly 2004 approvals, carry a far higher SBA guarantee share (0.83 against
+0.58), are larger, and are missing several other fields as well. Their decline
+rate is explained by those characteristics, not by the absent flag. The
+hypothesis was therefore tested directly rather than inferred, and §5.6d reports
+what that test found — which is the opposite.
+
+## 5.6d What the models do with information the applicant did not supply
+
+§4.5 reported a completeness gate: the artefact refuses to return a band when too
+little of an objective has been assessed. It was introduced as a safety measure
+after testing found a 14%-complete appraisal being handed a recommendation. This
+section asks what the alternative actually does, and the answer is a stronger
+argument for the gate than the safety argument that motivated it.
+
+### 5.6d.1 Method
+
+The question is causal, so it is answered by counterfactual rather than by
+comparing groups. Take the 201,566 test-cohort applicants whose records are
+complete, blank one field, and re-score the same applicant. Everything else is
+held fixed, so whatever moves is caused by the absence itself. The decline
+threshold is the same portfolio rule as §5.6c.
+
+### 5.6d.2 The models reward withholding
+
+They do not penalise missing data. They reward it. For the gradient booster,
+withholding lowers assessed risk for **11 of the 14 fields**. Withholding the
+rurality flag alone scores **97.7% of applicants as less risky than when they
+answered**, dropping mean assessed default from 16.84% to 6.44% — and moves
+**19.84% of all applicants from decline to approval**. Withholding whether the
+business is new does the same for 92.0% of applicants and flips 16.48%.
+
+The mechanism is mundane and entirely general. A gradient booster sends missing
+values down whichever branch carried the greater training weight; `is_urban` was
+absent for about a third of training rows and those rows defaulted less often, so
+"not stated" is scored like a low-risk population.
+
+Median imputation, the standard alternative, fails differently rather than
+better. Under the logistic regression, withholding the SBA guarantee share scores
+90.5% of applicants as less risky and flips 19.61% from decline to approval. It
+does not reward omission through a missingness branch; it silently asserts a
+value the applicant never gave.
+
+[Image: missingness.png | Effect of withholding information on the same applicants. Left: mean assessed probability of default as fields are withheld, shaded across draws. Right: the share of all applicants converted from decline to approval. Both models converge on the ceiling, at which every applicant who would have been declined is approved.]
+
+### 5.6d.3 The limit case
+
+Withholding 7 of the 14 fields halves mean assessed risk. At the limit the result
+is unambiguous. An applicant who supplies **nothing at all** receives an assessed
+default probability of **0.0615 from the gradient booster — identical for every
+applicant, and far below the 0.2293 decline threshold**. Every applicant who
+would have been declined is approved. The model's no-information prior is more
+favourable than the assessment given to 80% of real applicants.
+
+### 5.6d.4 Why this matters for the artefact
+
+The completeness gate was justified in §4.5 on safety grounds: a score computed
+from 14% of the evidence should not be presented as a recommendation. This
+analysis shows the weaker justification was the wrong one. A scoring model that
+answers regardless of how much it was told is not merely unreliable on thin
+evidence — it is **exploitable**, and in a direction that rewards the applicant
+for supplying less. Under a fixed threshold, omission is a dominant strategy.
+
+Refusing to answer is not conservatism. It is the only response to insufficient
+evidence that cannot be gamed, and this is the empirical case for the design
+decision rather than the a priori one.
+
+Two qualifications. The counterfactual asks what the model does with a blank
+field, not what a bank's own process would do; a real institution would refuse an
+incomplete application at intake, and the vulnerability arises only where an
+automated score is taken at face value. And the specific numbers belong to these
+two models on this dataset. The direction — that absent information is scored as
+favourable rather than as unknown — follows from how both missing-value
+strategies work, and is not particular to either.
+
 ## 5.7 Limitations
 
 **Jurisdiction.** SBA data reflects U.S. government-guaranteed small-business

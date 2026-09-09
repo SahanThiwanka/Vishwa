@@ -85,6 +85,16 @@ contribution decomposition summing exactly to the score.
 Plus, globally: a list of critical breaches (currently DSCR < 1.0), surfaced
 separately so they cannot be averaged away.
 
+**Why the gate refuses rather than flags.** Returning a score with a caveat was
+the obvious alternative and is the wrong one. Testing what conventional models do
+with absent information (§5.19 of the thesis) found that both a gradient booster
+and a median-imputing logistic regression score a withheld field as *favourable*
+rather than as unknown. Omitting a single field moves 19.84% of applicants from
+decline to approval, and an applicant who supplies nothing at all is assessed at
+a 6.15% probability of default - below the threshold that declines 80% of real
+applicants, so such an applicant is approved outright. A gate that answers
+anyway, however it is captioned, is a gate that rewards withholding.
+
 ### Why two scores and not one
 
 Arvanitis et al. (2015) find development and credit concerns to be empirically
@@ -151,8 +161,12 @@ development weights costs more, and those weights warrant more respondents.
 - **The development objective.** Only employment proxies are observable; five of
   the nine clause-5 items have no counterpart in any available data.
 - **Usability or acceptance.** No officer has used it on live applications.
-- **Fairness.** No disparate-impact analysis has been performed on any protected
-  characteristic. This is a serious gap for a credit model.
+- **Fairness against protected characteristics.** Still not assessed, and not
+  assessable here: the SBA file records no race, sex, age, disability or
+  marital-status field. Disparate impact HAS now been measured on credit-access
+  proxies - rurality, firm size, firm age, sector, facility size - and the
+  results are in the section below. Those are not protected classes, and passing
+  on them would not establish lawfulness.
 
 ### The negative result, stated plainly
 
@@ -170,8 +184,11 @@ following would each independently prevent responsible deployment:
    how it trades criteria off.
 2. **The tree is not validated against outcomes.** Nobody has shown that it
    separates good credits from bad.
-3. **No fairness assessment.** A credit model that has not been tested for
-   disparate impact should not touch real applicants.
+3. **Measured disparate impact.** The scorecard fails the four-fifths rule on
+   four of the five credit-access attributes tested, and would decline 36.11% of
+   creditworthy agricultural borrowers - the worst rate of any sector - despite
+   agriculture having the lowest default rate in the cohort at 19.19%. This is no
+   longer an untested risk; it is an observed defect.
 4. **Bands are a priori.** Thresholds (DSCR 1.0 → 25, and so on) reflect
    reasoning about credit policy, not calibration against outcomes.
 5. **Not calibrated.** Output is ordinal. Treating a score of 80 as "20% chance of
@@ -201,9 +218,25 @@ code, years of experience, institution type and role — **no name, no customer
 information**. Participation is voluntary and stoppable; responses are reported
 only in aggregate.
 
-**Fairness.** Not assessed, as noted. Any deployment must first test for
-disparate impact across whatever protected characteristics apply in the relevant
-jurisdiction.
+**Fairness.** Assessed on credit-access proxies, not on protected
+characteristics, which the data does not carry. Any deployment must still test
+for disparate impact across whatever protected characteristics apply in the
+relevant jurisdiction; nothing here substitutes for that.
+
+What was measured, on 275,487 facilities under a policy of declining the riskiest
+20%, is reported in full in §5.18 of the thesis. In summary: the scorecard fails
+the four-fifths rule on rurality (0.183), firm size (0.729), firm age (0.711) and
+sector (0.731); the trained gradient booster fails on rurality (0.325), sector
+(0.773) and facility size (0.789). Creditworthy micro-enterprises are declined at
+2.81 times the rate of large firms, and creditworthy applicants in the smallest
+facility quartile at 3.42 times the rate of the largest. Within several
+substantial groups the scorecard's ranking is inverted rather than merely weak -
+AUC 0.4369 for wholesale trade (n = 18,018).
+
+Base rates genuinely differ between these groups, so the selection-rate
+disparities are not by themselves evidence of injustice. The error-rate
+disparities, which compare only borrowers who actually repaid, have no such
+defence.
 
 **Human oversight.** The design keeps the officer as decision-maker. Credit
 scoring is designated high-risk under the EU AI Act, and comparable regimes

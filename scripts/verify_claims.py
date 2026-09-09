@@ -439,6 +439,23 @@ def main() -> int:
         checks.append(check("complete records analysed",
                             f"{miss['n_complete_records']:,}", docs, BOTH))
 
+        # Threshold independence: the finding must not rest on one policy.
+        info = miss.get("no_information_applicant", {})
+        for model_key, label in (
+            ("Gradient boosting (native NaN)", "GBM"),
+            ("Logistic regression (median imputation)", "logistic"),
+        ):
+            entry = info.get(model_key)
+            if entry:
+                checks.append(check(
+                    f"{label} no-information percentile",
+                    f"{entry['percentile_among_real_applicants'] * 100:.1f}th",
+                    docs, BOTH))
+                checks.append(check(
+                    f"{label} withholding crossover",
+                    f"{entry['crossover_decline_share'] * 100:.1f}%",
+                    docs, BOTH))
+
     # ---- calibration --------------------------------------------------------
     calib = load_csv("calibration.csv")
     for row in calib:

@@ -91,17 +91,30 @@ with absent information (§5.19 of the thesis) found that both a gradient booste
 and a median-imputing logistic regression score a withheld field as *favourable*
 rather than as unknown. Omitting a single field moves 19.84% of applicants from
 decline to approval, and an applicant who supplies nothing at all is assessed at
-a 6.15% probability of default - below the threshold that declines 80% of real
-applicants, so such an applicant is approved outright. A gate that answers
-anyway, however it is captioned, is a gate that rewards withholding.
+a 6.15% probability of default - the 6.5th percentile of real applicants. That
+applicant is approved under any policy declining less than 93.5% of the
+portfolio, so the result does not depend on where the threshold is set. A gate
+that answers anyway, however it is captioned, is a gate that rewards
+withholding.
 
 ### Why two scores and not one
 
-Arvanitis et al. (2015) find development and credit concerns to be empirically
-independent in development-bank appraisal. Because they are independent,
-aggregating them destroys information rather than summarising it: a facility
-scoring 80/40 and one scoring 60/60 are materially different propositions that a
-combined score of 60 would render identical.
+The original justification was that Arvanitis et al. (2015) had found development
+and credit concerns to be empirically independent in development-bank appraisal.
+**That reading was wrong and has been corrected.** What they report is a positive
+but statistically non-significant relationship — slope 0.048, p = 0.49 — across
+109 operations, which cannot distinguish independence from a moderate
+association. §5.17 of the thesis measures the association directly on 652,284
+facilities and finds r = +0.40: the same direction they estimated, at a sample
+size that resolves it.
+
+The separation therefore stands on a different footing. It is not that the two
+objectives are independent, but that they **disagree about individual
+facilities**: they place the same firm in different risk bands 88.2% of the time,
+and two or more bands apart 38.4% of the time. A facility scoring 80/40 and one
+scoring 60/60 are materially different propositions that a combined score of 60
+would render identical, and that remains true whether or not the two are
+correlated on average.
 
 ## 5. Weights
 

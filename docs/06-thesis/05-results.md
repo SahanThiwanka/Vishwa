@@ -853,7 +853,9 @@ The question is causal, so it is answered by counterfactual rather than by
 comparing groups. Take the 201,566 test-cohort applicants whose records are
 complete, blank one field, and re-score the same applicant. Everything else is
 held fixed, so whatever moves is caused by the absence itself. The decline
-threshold is the same portfolio rule as §5.18.
+threshold is the same portfolio rule as §5.18 — decline the riskiest 20%, which
+on these applicants falls at a predicted default probability of **0.2293**.
+§5.19.3 shows the conclusion does not depend on that choice.
 
 ### 5.19.2 The models reward withholding
 
@@ -881,10 +883,19 @@ value the applicant never gave.
 
 Withholding 7 of the 14 fields halves mean assessed risk. At the limit the result
 is unambiguous. An applicant who supplies **nothing at all** receives an assessed
-default probability of **0.0615 from the gradient booster — identical for every
-applicant, and far below the 0.2293 decline threshold**. Every applicant who
-would have been declined is approved. The model's no-information prior is more
-favourable than the assessment given to 80% of real applicants.
+default probability of **0.0615 from the gradient booster** — identical for every
+applicant, because nothing remains for the model to vary on.
+
+**This does not depend on where the decline threshold is placed**, which is the
+obvious objection to a result reported under a single policy. That score sits at
+the **6.5th percentile** of real applicants' scores. Supplying nothing therefore
+beats 93.5% of genuine applications, and remains an approval under any policy
+declining less than **93.5%** of the portfolio. The logistic regression is worse:
+its no-information score of 0.0669 sits at the **3.9th percentile**, giving a
+crossover at **96.1%**.
+
+No lender declines nine applicants in ten. Within the entire range of policies a
+bank might actually operate, an applicant who answers nothing is approved.
 
 ### 5.19.4 Why this matters for the artefact
 

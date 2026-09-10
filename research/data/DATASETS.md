@@ -89,3 +89,28 @@ the first thing an examiner will probe.
 ```bash
 python research/src/check_data.py
 ```
+
+## SBA 7(a) and 504 FOIA extracts
+
+The SBA's own loan-level publication, refreshed quarterly. Used by
+`research/src/sba_foia_replication.py` to establish that the `Term` artefact is
+present in the authoritative records rather than introduced by the widely used
+derivative file, and to show it is absent from the 504 programme.
+
+Source: <https://data.sba.gov/dataset/7a-504-foia>
+
+Download into `research/data/raw/` and rename as below. Both are gitignored.
+
+| Save as | Approx. size | Release used |
+|---|---|---|
+| `FOIA_7a_FY2000_FY2009.csv` | 318 MB | as of 2026-06-30 |
+| `FOIA_504_FY1991_FY2009.csv` | 54 MB | as of 2026-06-30 |
+
+**The two files spell the paid-in-full status differently** — `P I F` in the 7(a)
+extract, `PIF` in the 504 one. Filtering for one spelling silently yields a frame
+of pure charge-offs and a default rate of 100%. `sba_foia_replication.py` accepts
+both.
+
+A later quarterly release will contain more resolved loans and the figures will
+move slightly. Re-run the script and `scripts/verify_claims.py` will flag any
+chapter that no longer matches.

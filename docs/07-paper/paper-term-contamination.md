@@ -59,7 +59,7 @@ Our contributions:
 2. Quantification of the resulting inflation in reported performance, with a
    meaningless-variable probe establishing an artefact ceiling (§V).
 3. Rejection of the natural mechanism hypothesis, leaving the cause open and
-   stated as such (§IV-E).
+   stated as such (§IV-F).
 4. Three further validation hazards in the same dataset: right-censoring, the
    optimism of random splitting, and a roughly 700-fold degradation in
    calibration across a temporal boundary (§VI).
@@ -251,7 +251,43 @@ roundness on a calendar grid rather than strictly annual roundness — which is 
 more natural reading of a contractual convention, and does not affect the
 argument that the field carries outcome information.
 
-### E. The mechanism is not established
+### E. The artefact is in the SBA's own records, not in the derivative
+
+One candidate explanation would make this finding uninteresting: that the
+artefact was introduced when the widely used derivative file was assembled. It
+can be excluded.
+
+The SBA publishes loan-level FOIA extracts of the same programme, refreshed
+quarterly. Using the release current to 30 June 2026, across **603,665 resolved
+7(a) facilities approved FY2000–FY2009**:
+
+| | SBA FOIA 7(a) | Derivative file |
+|---|---:|---:|
+| Repaid, term a multiple of twelve | 82.02% | 86.4% |
+| Charged off, multiple of twelve | 8.46% | 8.5% |
+| AUC of the roundness boolean | **0.8678** | 0.8894 |
+
+The pattern holds in every approval year, from 0.8562 to 0.8808. **The artefact
+is present in the authoritative publication.**
+
+We do not claim independent replication. The derivative is itself built from SBA
+FOIA releases, so these are the same loans at a different vintage. The comparison
+establishes where the artefact originates, not that it recurs in a second source.
+
+The same release provides a control. The **504 programme** is a different
+facility type under the same agency, in the same extract, with terms fixed by
+programme design — 95.5% written at exactly 240 months. There the boolean reaches
+**AUC 0.4997**, and charged-off facilities are marginally *more* round-termed
+(99.85%) than repaid ones (99.80%).
+
+Where the term is set by the programme and does not vary, charged-off records
+keep their round terms. Where it is negotiated facility by facility, they
+overwhelmingly do not. This is consistent with a servicing or restructuring
+process that writes to the term field of 7(a) records, and inconsistent with any
+uniform agency-wide transformation. It narrows the mechanism without
+establishing it.
+
+### F. The mechanism is still not fully established
 
 The natural hypothesis is that `Term` for charged-off facilities has been
 overwritten with elapsed time to charge-off. **We tested and rejected it.** Among
@@ -352,7 +388,7 @@ frequently conflated.
 
 ## VII. Limitations
 
-We have not established the mechanism of the contamination (§IV-E), and we do not
+We have not fully established the mechanism of the contamination (§IV-F), and we do not
 claim priority for the finding — our literature search was not exhaustive.
 
 Restricting to fully-matured facilities removes censoring but over-represents
@@ -460,7 +496,8 @@ All results are produced by the following, in order, against the public dataset:
 
 ```
 research/src/prepare_sba.py        # cleaning, leakage-column removal, censoring flags
-research/src/leakage_analysis.py   # Sections IV-B, IV-C, IV-E
+research/src/leakage_analysis.py   # Sections IV-B, IV-C, IV-F
+research/src/sba_foia_replication.py # Section IV-E
 research/src/modulus_probe.py      # Section IV-D
 research/src/benchmark.py          # Section V
 research/src/make_figures.py       # figures
@@ -482,9 +519,11 @@ No value in this paper was entered by hand.
    `scripts/read_pdf.py`. A database search (Scopus, Web of Science, IEEE Xplore)
    has still not been run and is what a reviewer will expect of a claim framed as
    systematic.
-2. **Contact the SBA or the dataset authors** about the mechanism. A reply
-   converts §IV-E from an open question into a complete account and materially
-   strengthens the paper.
+2. **Contact the SBA or the dataset authors** about the mechanism — now a
+   narrower question than it was. §IV-E establishes that the artefact is in the
+   SBA's own FOIA publication and absent from the 504 programme, which points at
+   a servicing or restructuring process acting on 7(a) records. What remains is
+   confirmation of which process, and only the agency can supply that.
 3. **Complete the leakage literature review** — reference [4] onward. Kapoor and
    Narayanan's taxonomy is cited; position this case explicitly against the
    specific type it instantiates.

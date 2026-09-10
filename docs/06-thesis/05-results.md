@@ -302,17 +302,63 @@ charged-off loans with both disbursement and charge-off dates:
 - correlation between `Term` and actual months to charge-off: **0.043**
 - proportion matching within ±3 months: **5.0%**
 
-`Term` is not survival time. Whether the value is rewritten on restructuring,
-recomputed under some servicing convention, or introduced when this derivative
-file was assembled cannot be determined from the data.
+`Term` is not survival time. That left three possibilities: the value is
+rewritten on restructuring, recomputed under some servicing convention, or
+introduced when this derivative file was assembled. The third would make the
+finding uninteresting — a packaging error in one upload rather than a property of
+the data — and §5.10.5 rules it out.
 
 The dataset codebook documents `Term` as "loan term in months" — the contractual
 term. The observed distribution is not consistent with that definition for
-charged-off loans. **The contamination is established; its cause is not.** This
-study reports it accordingly and does not assert a mechanism it has not
-demonstrated.
+charged-off loans. **The contamination is established; the choice between the
+remaining two explanations is not.** This study reports it accordingly and does
+not assert a mechanism it has not demonstrated.
 
-### 5.10.5 Is twelve doing the work?
+### 5.10.5 The artefact is in the SBA's own records
+
+The derivation hypothesis can be tested without contacting anyone. The SBA
+publishes loan-level FOIA extracts of the same programme, refreshed quarterly;
+the release used here is current to 30 June 2026. If the pattern appears there,
+the derivative did not create it.
+
+It appears there. Across **603,665 resolved 7(a) facilities approved between
+FY2000 and FY2009**:
+
+| | SBA FOIA 7(a) | SBA National (derivative) |
+|---|---:|---:|
+| Repaid, term a multiple of twelve | **82.02%** | 86.4% |
+| Charged off, multiple of twelve | **8.46%** | 8.5% |
+| AUC of the roundness boolean | **0.8678** | 0.8894 |
+
+and it holds in every approval year, between 0.8562 and 0.8808. **The
+contamination is not an artefact of the derivative file.** It is present in the
+authoritative publication, which removes one of the three candidate explanations
+and moves the finding from a problem with one dataset to a property of the
+records themselves.
+
+**This is not an independent replication and is not claimed as one.** The SBA
+National dataset is itself built from SBA FOIA releases, so these are the same
+underlying loans at a different vintage rather than a second source. What the
+comparison settles is where the artefact originates, not whether it recurs
+elsewhere.
+
+The same release supplies a control. The **504 programme** is a different
+facility type under the same agency, released in the same extract, and its terms
+are fixed by programme design — **95.5% are written at exactly 240 months**. There
+the boolean discriminates at **AUC 0.4997**, indistinguishable from chance, and
+charged-off facilities are marginally *more* round-termed (99.85%) than repaid
+ones (99.80%).
+
+That contrast is informative. In a programme where the term is set by the
+programme and effectively never varies, charged-off records retain their round
+terms. In 7(a), where the term is negotiated facility by facility, charged-off
+records overwhelmingly do not. Whatever produces the pattern acts on 7(a) records
+and not on 504 records, which is consistent with a servicing or restructuring
+process that touches the term field, and inconsistent with anything applied
+uniformly across the agency's data. It narrows the mechanism; it does not
+establish it, and the distinction is maintained here.
+
+### 5.10.6 Is twelve doing the work?
 
 The finding rests on one boolean, so the obvious challenge is whether twelve
 matters at all. If "multiple of two" or "multiple of five" discriminated equally
@@ -356,7 +402,7 @@ anything the more natural reading of a contractual convention.
 excludes facilities with a term of zero; both are produced by code in
 `research/src/`.)
 
-### 5.10.6 The contamination reaches the dataset's own documentation
+### 5.10.7 The contamination reaches the dataset's own documentation
 
 Li, Mickel and Taylor [28], the paper that documents this dataset, derive a
 feature from `Term` themselves. They define a dummy `RealEstate`, set to 1 where

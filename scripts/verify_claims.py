@@ -301,6 +301,46 @@ def main() -> int:
         checks.append(check("two or more bands apart",
                             f"{indep['band_two_plus_apart'] * 100:.1f}%", docs))
 
+    # ---- the artefact in SBA's own FOIA records -----------------------------
+    foia = load_json("foia_replication.json")
+    if foia:
+        BOTH_F = ["ch5-empirical-validation.md", "05-results.md"]
+        by_name = {d["dataset"].split(" programme")[0]: d
+                   for d in foia["datasets"]}
+        seven = by_name.get("7(a)")
+        if seven:
+            checks.append(check("FOIA 7(a) resolved facilities",
+                                f"{seven['n_resolved']:,}", docs, BOTH_F))
+            checks.append(check("FOIA 7(a) round share, repaid",
+                                f"{seven['round_share_repaid'] * 100:.2f}%",
+                                docs, BOTH_F))
+            checks.append(check("FOIA 7(a) round share, charged off",
+                                f"{seven['round_share_default'] * 100:.2f}%",
+                                docs, BOTH_F))
+            checks.append(check("FOIA 7(a) roundness AUC",
+                                f"{seven['roundness_auc']:.4f}", docs, BOTH_F))
+        five = by_name.get("504")
+        if five:
+            checks.append(check("FOIA 504 roundness AUC",
+                                f"{five['roundness_auc']:.4f}", docs, BOTH_F))
+            checks.append(check("FOIA 504 round share, charged off",
+                                f"{five['round_share_default'] * 100:.2f}%",
+                                docs, BOTH_F))
+        if foia.get("five04_share_240_months") is not None:
+            checks.append(check("FOIA 504 share at 240 months",
+                                f"{foia['five04_share_240_months'] * 100:.1f}%",
+                                docs, BOTH_F))
+
+    foia_years = load_csv("foia_7a_by_year.csv")
+    if foia_years:
+        aucs = [float(r["auc"]) for r in foia_years]
+        checks.append(check("FOIA 7(a) yearly AUC, lowest",
+                            f"{min(aucs):.4f}", docs,
+                            ["ch5-empirical-validation.md", "05-results.md"]))
+        checks.append(check("FOIA 7(a) yearly AUC, highest",
+                            f"{max(aucs):.4f}", docs,
+                            ["ch5-empirical-validation.md", "05-results.md"]))
+
     # ---- is twelve doing the work? -----------------------------------------
     mod = load_csv("modulus_probe.csv")
     if mod:

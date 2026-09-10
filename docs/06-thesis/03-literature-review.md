@@ -283,26 +283,77 @@ flexible model might achieve, which Chapter 5 shows to be a real cost.
 
 ### 3.7.2 Leakage and reproducibility
 
-Kapoor and Narayanan [27] surveyed machine-learning-based science across
-seventeen fields and found leakage affecting **294 papers**, in some cases
-producing wildly overoptimistic conclusions. They argue leakage is the single
-largest cause of irreproducibility in the area, and set out a taxonomy of eight
-types ranging from textbook errors to open research problems.
+Data leakage is the use, in training or evaluation, of information that would not
+be available at the moment a prediction is actually made. Its effect is not
+subtle: a model reading some trace of the answer scores well and the error is
+invisible in every conventional diagnostic, because the model really does predict
+the held-out data — the held-out data is simply contaminated too.
 
-This is the frame within which Chapter 5's finding sits: not a curiosity peculiar
-to one dataset, but an instance of a documented, recurring failure.
+Kapoor and Narayanan [27] established the scale of the problem. Surveying prior
+reviews across machine-learning-based science, they find leakage in **17 fields,
+collectively affecting 294 papers**, in some cases producing what they call
+wildly overoptimistic conclusions, and argue it is the largest single cause of
+irreproducibility in the area. They demonstrate the consequence directly in a
+reproducibility study of civil war prediction, where complex models had been
+reported as substantially outperforming older methods and the advantage does not
+survive correction.
+
+Their contribution most relevant here is a **taxonomy of eight leakage types**,
+grouped in three families:
+
+| Family | Types | Character |
+|---|---|---|
+| **L1** No clean train–test separation | no test set; preprocessing on train and test together; feature selection on both; duplicates across the split | Largely textbook errors, detectable by inspecting the pipeline |
+| **L2** Illegitimate features | the model uses a feature that should not be available — including, explicitly, *a feature that is a proxy for the outcome variable* | Requires domain judgement about each feature |
+| **L3** Test set not independent of training set | temporal leakage; non-independence between train and test; sampling bias | Shades into open research problems |
+
+Their proposed remedy is a **model info sheet**: the researcher writes down, for
+each element of the design, why it is sound — including, for L2, an argument that
+every feature in the model is legitimately available.
+
+The case in Chapter 5 is an instance of **L2**, in precisely the sub-case they
+name. It is also a case their remedy does not catch, and that is what makes it
+worth reporting rather than merely classifying. The contaminated field is
+documented in the dataset's own codebook as a contractual term agreed at
+origination; it is economically meaningful, it is available at appraisal time
+under that definition, and an honest researcher completing a model info sheet
+would write a correct and convincing justification for including it. The leakage
+survives the check designed to catch it, and is detectable only by noticing that
+the *shape* of the field's relationship with the outcome is not one any economic
+mechanism could produce.
+
+Chapter 5's finding therefore sits inside a documented, recurring failure mode
+rather than being a curiosity peculiar to one dataset — and extends it, by
+exhibiting a variety that passes the current best-practice defence.
 
 ### 3.7.3 The SBA National dataset
 
 Li, Mickel and Taylor [28] introduced the SBA National dataset — 899,164 loan
-guarantees, 1987–2014, with realised outcomes — as a teaching resource for
-statistics as investigative decision-making. It has since become a widely used
-benchmark in small-business credit research.
+guarantees issued by the U.S. Small Business Administration between 1987 and
+2014, with realised outcomes — as a teaching resource, built around a case
+assignment in which students take the role of a loan officer and decide whether
+to approve a facility. It has since become a widely used benchmark in
+small-business credit research, which is a heavier duty than it was designed for.
 
-The searched literature reports `Term`, disbursement and approval amounts as
-significant predictors, and uses them accordingly. The dataset codebook documents
-`Term` as "loan term in months" — the contractual term, legitimately available at
-appraisal time.
+Their Table 1 is the dataset's codebook. Three of its fields are populated only
+after a loan has been charged off — `ChgOffDate`, "the date when a loan is
+declared to be in default"; `ChgOffPrinGr`, "charged-off amount"; and
+`BalanceGross`, "gross amount outstanding" — and any model given them is reading
+the outcome rather than predicting it. They are dropped in this study, and the
+drop is asserted in code rather than assumed.
+
+The same table defines `Term` as **"Loan term in months"**: the contractual term
+agreed at origination, legitimately available at appraisal time, and on that
+definition entirely proper to use. The searched literature reports `Term`,
+disbursement and approval amounts as significant predictors and uses them
+accordingly.
+
+The dataset's own documentation goes further. In discussing the data, the authors
+derive a feature *from* `Term` — a `RealEstate` indicator set where the term
+reaches 240 months, on the reasoning that only real-estate-backed lending runs
+twenty years — and report a striking difference in default rates between the two
+groups. That derivation is economically well-motivated and is exactly what a
+careful analyst would do. §5.10.6 examines what the contrast actually rests on.
 
 **No located source reports that the field itself carries outcome information.**
 Chapter 5 presents evidence that it does. This is stated as a finding the author

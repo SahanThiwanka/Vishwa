@@ -79,19 +79,31 @@ cd web
 npm run db:gen-postgres
 ```
 
-```bash
-DATABASE_URL="postgresql://..." npm run db:migrate:postgres
-```
-
-On Windows PowerShell, set it first:
+On Windows PowerShell:
 
 ```bash
-$env:DATABASE_URL="postgresql://..."; npm run db:migrate:postgres
+$env:DATABASE_URL="postgresql://..."; npm run db:setup:postgres
 ```
 
-This applies the existing migrations to the new database. It does **not** copy
-your local SQLite data, which is what you want — the local database contains test
-appraisals, not research data.
+On macOS or Linux:
+
+```bash
+DATABASE_URL="postgresql://..." npm run db:setup:postgres
+```
+
+Expect `Your database is now in sync with your Prisma schema.`
+
+This creates the tables directly from the schema. It does **not** copy your local
+SQLite data, which is what you want — the local database holds test appraisals,
+not research data.
+
+> **Why this creates tables rather than replaying migrations.** The migration
+> files in `prisma/migrations/` were generated for SQLite and contain
+> SQLite-specific types — `DATETIME`, `REAL`. PostgreSQL has no `DATETIME`, so
+> `prisma migrate deploy` fails against it. `db push` builds the tables from the
+> model definitions instead, which is the right tool for standing up a fresh
+> deployment database from a second provider. The local SQLite database keeps its
+> migration history; the deployed one does not need it.
 
 ---
 

@@ -12,7 +12,7 @@
     "test:scoring": "tsx scripts/smoke-scoring.ts",
     "sync-model": "node ../scripts/sync-model.mjs",
     "db:gen-postgres": "node scripts/gen-postgres-schema.mjs",
-    "db:migrate:postgres": "cross-env PRISMA_SCHEMA=prisma/schema.postgres.prisma prisma migrate deploy",
+    "db:setup:postgres": "cross-env PRISMA_SCHEMA=prisma/schema.postgres.prisma prisma db push --skip-generate",
     "test": "vitest run",
     "test:watch": "vitest",
     "db:seed-users": "tsx prisma/seed-users.ts"

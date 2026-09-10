@@ -95,7 +95,7 @@ def _fetch_rows() -> list[dict] | None:
         except psycopg.errors.UndefinedTable:
             print('No "ElicitationResponse" table in that database.\n'
                   "  The migrations have not been applied. From web/:\n"
-                  "    npm run db:migrate:postgres")
+                  "    npm run db:setup:postgres")
             return None
         print(f"Read {len(fetched)} response rows from PostgreSQL.")
         return [dict(zip(FIELDS, row)) for row in fetched]

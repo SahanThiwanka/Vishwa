@@ -104,6 +104,7 @@ Download into `research/data/raw/` and rename as below. Both are gitignored.
 | Save as | Approx. size | Release used |
 |---|---|---|
 | `FOIA_7a_FY2000_FY2009.csv` | 318 MB | as of 2026-06-30 |
+| `FOIA_7a_FY2010_FY2019.csv` | 255 MB | as of 2026-06-30 |
 | `FOIA_504_FY1991_FY2009.csv` | 54 MB | as of 2026-06-30 |
 
 **The two files spell the paid-in-full status differently** — `P I F` in the 7(a)

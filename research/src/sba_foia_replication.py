@@ -44,6 +44,7 @@ Not committed - 318 MB and 54 MB. Download from
 https://data.sba.gov/dataset/7a-504-foia into research/data/raw/ as:
 
     FOIA_7a_FY2000_FY2009.csv
+    FOIA_7a_FY2010_FY2019.csv
     FOIA_504_FY1991_FY2009.csv
 """
 
@@ -61,6 +62,7 @@ RAW = ROOT / "research" / "data" / "raw"
 OUT_TABLES = ROOT / "research" / "outputs" / "tables"
 
 SEVEN_A = RAW / "FOIA_7a_FY2000_FY2009.csv"
+SEVEN_A_2010S = RAW / "FOIA_7a_FY2010_FY2019.csv"
 FIVE_04 = RAW / "FOIA_504_FY1991_FY2009.csv"
 
 # The two files spell the paid-in-full status differently. Discovered the hard
@@ -157,6 +159,28 @@ def main() -> int:
     print("\n  => The pattern is in SBA's own publication. The derivative did")
     print("     not create it.")
 
+    # Historical, or still happening? FY2010-2019 facilities are old enough to
+    # have resolved and fall entirely outside the derivative's coverage, so this
+    # is the test of whether the problem is live rather than archival.
+    later = load(SEVEN_A_2010S)
+    later_years: list[dict] = []
+    if later is not None:
+        s2 = summarise("7(a) programme, FY2010-2019 (SBA FOIA)", later)
+        findings["datasets"].append(s2)
+        later_years = by_year(later)
+        la = [r["auc"] for r in later_years]
+        combined = s["n_resolved"] + s2["n_resolved"]
+        findings["combined_resolved_7a"] = int(combined)
+        findings["span_low_auc"] = round(min(aucs + la), 4)
+        findings["span_high_auc"] = round(max(aucs + la), 4)
+        print(f"\n  Every approval year FY2010-2019 falls in "
+              f"{min(la):.4f}-{max(la):.4f}.")
+        print(f"\n  => Across FY2000-FY2019, {combined:,} resolved facilities and")
+        print("     twenty consecutive approval years, the probe stays between")
+        print(f"     {min(aucs + la):.4f} and {max(aucs + la):.4f}. The artefact is not a")
+        print("     historical quirk of an old file. It is a live property of")
+        print("     data the SBA is publishing now.")
+
     if five is not None:
         f = summarise("504 programme, FY1991-2009 (SBA FOIA)", five)
         findings["datasets"].append(f)
@@ -171,7 +195,7 @@ def main() -> int:
         print("  Whatever produces the 7(a) pattern does not operate on 504.")
 
     OUT_TABLES.mkdir(parents=True, exist_ok=True)
-    pd.DataFrame(year_rows).to_csv(
+    pd.DataFrame(year_rows + later_years).to_csv(
         OUT_TABLES / "foia_7a_by_year.csv", index=False)
     (OUT_TABLES / "foia_replication.json").write_text(
         json.dumps(findings, indent=2), encoding="utf-8")

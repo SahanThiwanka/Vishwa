@@ -270,6 +270,17 @@ quarterly. Using the release current to 30 June 2026, across **603,665 resolved
 The pattern holds in every approval year, from 0.8562 to 0.8808. **The artefact
 is present in the authoritative publication.**
 
+It is also current. The same release covers FY2010–FY2019, a decade outside the
+derivative's coverage and now largely resolved: across **428,652 resolved
+facilities**, AUC **0.8815**, with 86.44% of repaid facilities round-termed
+against 10.15% of charge-offs, and every year between 0.8587 and 0.8904.
+
+**Across FY2000–FY2019 the two extracts cover 1,032,317 resolved facilities and
+twenty consecutive approval years, with the probe never leaving 0.8562–0.8904.**
+This is not a defect confined to an ageing teaching dataset. It is a property of
+loan data the SBA published in June 2026, and it exposes anyone modelling on the
+current release.
+
 We do not claim independent replication. The derivative is itself built from SBA
 FOIA releases, so these are the same loans at a different vintage. The comparison
 establishes where the artefact originates, not that it recurs in a second source.
@@ -413,6 +424,9 @@ For work using the SBA National dataset:
 3. **Validate temporally**, not randomly.
 4. **Include a meaningless-variable probe.** The roundness boolean costs nothing
    to compute and bounds how much apparent performance is artefact.
+5. **Do not assume the current release is clean.** The artefact is present in
+   FOIA extracts published in 2026 and in every approval year from FY2000 to
+   FY2019. Using fresher data is not a remedy.
 
 These extend, for this dataset, the general remedies Kapoor and Narayanan [3]
 propose — principally that authors document leakage checks explicitly rather than

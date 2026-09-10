@@ -69,8 +69,12 @@ produced an unanticipated principal finding: the dataset's `Term` field carries
 outcome information. Whether the term is a multiple of twelve — a property with no
 economic content — predicts default at AUC 0.889 within every approval year from
 1990 to 2010, and excluding the field reduces gradient-boosting temporal
-discrimination from 0.9461 to 0.6076 (p < 0.001). The mechanism was tested and
-remains unresolved, and is reported as such. A scorecard built from
+discrimination from 0.9461 to 0.6076 (p < 0.001). The artefact is not confined to
+that file: it is present in the SBA's own loan-level FOIA extracts published in
+June 2026, across 1,032,317 resolved facilities and twenty consecutive approval
+years, and absent from the 504 programme whose terms are fixed by programme
+design. The mechanism is narrowed to a process acting on 7(a) records but is not
+fully established, and is reported as such. A scorecard built from
 dataset-observable proxies failed to discriminate (AUC 0.41–0.53), supporting the
 methodological conclusion that instrument-specific appraisal models cannot be
 validated on datasets lacking their variables.

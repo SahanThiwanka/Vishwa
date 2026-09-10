@@ -336,6 +336,19 @@ authoritative publication, which removes one of the three candidate explanations
 and moves the finding from a problem with one dataset to a property of the
 records themselves.
 
+**Nor is it historical.** The same release covers FY2010–FY2019, a decade lying
+entirely outside the derivative's coverage and now old enough to have resolved.
+Across **428,652 resolved facilities** there the boolean reaches **AUC 0.8815**,
+with repaid facilities **86.44%** round-termed against **10.15%** for charge-offs,
+and every approval year falls between 0.8587 and 0.8904.
+
+Taken together the two extracts span **1,032,317 resolved facilities across
+twenty consecutive approval years, FY2000 to FY2019, with the probe never leaving
+the range 0.8562 to 0.8904.** This is not a defect in an old teaching file. It is
+a live property of loan data the SBA published in June 2026, and anyone building
+a model on the current release is exposed to it exactly as anyone using the 2014
+derivative was.
+
 **This is not an independent replication and is not claimed as one.** The SBA
 National dataset is itself built from SBA FOIA releases, so these are the same
 underlying loans at a different vintage rather than a second source. What the

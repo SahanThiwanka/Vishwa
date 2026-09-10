@@ -326,6 +326,28 @@ def main() -> int:
             checks.append(check("FOIA 504 round share, charged off",
                                 f"{five['round_share_default'] * 100:.2f}%",
                                 docs, BOTH_F))
+        later = next((d for d in foia["datasets"]
+                      if "FY2010-2019" in d["dataset"]), None)
+        if later:
+            checks.append(check("FOIA 7(a) 2010s resolved",
+                                f"{later['n_resolved']:,}", docs, BOTH_F))
+            checks.append(check("FOIA 7(a) 2010s roundness AUC",
+                                f"{later['roundness_auc']:.4f}", docs, BOTH_F))
+            checks.append(check("FOIA 7(a) 2010s round share, repaid",
+                                f"{later['round_share_repaid'] * 100:.2f}%",
+                                docs, BOTH_F))
+            checks.append(check("FOIA 7(a) 2010s round share, charged off",
+                                f"{later['round_share_default'] * 100:.2f}%",
+                                docs, BOTH_F))
+        if foia.get("combined_resolved_7a"):
+            checks.append(check("FOIA combined resolved facilities",
+                                f"{foia['combined_resolved_7a']:,}", docs,
+                                BOTH_F))
+            checks.append(check("FOIA span, lowest AUC",
+                                f"{foia['span_low_auc']:.4f}", docs, BOTH_F))
+            checks.append(check("FOIA span, highest AUC",
+                                f"{foia['span_high_auc']:.4f}", docs, BOTH_F))
+
         if foia.get("five04_share_240_months") is not None:
             checks.append(check("FOIA 504 share at 240 months",
                                 f"{foia['five04_share_240_months'] * 100:.1f}%",

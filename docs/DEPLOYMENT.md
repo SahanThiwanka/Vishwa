@@ -79,19 +79,34 @@ cd web
 npm run db:gen-postgres
 ```
 
-On Windows PowerShell:
+Put the connection string in `web/.env`:
+
+```
+DATABASE_URL="postgresql://...paste yours here..."
+```
+
+`.env` is gitignored, so the credential stays off GitHub. Then, from `web/`:
+
+```bash
+npm run db:setup:postgres
+```
+
+Expect `Your database is now in sync with your Prisma schema.`
+
+Two things happen automatically and both print a line saying so. `.env` is
+loaded explicitly by `prisma.config.ts`, because **Prisma 7 does not read it**
+— and this config falls back to the local SQLite file when `DATABASE_URL` is
+unset, so without that the command would quietly apply the PostgreSQL schema to
+`dev.db`, report success, and leave the cloud database empty. And if the URL is
+Neon's **pooled** endpoint, the schema commands switch to the direct one, since
+pooled connections cannot run all the required DDL and fail obscurely when they
+try.
+
+A shell variable still overrides the file if you prefer:
 
 ```bash
 $env:DATABASE_URL="postgresql://..."; npm run db:setup:postgres
 ```
-
-On macOS or Linux:
-
-```bash
-DATABASE_URL="postgresql://..." npm run db:setup:postgres
-```
-
-Expect `Your database is now in sync with your Prisma schema.`
 
 This creates the tables directly from the schema. It does **not** copy your local
 SQLite data, which is what you want — the local database holds test appraisals,

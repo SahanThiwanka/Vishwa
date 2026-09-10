@@ -36,8 +36,14 @@ DB = ROOT / "web" / "dev.db"
 TREE = ROOT / "shared" / "model" / "criteria-tree.json"
 OUT_TABLES = ROOT / "research" / "outputs" / "tables"
 
-# Responses under these codes are excluded from analysis.
-EXCLUDED_CODES = {"TESTDATA-DELETE-ME"}
+# Responses whose code starts with any of these are excluded from analysis.
+#
+# Prefix, not exact match. The exact-match version excluded only the single
+# literal code "TESTDATA-DELETE-ME", so a second pilot run coded "TESTDATA-2"
+# would have been aggregated into the real weights without a word. The whole
+# purpose of the guard is that a pilot cannot contaminate a result, and a guard
+# that only catches one spelling of "this is not real data" does not do that.
+EXCLUDED_PREFIXES = ("TESTDATA", "TEST-", "PILOT", "DEMO")
 
 
 def load_responses() -> list[dict]:
@@ -54,8 +60,11 @@ def load_responses() -> list[dict]:
     con.close()
 
     out = []
+    excluded: set[str] = set()
     for r in rows:
-        if r["respondentCode"] in EXCLUDED_CODES:
+        code = (r["respondentCode"] or "").strip()
+        if code.upper().startswith(EXCLUDED_PREFIXES):
+            excluded.add(code)
             continue
         out.append({
             "respondent": r["respondentCode"],
@@ -68,6 +77,13 @@ def load_responses() -> list[dict]:
             "bestToOthers": json.loads(r["bestToOthers"]),
             "othersToWorst": json.loads(r["othersToWorst"]),
         })
+
+    # Say so out loud. A response silently dropped is indistinguishable from one
+    # never collected, and a participant coded by mistake in a way that matches
+    # a reserved prefix should be visible rather than vanish.
+    if excluded:
+        print(f"Excluded {len(excluded)} test/pilot respondent(s): "
+              f"{', '.join(sorted(excluded))}")
     return out
 
 

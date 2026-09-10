@@ -175,6 +175,11 @@ cd web && npm test                          # 89 unit tests
 
 Listed here rather than buried, because they should shape the feedback.
 
+The three that need people are no longer just identified — `docs/PROTOCOLS.md`
+sets out each as a runnable study: participant numbers and why, consent wording,
+session scripts, the analysis to apply, and what has to be rewritten afterwards.
+They need people and time, not design work.
+
 | Weakness | Status |
 |---|---|
 | No weight elicitation | RQ2 as originally posed is unanswered |
@@ -221,16 +226,26 @@ Listed here rather than buried, because they should shape the feedback.
 
 | Path | Contents |
 |---|---|
-| `docs/06-thesis/THESIS.docx` | Thesis draft, 6 chapters |
+| `docs/06-thesis/THESIS-NSBM.docx` | **The thesis**, in NSBM senate format, IEEE referencing |
 | `docs/07-paper/paper-term-contamination.md` | Conference paper draft |
-| `docs/07-paper/affected-work-search.md` | Systematic search record and outstanding protocol |
-| `docs/02-literature/bibliography.md` | 50 sources with per-entry verification status |
-| `docs/04-criteria-model/MODEL-CARD.md` | Intended use, limitations, risks |
-| `docs/RESEARCH-STRENGTHENING-PLAN.md` | Remaining work, ordered by value |
+| `docs/07-paper/affected-work-search.md` | Search record: one affected study verified, four excluded, two unobtainable |
+| `docs/02-literature/bibliography.md` | 58 sources with per-entry verification status |
+| `docs/04-criteria-model/MODEL-CARD.md` | Intended use, limitations, risks, fairness results |
+| `docs/PROTOCOLS.md` | **The three outstanding studies, written to be run** |
+| `docs/VIVA-PREPARATION.md` | Anticipated questions, weak points, numbers to memorise |
+| `docs/DEPLOYMENT.md` | Step-by-step deployment to Vercel and PostgreSQL |
+| `docs/RESEARCH-STRENGTHENING-PLAN.md` | The original plan, annotated with what was delivered |
 | `web/` | The system |
 | `research/` | Analysis pipeline and generated results |
 
 **A note on the bibliography.** Sources are marked read / verified-not-read /
-needs-confirming. Bibliographic details were checked against authoritative
-records, but most have not been read in full. They must be before submission —
-the priority order is in the file.
+retrieval-failed / needs-confirming. Bibliographic details were checked against
+authoritative records; **8 of 58 have been read in full**, and those are the ones
+carrying substantive claims.
+
+That reading mattered more than expected. Of the eight, **three did not say what
+the thesis had said they said** — most seriously Arvanitis et al. (2015), whose
+"independence" result turns out to be a positive but non-significant relationship
+in 109 observations, which the design's justification had been resting on. All
+three are corrected in the text, and §7 of the viva document prepares the answers.
+The remaining 28 unread entries are the clearest argument for library access.

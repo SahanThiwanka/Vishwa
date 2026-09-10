@@ -45,9 +45,30 @@ const USERS = [
 ];
 
 async function main() {
-  const adapter = new PrismaBetterSqlite3({
-    url: process.env.DATABASE_URL ?? "file:./dev.db",
-  });
+  const url = process.env.DATABASE_URL ?? "file:./dev.db";
+
+  // Refuse to run against anything but the local file.
+  //
+  // The passwords below are committed to the repository, deliberately, so a
+  // viva demonstration needs no secret handling. That makes running this
+  // against a deployment equivalent to publishing an admin login. The comment
+  // above used to be the only thing preventing it, and a comment is not a
+  // control.
+  if (url.startsWith("postgres://") || url.startsWith("postgresql://")) {
+    console.error(
+      "Refusing to run: DATABASE_URL points at PostgreSQL.\n\n" +
+        "These are demonstration accounts whose passwords are published in\n" +
+        "this repository. Creating them on a deployment would publish a\n" +
+        "working login for it.\n\n" +
+        "To create a real account with a password you choose:\n" +
+        "    npm run db:create-user\n\n" +
+        "To seed the demo accounts locally, comment DATABASE_URL out of\n" +
+        "web/.env first.",
+    );
+    process.exit(1);
+  }
+
+  const adapter = new PrismaBetterSqlite3({ url });
   const prisma = new PrismaClient({ adapter });
 
   console.log("Demonstration accounts:\n");

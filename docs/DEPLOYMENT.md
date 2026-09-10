@@ -197,11 +197,27 @@ Check all four:
 
 ### Create user accounts
 
-Appraisal records require an account; the elicitation instrument does not.
-`npm run db:seed-users` creates three **demonstration** accounts with published
-passwords — these are for the viva only and **must not exist on a public
-deployment**. Either change their passwords immediately or create real accounts
-and delete the demo ones.
+**The elicitation study needs no accounts at all.** `/elicitation` is public by
+design, so if the deployment exists only to collect weights, skip this section
+and leave the deployed database with zero users. Nobody can sign in, which is
+the safest state a public deployment can be in.
+
+`npm run db:seed-users` creates three **demonstration** accounts whose passwords
+are committed to this repository. That is deliberate — a viva demonstration
+should not depend on remembering a secret — and it makes them unusable on
+anything reachable from the internet. The script now **refuses to run** when
+`DATABASE_URL` points at PostgreSQL rather than relying on the reader to
+remember.
+
+To create a real account on the deployment, with a password you choose:
+
+```bash
+$env:DATABASE_URL="postgresql://...your Neon URL..."; npm run db:create-user
+```
+
+It prints which database it is targeting before asking anything, prompts for the
+password without echoing it, requires 12 characters, and asks for confirmation.
+The password is never written to a file, an argument, or a log.
 
 Then complete one full run of `/elicitation` yourself under the code
 `TEST-DELETE`, and confirm the count increments. You do not have to delete it:

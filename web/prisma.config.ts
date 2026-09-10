@@ -45,8 +45,31 @@ function directConnection(url: string | undefined): string | undefined {
 
 // PRISMA_SCHEMA selects the PostgreSQL schema for deployment:
 //   PRISMA_SCHEMA=prisma/schema.postgres.prisma npx prisma db push
+/**
+ * Pick the schema that matches the database being used.
+ *
+ * `src/lib/db.ts` chooses its driver adapter from the shape of DATABASE_URL, so
+ * the generated client has to be built from the schema for the same provider.
+ * Defaulting to the SQLite schema regardless meant the Vercel build generated a
+ * sqlite client, the runtime then loaded the PostgreSQL adapter, and the build
+ * died with "The Driver Adapter `@prisma/adapter-pg` ... is not compatible with
+ * the provider `sqlite`". The two decisions were made in different files from
+ * different inputs, so they could disagree; now they read the same one.
+ *
+ * PRISMA_SCHEMA still overrides, for the rare case of pointing the CLI at a
+ * schema that does not match the current URL.
+ */
+function schemaPath(): string {
+  if (process.env.PRISMA_SCHEMA) return process.env.PRISMA_SCHEMA;
+  const url = process.env.DATABASE_URL ?? "";
+  const postgres = url.startsWith("postgres://") ||
+    url.startsWith("postgresql://");
+  return path.join("prisma", postgres ? "schema.postgres.prisma"
+                                      : "schema.prisma");
+}
+
 export default defineConfig({
-  schema: process.env.PRISMA_SCHEMA ?? path.join("prisma", "schema.prisma"),
+  schema: schemaPath(),
   migrations: {
     path: path.join("prisma", "migrations"),
   },

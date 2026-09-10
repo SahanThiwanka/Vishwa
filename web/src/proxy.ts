@@ -21,6 +21,13 @@ const PUBLIC_PATHS = [
   "/login",
   "/elicitation", // the research instrument — public by design
   "/api/health",
+  // First-run setup. Necessarily public: a fresh deployment has no accounts, so
+  // requiring a session here would deadlock - nobody could sign in and nobody
+  // could create the account that would let them. The page itself refuses to do
+  // anything once any account exists, and so does the action behind it, which
+  // is where that guard belongs since a Server Action is reachable by direct
+  // POST regardless of what the page renders.
+  "/setup",
 ];
 
 function isPublic(pathname: string): boolean {

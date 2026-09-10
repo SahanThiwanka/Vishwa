@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "node ../scripts/sync-model.mjs",
+    "predev": "node ../scripts/sync-model.mjs && prisma generate",
     "dev": "next dev",
     "prebuild": "node ../scripts/sync-model.mjs && prisma generate",
     "build": "next build",

@@ -56,6 +56,14 @@ export default async function RootLayout({
                   <Link href="/model" className="text-slate-600 hover:text-slate-900">
                     Model
                   </Link>
+                  {user.role === "ADMIN" && (
+                    <Link
+                      href="/admin/users"
+                      className="text-slate-600 hover:text-slate-900"
+                    >
+                      Accounts
+                    </Link>
+                  )}
                   <Link
                     href="/appraisals/new"
                     className="rounded-md bg-slate-900 px-3 py-1.5 text-white hover:bg-slate-800"

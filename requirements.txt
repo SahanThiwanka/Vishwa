@@ -28,3 +28,9 @@ python-docx==1.2.0
 # Reading candidate studies during the affected-work search
 # (scripts/read_pdf.py)
 pypdf==6.14.2
+
+# Reading elicitation responses back from a deployed instrument.
+# Only needed when DATABASE_URL points at PostgreSQL; the local SQLite path
+# needs nothing beyond the standard library. derive_weights.py prints an
+# install hint rather than failing obscurely if it is missing.
+psycopg[binary]==3.3.5

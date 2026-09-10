@@ -4,7 +4,32 @@ The point of deploying is one thing: **let practitioners complete the criterion
 weighting study from wherever they are.** Until responses exist, RQ2 is
 unanswered and the criteria model stays on placeholder weights.
 
-Budget about 20 minutes.
+Budget about an hour if the accounts are new, twenty minutes if they exist.
+
+---
+
+## What you are actually doing
+
+Four things, in order. Nothing here requires you to write code.
+
+1. **Get a database in the cloud** (Neon, free) — because Vercel cannot keep files,
+   so the app needs somewhere permanent to put responses.
+2. **Create the empty tables in it** — one command from your machine.
+3. **Put the code on GitHub** — Vercel installs from a repository, not from your
+   laptop.
+4. **Connect Vercel to that repository** and paste in two settings.
+
+You end with a public link like `https://sme-appraisal.vercel.app/elicitation`
+that you can send to a loan officer, who completes it on their phone in twenty
+minutes without an account, a password, or anything installed.
+
+**Three accounts, all free tiers, no card needed:** `neon.tech`, `github.com`,
+`vercel.com`. Sign up for all three before starting — you can use the same email,
+and signing into Vercel with your GitHub account saves a step later.
+
+**If something goes wrong**, go to "Things that will go wrong" at the bottom
+first. The four failures listed there cover almost everything, and the health
+check in Step 5 tells you which one you have.
 
 ---
 
@@ -91,10 +116,16 @@ or database file is staged.
 2. Set **Root Directory** to `web` — this matters, the repo root is not the app
 3. Add an environment variable:
 
-   | Name | Value |
-   |---|---|
-   | `DATABASE_URL` | your PostgreSQL connection string |
-   | `SESSION_SECRET` | a random string, 32+ characters |
+   | Name | Value | Required |
+   |---|---|---|
+   | `DATABASE_URL` | your PostgreSQL connection string | yes |
+   | `SESSION_SECRET` | a random string, 32+ characters | yes |
+   | `RATE_LIMIT_SALT` | a second random string | no — falls back to `SESSION_SECRET` |
+
+   `RATE_LIMIT_SALT` salts the hash of client addresses used for sign-in rate
+   limiting, so the attempts table cannot become a record of which address tried
+   to sign in as whom. Setting it separately is better practice; leaving it unset
+   is safe.
 
    Generate the secret with:
 
@@ -145,10 +176,12 @@ passwords — these are for the viva only and **must not exist on a public
 deployment**. Either change their passwords immediately or create real accounts
 and delete the demo ones.
 
-Then complete one full run of `/elicitation` yourself under a code like
-`TEST-DELETE`, confirm the count increments, and **delete that row before
-analysis** — `derive_weights.py` excludes codes listed in `EXCLUDED_CODES`, so
-add it there if you keep it.
+Then complete one full run of `/elicitation` yourself under the code
+`TEST-DELETE`, and confirm the count increments. You do not have to delete it:
+`derive_weights.py` excludes any code beginning `TESTDATA`, `TEST-`, `PILOT` or
+`DEMO`, and prints what it excluded so a filtered response is never silently
+lost. **Give real participants codes like `R01`, `R02`** so none of them collides
+with a reserved prefix.
 
 ---
 
@@ -170,14 +203,32 @@ responses without needing their names.
 
 ## Step 7 — Retrieve the responses
 
-`derive_weights.py` reads the local SQLite file by default. To analyse
-production responses, point it at PostgreSQL — either export the table to the
-local database, or adjust `load_responses()` to read from `DATABASE_URL`.
+`derive_weights.py` reads whichever database `DATABASE_URL` points at. Set it to
+the same connection string Vercel uses and it reads the live responses; leave it
+unset and it reads the local SQLite file.
 
 ```bash
-python research/src/derive_weights.py            # dry run: consistency + weights
-python research/src/derive_weights.py --apply    # write into the criteria tree
-cd web && npm run sync-model
+pip install "psycopg[binary]"        # once, for the PostgreSQL driver
+```
+
+On macOS or Linux:
+
+```bash
+DATABASE_URL="postgresql://..." python research/src/derive_weights.py
+```
+
+On Windows PowerShell:
+
+```bash
+$env:DATABASE_URL="postgresql://..."; python research/src/derive_weights.py
+```
+
+That is a dry run — it prints each respondent's consistency score and the weights
+that would result, and changes nothing. When the output looks right:
+
+```bash
+$env:DATABASE_URL="postgresql://..."; python research/src/derive_weights.py --apply
+cd web; npm run sync-model
 ```
 
 `--apply` flips `weightStatus` to `ELICITED` and records the respondent count,

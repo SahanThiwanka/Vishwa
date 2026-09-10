@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sqlite3
 import sys
 from collections import defaultdict
@@ -46,18 +47,78 @@ OUT_TABLES = ROOT / "research" / "outputs" / "tables"
 EXCLUDED_PREFIXES = ("TESTDATA", "TEST-", "PILOT", "DEMO")
 
 
-def load_responses() -> list[dict]:
+QUERY = (
+    "SELECT respondentCode, yearsExperience, institution, role, level, "
+    "best, worst, bestToOthers, othersToWorst FROM ElicitationResponse"
+)
+
+# Postgres folds unquoted identifiers to lower case, and Prisma creates the
+# table with camelCase column names, so the same SQL needs quoting there.
+PG_QUERY = (
+    'SELECT "respondentCode", "yearsExperience", institution, role, level, '
+    'best, worst, "bestToOthers", "othersToWorst" FROM "ElicitationResponse"'
+)
+
+FIELDS = ["respondentCode", "yearsExperience", "institution", "role", "level",
+          "best", "worst", "bestToOthers", "othersToWorst"]
+
+
+def _fetch_rows() -> list[dict] | None:
+    """Read the responses, from PostgreSQL if configured and SQLite otherwise.
+
+    The deployed instrument writes to PostgreSQL, and it is the deployed one
+    practitioners actually use. Requiring the analysis to be pointed at the
+    production database by hand-editing this function - which is what the
+    deployment guide used to say - is how a study ends up analysing the wrong
+    responses, or none.
+    """
+    url = os.environ.get("DATABASE_URL", "")
+    if url.startswith(("postgres://", "postgresql://")):
+        try:
+            import psycopg
+        except ImportError:
+            print("DATABASE_URL points at PostgreSQL but psycopg is not "
+                  "installed.\n  pip install 'psycopg[binary]'")
+            return None
+        try:
+            with psycopg.connect(url, connect_timeout=15) as con:
+                with con.cursor() as cur:
+                    cur.execute(PG_QUERY)
+                    fetched = cur.fetchall()
+        except psycopg.OperationalError as exc:
+            # Almost always a wrong or expired connection string. A stack trace
+            # here tells the reader nothing they can act on.
+            print(f"Could not connect to PostgreSQL.\n  {exc}\n"
+                  "  Check DATABASE_URL - copy it again from the Neon "
+                  "dashboard, and keep the ?sslmode=require suffix.")
+            return None
+        except psycopg.errors.UndefinedTable:
+            print('No "ElicitationResponse" table in that database.\n'
+                  "  The migrations have not been applied. From web/:\n"
+                  "    npm run db:migrate:postgres")
+            return None
+        print(f"Read {len(fetched)} response rows from PostgreSQL.")
+        return [dict(zip(FIELDS, row)) for row in fetched]
+
     if not DB.exists():
-        print(f"No database at {DB}. Run the web app and collect responses first.")
-        return []
+        print(f"No database at {DB}, and DATABASE_URL is not set to a "
+              f"PostgreSQL URL.\n"
+              f"  Local:      run the web app and collect responses first\n"
+              f"  Deployed:   DATABASE_URL='postgresql://...' python "
+              f"research/src/derive_weights.py")
+        return None
 
     con = sqlite3.connect(DB)
     con.row_factory = sqlite3.Row
-    rows = con.execute(
-        "SELECT respondentCode, yearsExperience, institution, role, level, "
-        "best, worst, bestToOthers, othersToWorst FROM ElicitationResponse"
-    ).fetchall()
+    rows = con.execute(QUERY).fetchall()
     con.close()
+    return [dict(r) for r in rows]
+
+
+def load_responses() -> list[dict]:
+    rows = _fetch_rows()
+    if rows is None:
+        return []
 
     out = []
     excluded: set[str] = set()

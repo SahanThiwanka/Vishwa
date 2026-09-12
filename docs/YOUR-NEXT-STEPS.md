@@ -16,15 +16,23 @@ send, and what happens afterwards.
 | 1 | Recruit officers for the weight elicitation | ~3 hours total | Unblocks RQ2. Every score the system produces currently carries a PLACEHOLDER warning. |
 | 2 | Request 7 papers from the library | ~20 min to request | Three of the eight already read needed corrections. This is a correction-finding exercise, not box-ticking. |
 | 3 | Inter-rater reliability study | ~2 days spread over 2 weeks | The strongest evidence the thesis could still gain. |
-| 4 | Deploy to Vercel | ~1 hour | Makes the elicitation link sendable, which feeds task 1. |
+| ~~4~~ | ~~Deploy to Vercel~~ | **DONE** | Live at `https://vishwa-ten.vercel.app` |
 | 5 | Usability evaluation | ~4 hours | Removes "no field evaluation". |
 | 6 | Two decisions (below) | minutes | Only you can make them. |
 
 If you can only do one thing, do **task 1**.
 
-Consider doing **task 4 before task 1** — a deployed link means officers can
-complete the elicitation on their own phone or desk, which makes recruiting far
-easier than arranging to sit with each of them.
+**Task 4 is done.** The instrument is live at
+`https://vishwa-ten.vercel.app/elicitation`, needs no account, and works on a
+phone. Setup is closed, an administrator account exists, and further accounts
+are created from the Accounts page while signed in.
+
+Before sending that link to anyone, complete one run yourself under the code
+`TEST-DELETE`. Two reasons: you will know exactly what you are asking an officer
+to spend twenty minutes on, and it proves submissions are reaching the database.
+Check `/api/health` afterwards — `elicitationResponses` should read 1. The row is
+safe to leave; `derive_weights.py` excludes anything starting `TEST-` and says so
+when it does.
 
 ---
 
@@ -48,7 +56,7 @@ appraises SME facilities. They do not need to be from People's Bank.
 >
 > It's anonymous — I record a code, not your name.
 >
-> Link: [your deployed URL]/elicitation
+> Link: https://vishwa-ten.vercel.app/elicitation
 >
 > Could you spare 20 minutes this week?
 

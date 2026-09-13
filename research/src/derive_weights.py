@@ -63,6 +63,33 @@ FIELDS = ["respondentCode", "yearsExperience", "institution", "role", "level",
           "best", "worst", "bestToOthers", "othersToWorst"]
 
 
+def _database_url() -> str:
+    """DATABASE_URL from the environment, falling back to web/.env.
+
+    Deliberately parsed here rather than requiring python-dotenv. The connection
+    string already lives in web/.env for the application's benefit, and asking
+    whoever runs the analysis to retype it into their shell invites two failure
+    modes: pointing at the wrong database, and pasting a live credential into
+    shell history. A shell variable still wins if one is set.
+    """
+    from_env = os.environ.get("DATABASE_URL")
+    if from_env:
+        return from_env
+
+    dotenv = ROOT / "web" / ".env"
+    if not dotenv.exists():
+        return ""
+
+    for line in dotenv.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        if key.strip() == "DATABASE_URL":
+            return value.strip().strip('"').strip("'")
+    return ""
+
+
 def _fetch_rows() -> list[dict] | None:
     """Read the responses, from PostgreSQL if configured and SQLite otherwise.
 
@@ -72,7 +99,7 @@ def _fetch_rows() -> list[dict] | None:
     deployment guide used to say - is how a study ends up analysing the wrong
     responses, or none.
     """
-    url = os.environ.get("DATABASE_URL", "")
+    url = _database_url()
     if url.startswith(("postgres://", "postgresql://")):
         try:
             import psycopg
@@ -101,11 +128,11 @@ def _fetch_rows() -> list[dict] | None:
         return [dict(zip(FIELDS, row)) for row in fetched]
 
     if not DB.exists():
-        print(f"No database at {DB}, and DATABASE_URL is not set to a "
-              f"PostgreSQL URL.\n"
-              f"  Local:      run the web app and collect responses first\n"
-              f"  Deployed:   DATABASE_URL='postgresql://...' python "
-              f"research/src/derive_weights.py")
+        print(f"No database at {DB}, and no PostgreSQL DATABASE_URL found in "
+              f"the environment or web/.env.\n"
+              f"  Local:     run the web app and collect responses first\n"
+              f"  Deployed:  put the Neon connection string in web/.env, or\n"
+              f"             set DATABASE_URL before running this script")
         return None
 
     con = sqlite3.connect(DB)

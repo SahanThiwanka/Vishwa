@@ -55,3 +55,11 @@ npm-debug.log*
 web/src/lib/scoring/criteria-tree.json
 web/dev.db
 web/src/generated/
+
+# Fabricated answers used to smoke-test the elicitation instrument.
+# Kept out of the repository deliberately: this study's central claim about
+# itself is that every reported number came from a real experiment, and a
+# committed file of invented BWM responses is exactly the artefact that gets
+# mistaken for data later. One already did - see the removal of
+# elicited_weights.json containing a single TESTDATA respondent.
+docs/elicitation-test-answers.txt

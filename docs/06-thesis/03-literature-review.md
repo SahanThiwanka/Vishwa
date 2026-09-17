@@ -6,69 +6,70 @@ This review covers six bodies of work bearing on the research questions:
 
 1. the statistical lineage of credit scoring, and what discrimination it achieves;
 2. SME finance specifically, and why SMEs are harder to appraise than consumers;
-3. variability in human credit judgement — the premise this study rests on;
+3. variability in human credit judgement, the premise this study rests on;
 4. multi-criteria decision methods, and their application to credit;
 5. non-financial objectives in lending;
 6. data quality and reproducibility in machine-learning-based science.
 
-It closes (Section 3.8) by stating what this study adds — which, after examining the
-literature, is narrower than the research proposal supposed.
+It closes (Section 3.8) by stating what this study adds, which, after examining
+the literature, is narrower than the research proposal supposed.
 
 ## 3.2 Credit scoring: sixty years of weighted ratios
 
 Quantitative credit assessment begins with Altman [3], who applied multiple
 discriminant analysis to twenty-two financial ratios across sixty-six firms to
-produce the Z-score. Ohlson [4] replaced discriminant analysis with conditional
-logit, shifting the output from a classification to a probability — a change that
-matters here, because a probability can be checked for *calibration* while a class
-label cannot (Section 5.12).
+produce the Z-score. Ohlson [4] replaced discriminant analysis with
+conditional logit, shifting the output from a classification to a probability, a
+change that matters here, because a probability can be checked for *calibration*
+while a class label cannot (Section 5.12).
 
 Hand and Henley [5] reviewed the statistical methods then in use, and Thomas,
 Crook and Edelman [6] and Thomas, Edelman and Crook [7] provided the
-standard textbook treatments. The most useful modern reference point is Lessmann et al.
-[8], who benchmarked **forty-one classifiers across seven** real-world retail
-credit scoring datasets, updating Baesens et al. (2003). They report a *tendency*
-for homogeneous ensembles to outperform individual classifiers — the five best
-methods all belong to that family, with random forest giving the most accurate
-probability-of-default estimates — but the picture is not uniform, and they note
-that several sophisticated techniques, including rotation forests and dynamic
-ensemble selection, predict less accurately than plain logistic regression.
+standard textbook treatments. The most useful modern reference point is Lessmann
+et al. [8], who benchmarked forty-one classifiers across seven real-world
+retail credit scoring datasets, updating Baesens et al. (2003). They report a
+*tendency* for homogeneous ensembles to outperform individual classifiers: the
+five best methods all belong to that family, with random forest giving the most
+accurate probability-of-default estimates. The picture is not uniform, however,
+and they note that several sophisticated techniques, including rotation forests
+and dynamic ensemble selection, predict less accurately than plain logistic
+regression.
 
-**Two implications for this study.** First, the core idea here — combining
-weighted financial ratios into a score — is a sixty-year-old one, and any novelty
+**Two implications for this study.** First, the core idea here, combining
+weighted financial ratios into a score, is a sixty-year-old one, and any novelty
 claim must rest elsewhere. Second, Lessmann et al. establish what discrimination
 is realistically achievable on credit data, which is the yardstick that made the
-anomalous result in Chapter 5 recognisable as anomalous — with the caveat that
-their datasets are **retail** credit, not SME lending, so they bound expectations
-by analogy rather than directly.
+anomalous result in Chapter 5 recognisable as anomalous, with the caveat that
+their datasets are retail credit, not SME lending, so they bound expectations by
+analogy alone.
 
 ## 3.3 SME credit assessment
 
 SMEs are harder than consumer credit. Financial statements are frequently
-unaudited or absent, trading histories are short, and collateral is thin. Beck and
-Demirgüç-Kunt [9] is the standard reference for access to finance as a binding
-growth constraint on SMEs internationally.
+unaudited or absent, trading histories are short, and collateral is thin. Beck
+and Demirgüç-Kunt [9] is the standard reference for access to finance as a
+binding growth constraint on SMEs internationally.
 
 Berger and Udell [10] provide the framework this study sits inside. They
-identify nine distinct SME lending technologies — relationship lending, financial
+identify nine distinct SME lending technologies: relationship lending, financial
 statement lending, trade credit, equipment lending, real-estate-based lending,
-leasing, factoring, small business credit scoring, and asset-based lending — and
+leasing, factoring, small business credit scoring, and asset-based lending. They
 argue that credit availability depends on which are feasible in a given
-institutional setting. **The People's Bank instrument is principally financial
-statement lending with substantial relationship and asset-based elements**, and
+institutional setting. The People's Bank instrument is principally financial
+statement lending with substantial relationship and asset-based elements, and
 this study adds a scoring layer without discarding the relationship content.
 
-Stein [11] explains why that is difficult. He distinguishes *hard* information,
-which can be credibly transmitted through a hierarchy, from *soft* information,
-which cannot, and shows that decentralised structures outperform where information
-is soft. An appraisal officer's judgement about management quality is soft
-information in exactly this sense.
+Stein [11] explains why that is difficult. He distinguishes *hard*
+information, which can be credibly transmitted through a hierarchy, from *soft*
+information, which cannot, and shows that decentralised structures outperform
+where information is soft. An appraisal officer's judgement about management
+quality is soft information in exactly this sense.
 
 > **This is the central tension of the present study.** Formalising narrative
 > appraisal is an attempt to *harden* soft information. Stein's analysis implies
-> something is necessarily lost in that transformation. The design response — a
+> something is necessarily lost in that transformation. The design response, a
 > five-point linguistic scale represented as fuzzy numbers rather than a forced
-> crisp value (Section 4.11.2) — is an attempt to lose less, not to avoid the loss.
+> crisp value (Section 4.11.2), is an attempt to lose less, not to avoid the loss.
 
 Ciampi, Giannozzi, Marzi and Altman [12] provide the anchoring review: a
 systematic analysis of over a hundred articles on SME default prediction across
@@ -76,45 +77,45 @@ thirty-four years, identifying five research streams and calling for work
 exploiting new data sources.
 
 Sri Lanka is documented as finance-constrained. Reported supply-side barriers
-include absent formal records, insufficient tangible collateral, non-submission of
-financial statements and limited management capacity, with policy responses
+include absent formal records, insufficient tangible collateral, non-submission
+of financial statements and limited management capacity, with policy responses
 proposed around SME credit rating and credit guarantee schemes. This establishes
 the practical motivation but does not address the appraisal *process*, which is
 where this study is situated.
 
 ## 3.4 Variability in human credit judgement
 
-This study is premised on manual appraisal being inconsistent. That premise should
-not rest on assertion, and it does not have to.
+This study is premised on manual appraisal being inconsistent. That premise
+should not rest on assertion, and it does not have to.
 
 Cortés, Duchin and Sosyura [2] provide causal evidence. Using daily variation
 in local sunshine as an instrument for sentiment, they show that the mood of
 lower-level financial officers affects day-to-day credit decisions: positive
 sentiment raises approval rates, negative sentiment lowers them by a larger
 magnitude, and the resulting variation affects subsequent financial performance
-and produces real effects. Officers are measurably influenced by something with no
-bearing whatever on the borrower.
+and produces real effects. Officers are measurably influenced by something with
+no bearing whatever on the borrower.
 
-Two features matter here. The effects are **stronger where decisions require more
-discretion and reviews are less automated** — which describes the People's Bank
-instrument precisely, since clause 7 asks for a viability judgement with no stated
-procedure for reaching it. And the mechanism is ordinary human variability rather
-than incompetence, which is why the response pursued here is to *structure* the
-judgement rather than remove the officer.
+Two features matter here. The effects are stronger where decisions require more
+discretion and reviews are less automated, which describes the People's Bank
+instrument precisely, since clause 7 asks for a viability judgement with no
+stated procedure for reaching it. And the mechanism is ordinary human
+variability, not incompetence, which is why the response pursued here is to
+*structure* the judgement rather than remove the officer.
 
 Their most directly relevant result is finer than the headline. Examining the
-reasons officers recorded for their decisions, they find that **a loan with the
+reasons officers recorded for their decisions, they find that a loan with the
 same quantitative measures of risk is less likely to be rejected for subjective
-reasons on sunny days**. It is not the arithmetic that moves; it is the
-judgemental residue around it — which is precisely the part of the People's Bank
+reasons on sunny days. It is not the arithmetic that moves; it is the
+judgemental residue around it, which is precisely the part of the People's Bank
 form that this study formalises, and precisely the part it leaves to the officer
 where it cannot be formalised.
 
 **The setting must be stated, because it is not this one.** Their evidence comes
 from US residential mortgage applications in the confidential Home Mortgage
-Disclosure Act registry — standardised consumer lending, not SME appraisal, and
-not Sri Lanka. Nothing transfers automatically. What supports the transfer is the
-direction of their own cross-sectional result: the effect grows as decisions
+Disclosure Act registry: standardised consumer lending, not SME appraisal, and
+not Sri Lanka. Nothing transfers automatically. What supports the transfer is
+the direction of their own cross-sectional result: the effect grows as decisions
 become more discretionary and less automated, and a narrative SME appraisal form
 completed by hand sits further along that dimension than a residential mortgage
 does. That is an argument, not an observation, and it is offered as one.
@@ -122,13 +123,13 @@ does. That is an argument, not an observation, and it is offered as one.
 Related work reaches similar conclusions from other directions: studies of
 discretion in loan rate setting, and of loan officers' subjective judgement in
 microfinance, where risk classification rests on recollected professional
-experience rather than an explicit model. SharafEldin, Idrees and Ouf [13]
+experience instead of an explicit model. SharafEldin, Idrees and Ouf [13]
 similarly motivate their work by observing that traditional credit assessment
 "often relied on subjective judgment, leading to inconsistent decisions".
 
-The premise is therefore supported by the literature. This study does **not**
-itself measure inter-rater reliability, which remains its most significant gap
-(Section 6.3); Cohen [14], Landis and Koch [15] and Krippendorff's α provide the
+The premise is therefore supported by the literature. This study does not itself
+measure inter-rater reliability, which remains its most significant gap (Section
+6.4); Cohen [14], Landis and Koch [15] and Krippendorff's α provide the
 instruments a proper measurement would use.
 
 ## 3.5 Multi-criteria decision methods
@@ -136,73 +137,76 @@ instruments a proper measurement would use.
 ### 3.5.1 Foundations
 
 Zadeh [16] introduced fuzzy sets, providing a representation for gradations of
-membership rather than binary classification. Saaty [17] introduced the
-Analytic Hierarchy Process, later defending it against criticism [18], deriving priority weights from pairwise comparisons on
-a 1–9 scale — still the most widely used weighting method.
+membership instead of binary classification. Saaty [17] introduced the
+Analytic Hierarchy Process, later defending it against criticism [18],
+deriving priority weights from pairwise comparisons on a 1–9 scale, still the
+most widely used weighting method.
 
 Fuzzy extensions followed. Chang [19] proposed extent analysis for fuzzy AHP,
 and Chen [20] extended TOPSIS to fuzzy group decision-making with linguistic
 ratings.
 
 **A caution that shaped this study's method choice.** Chang's extent analysis is
-very widely used, but subsequent work shows it *cannot recover true weights* from
-a fuzzy comparison matrix and has produced a considerable number of
+very widely used, but subsequent work shows it *cannot recover true weights*
+from a fuzzy comparison matrix and has produced a considerable number of
 misapplications. Adopting it uncritically would have been the path of least
 resistance; it is also documented to be wrong.
 
 ### 3.5.2 Best-Worst Method
 
 Rezaei [21] introduced the Best-Worst Method, which derives weights from two
-comparison vectors — the best criterion against all others, and all others against
-the worst — requiring 2n−3 comparisons rather than AHP's n(n−1)/2. Anchoring every
-comparison to a fixed reference tends to produce more consistent responses.
-Rezaei [22] gave a linear formulation with a unique solution, which is the form
-implemented here (Section 4.5).
+comparison vectors — the best criterion against all others, and all others
+against the worst — requiring 2n−3 comparisons rather than AHP's n(n−1)/2.
+Anchoring every comparison to a fixed reference tends to produce more consistent
+responses. Rezaei [22] gave a linear formulation with a unique solution, which
+is the form implemented here (Section 4.5).
 
-For this study's criteria tree the difference is decisive: **168 comparisons under
-pairwise AHP against 86 under BWM** (Section 4.5.1). That is the difference between an
-hour of a practitioner's attention and fifteen minutes, and therefore between
-usable and unusable responses.
+For this study's criteria tree the difference is decisive: 168 comparisons under
+pairwise AHP against 86 under BWM (Section 4.5.1). That is the difference
+between an hour of a practitioner's attention and fifteen minutes, and therefore
+between usable and unusable responses.
 
-### 3.5.3 Application to credit — and the nearest precedent
+### 3.5.3 Application to credit, and the nearest precedent
 
 **Roy and Shaw [23] must be acknowledged plainly.** They construct a
-multicriteria credit scoring model for SMEs using exactly the hybrid this study's
-proposal treated as novel: BWM to determine criteria weights, combined with a
-ranking method (TOPSIS) to score applicants. Their instrument has 30 subcriteria
-finalised by a panel of 12 experts — seven from banking and SME lending, five
-from SMEs that had obtained credit — and they validate it against a commercial
-rating agency's ratings on a real-life case study, reporting 90.32% accuracy and
-a Type-II error rate of 14.28% against the commercial model's 28.57%.
+multicriteria credit scoring model for SMEs using exactly the hybrid this
+study's proposal treated as novel: BWM to determine criteria weights, combined
+with a ranking method (TOPSIS) to score applicants. Their instrument has 30
+subcriteria finalised by a panel of 12 experts — seven from banking and SME
+lending, five from SMEs that had obtained credit — and they validate it against
+a commercial rating agency's ratings on a real-life case study, reporting 90.32%
+accuracy and a Type-II error rate of 14.28% against the commercial model's
+28.57%.
 
-The implication is direct: **applying BWM to SME credit scoring is not novel.** An
+The implication is direct: applying BWM to SME credit scoring is not novel. An
 earlier draft of this research claimed the fuzzy-MCDM combination as its
-methodological contribution. The literature does not support that claim, and it is
-withdrawn here.
+methodological contribution. The literature does not support that claim, and it
+is withdrawn here.
 
 Two differences are worth stating precisely, because they cut in opposite
 directions and the honest positioning depends on both.
 
-Roy and Shaw **elicited their weights**; this study did not (Section 6.1), which is the
-more serious gap of the two and is theirs to claim. Against that, their
-validation rests on **31 SMEs** — an accuracy of 90.32% is 28 firms out of 31,
-and a Type-II rate of 14.28% is one or two misclassifications. A sample that size
+Roy and Shaw elicited their weights; this study did not (Section 6.1), which is
+the more serious gap of the two and is theirs to claim. Against that, their
+validation rests on 31 SMEs: an accuracy of 90.32% is 28 firms out of 31, and a
+Type-II rate of 14.28% is one or two misclassifications. A sample that size
 cannot separate a good model from a fortunate one. This study validates its
-scoring method on 652,284 facilities with realised outcomes, and reports that the
-expert-structured scorecard fails on them (Section 5.15).
+scoring method on 652,284 facilities with realised outcomes, and reports that
+the expert-structured scorecard fails on them (Section 5.15).
 
 They also aggregate. TOPSIS returns a single closeness coefficient, so
 development and credit considerations, where both are present, are resolved into
 one number. This study reports two and refuses to combine them.
 
 Related work populates the space further: fuzzy BWM with fuzzy TOPSIS for
-sustainable credit scoring, fuzzy-BWM with TOPSIS-Sort-C for credit rating, fuzzy
-decision support systems for credit scoring, and fuzzy AHP combined with neural
-approaches for SME credit risk assessment. The method space is well occupied.
+sustainable credit scoring, fuzzy-BWM with TOPSIS-Sort-C for credit rating,
+fuzzy decision support systems for credit scoring, and fuzzy AHP combined with
+neural approaches for SME credit risk assessment. The method space is well
+occupied.
 
-What remains open is not the method but its **object**: no located study
-formalises a *specific, named, operational appraisal instrument* of a state bank,
-with every criterion traceable to a numbered clause of that institution's own
+What remains open is not the method but its object: no located study formalises
+a *specific, named, operational appraisal instrument* of a state bank, with
+every criterion traceable to a numbered clause of that institution's own
 document.
 
 ## 3.6 Non-financial objectives in lending
@@ -215,49 +219,51 @@ aspects, quantifying a loan's impact on outcomes such as employment, education,
 environment and health, and using MCDM to combine them. Their system yields not
 only a score but an account of an application's strengths and weaknesses.
 
-This narrows the novelty claim again: **scoring social impact alongside credit
-risk has been done.** Their method is AHP in its absolute-measurement mode, with
+This narrows the novelty claim again: scoring social impact alongside credit
+risk has been done. Their method is AHP in its absolute-measurement mode, with
 social outcomes valued through Social Return on Investment, and it is
-demonstrated on a single real application — a bike courier company's loan request
+demonstrated on a single real application: a bike courier company's loan request
 to a Spanish financial services cooperative, whose board supplied the preference
 weights. AHP was chosen, they report, largely because the algorithm was already
 available in a spreadsheet and the cooperative's analysts found it easy to use.
 
 Two differences remain. The first is institutional grounding: the development
-criteria here are not selected by the researcher from a development framework but
-taken from clause 5 of an instrument a state bank already uses in production. The
-second is aggregation. Their system merges financial ratios and social indicators
-in one model to produce a single assessment; this study keeps the two objectives
-apart and never issues a combined figure, which Section 5.17 shows changes the answer for
+criteria here are not selected by the researcher from a development framework
+but taken from clause 5 of an instrument a state bank already uses in
+production. The second is aggregation. Their system merges financial ratios and
+social indicators in one model to produce a single assessment; this study keeps
+the two objectives apart and never issues a combined figure, which Section 5.17
+shows changes the answer for
 88.2% of facilities.
 
 ### 3.6.2 Development returns and credit risk
 
 Arvanitis, Stampini and Vencatachellum [25] examine ex-ante appraisal at the
-African Development Bank, and their result is the closest thing in the literature
-to a test of whether the two objectives need to be reported separately. They
-conclude that the variables weighed at appraisal, "whether they pertain to
-development or risk concerns, are rather independent from each other and no
-assumption should be made on one variable given information on the others".
+African Development Bank, and their result is the closest thing in the
+literature to a test of whether the two objectives need to be reported
+separately. They conclude that the variables weighed at appraisal, "whether they
+pertain to development or risk concerns, are rather independent from each other
+and no assumption should be made on one variable given information on the
+others".
 
-**What that conclusion rests on has to be stated precisely, because it is weaker
-than the wording suggests.** Comparing development outcome ratings against credit
+What that conclusion rests on has to be stated precisely, because it is weaker
+than the wording suggests. Comparing development outcome ratings against credit
 risk ratings for the 109 operations that carried both, they find a *positive but
-statistically non-significant* relationship — a slope of 0.048 with a p-value of
-0.49 — and read it as showing the two factors to be "somewhat independent". A
+statistically non-significant* relationship, a slope of 0.048 with a p-value of
+0.49, and read it as showing the two factors to be "somewhat independent". A
 non-significant association in 109 observations is an absence of evidence, not
 evidence of absence: a sample that size cannot detect a moderate correlation, so
 the finding is consistent both with genuine independence and with a real
 association the study was underpowered to see. Their measured association is
 positive, which is worth carrying forward.
 
-The distinction matters for how the design decision in Chapter 4 is justified.
+The distinction matters for how the non-aggregation design decision (Section 5.7) is justified.
 The strong reading — that the objectives are independent, so aggregating them
 destroys information — is not available on this evidence. The weaker and
 defensible reading is that no one has shown the two can be inferred from each
 other, and that a bank with a development mandate therefore has no warrant for
-collapsing them into one number. Section 5.17 tests the association directly on a sample
-large enough to resolve it.
+collapsing them into one number. Section 5.17 tests the association directly on
+a sample large enough to resolve it.
 
 ## 3.7 Explainability, regulation, and data quality
 
@@ -274,97 +280,97 @@ The technical response has been post-hoc explanation: LIME [26] fits an interpre
 SHAP [27] assigns each feature a Shapley-value contribution
 with uniqueness guarantees.
 
-**This study takes a different route, and the distinction is worth stating.**
-LIME and SHAP explain an opaque model after the fact. The model here is additive
-by construction, so per-criterion contributions are exact rather than
-approximated, and they sum precisely to the score (Section 5.4). That is a stronger
-guarantee than a post-hoc method can offer — at the cost of the discrimination a
-flexible model might achieve, which Chapter 5 shows to be a real cost.
+This study takes a different route, and the distinction is worth stating. LIME
+and SHAP explain an opaque model after the fact. The model here is additive by
+construction, so per-criterion contributions are exact, not approximated, and
+they sum precisely to the score (Section 5.4). That is a stronger guarantee than
+a post-hoc method can offer, at the cost of the discrimination a flexible model
+might achieve, which Chapter 5 shows to be a real cost.
 
 ### 3.7.2 Leakage and reproducibility
 
-Data leakage is the use, in training or evaluation, of information that would not
-be available at the moment a prediction is actually made. Its effect is not
+Data leakage is the use, in training or evaluation, of information that would
+not be available at the moment a prediction is actually made. Its effect is not
 subtle: a model reading some trace of the answer scores well and the error is
-invisible in every conventional diagnostic, because the model really does predict
-the held-out data — the held-out data is simply contaminated too.
+invisible in every conventional diagnostic, because the model really does
+predict the held-out data; the held-out data is simply contaminated too.
 
-Kapoor and Narayanan [28] established the scale of the problem. Surveying prior
-reviews across machine-learning-based science, they find leakage in **17 fields,
-collectively affecting 294 papers**, in some cases producing what they call
-wildly overoptimistic conclusions, and argue it is the largest single cause of
-irreproducibility in the area. They demonstrate the consequence directly in a
+Kapoor and Narayanan [28] established the scale of the problem. Surveying
+prior reviews across machine-learning-based science, they find leakage in 17
+fields, collectively affecting 294 papers, in some cases producing what they
+call wildly overoptimistic conclusions, and argue it is the largest single cause
+of irreproducibility in the area. They demonstrate the consequence directly in a
 reproducibility study of civil war prediction, where complex models had been
 reported as substantially outperforming older methods and the advantage does not
 survive correction.
 
-Their contribution most relevant here is a **taxonomy of eight leakage types**,
+Their contribution most relevant here is a taxonomy of eight leakage types,
 grouped in three families:
 
 [Table: Taxonomy of leakage types, after Kapoor and Narayanan]
 
 | Family | Types | Character |
 |---|---|---|
-| **L1** No clean train–test separation | no test set; preprocessing on train and test together; feature selection on both; duplicates across the split | Largely textbook errors, detectable by inspecting the pipeline |
-| **L2** Illegitimate features | the model uses a feature that should not be available — including, explicitly, *a feature that is a proxy for the outcome variable* | Requires domain judgement about each feature |
-| **L3** Test set not independent of training set | temporal leakage; non-independence between train and test; sampling bias | Shades into open research problems |
+| L1 No clean train–test separation | no test set; preprocessing on train and test together; feature selection on both; duplicates across the split | Largely textbook errors, detectable by inspecting the pipeline |
+| L2 Illegitimate features | the model uses a feature that should not be available, including, explicitly, *a feature that is a proxy for the outcome variable* | Requires domain judgement about each feature |
+| L3 Test set not independent of training set | temporal leakage; non-independence between train and test; sampling bias | Shades into open research problems |
 
-Their proposed remedy is a **model info sheet**: the researcher writes down, for
-each element of the design, why it is sound — including, for L2, an argument that
+Their proposed remedy is a model info sheet: the researcher writes down, for
+each element of the design, why it is sound, including, for L2, an argument that
 every feature in the model is legitimately available.
 
-The case in Chapter 5 is an instance of **L2**, in precisely the sub-case they
-name. It is also a case their remedy does not catch, and that is what makes it
-worth reporting rather than merely classifying. The contaminated field is
-documented in the dataset's own codebook as a contractual term agreed at
-origination; it is economically meaningful, it is available at appraisal time
-under that definition, and an honest researcher completing a model info sheet
-would write a correct and convincing justification for including it. The leakage
-survives the check designed to catch it, and is detectable only by noticing that
-the *shape* of the field's relationship with the outcome is not one any economic
-mechanism could produce.
+The case in Chapter 5 is an instance of L2, in precisely the sub-case they name.
+It is also a case their remedy does not catch, and that is what makes it worth
+reporting and not merely classifying. The contaminated field is documented in
+the dataset's own codebook as a contractual term agreed at origination; it is
+economically meaningful, it is available at appraisal time under that
+definition, and an honest researcher completing a model info sheet would write a
+correct and convincing justification for including it. The leakage survives the
+check designed to catch it, and is detectable only by noticing that the *shape*
+of the field's relationship with the outcome is not one any economic mechanism
+could produce.
 
 Chapter 5's finding therefore sits inside a documented, recurring failure mode
-rather than being a curiosity peculiar to one dataset — and extends it, by
-exhibiting a variety that passes the current best-practice defence.
+and is not a curiosity peculiar to one dataset, and extends it by exhibiting a
+variety that passes the current best-practice defence.
 
 ### 3.7.3 The SBA National dataset
 
-Li, Mickel and Taylor [29] introduced the SBA National dataset — 899,164 loan
+Li, Mickel and Taylor [29] introduced the SBA National dataset, 899,164 loan
 guarantees issued by the U.S. Small Business Administration between 1987 and
-2014, with realised outcomes — as a teaching resource, built around a case
+2014 with realised outcomes, as a teaching resource, built around a case
 assignment in which students take the role of a loan officer and decide whether
 to approve a facility. It has since become a widely used benchmark in
-small-business credit research, which is a heavier duty than it was designed for.
+small-business credit research, which is a heavier duty than it was designed
+for.
 
 Their Table 1 is the dataset's codebook. Three of its fields are populated only
-after a loan has been charged off — `ChgOffDate`, "the date when a loan is
+after a loan has been charged off: `ChgOffDate`, "the date when a loan is
 declared to be in default"; `ChgOffPrinGr`, "charged-off amount"; and
-`BalanceGross`, "gross amount outstanding" — and any model given them is reading
-the outcome rather than predicting it. They are dropped in this study, and the
-drop is asserted in code rather than assumed.
+`BalanceGross`, "gross amount outstanding". Any model given them is reading the outcome rather than predicting it. They are dropped in this study, and the drop is asserted in code, not assumed.
 
-The same table defines `Term` as **"Loan term in months"**: the contractual term
+The same table defines `Term` as "Loan term in months": the contractual term
 agreed at origination, legitimately available at appraisal time, and on that
 definition entirely proper to use. The searched literature reports `Term`,
 disbursement and approval amounts as significant predictors and uses them
 accordingly.
 
-The dataset's own documentation goes further. In discussing the data, the authors
-derive a feature *from* `Term` — a `RealEstate` indicator set where the term
-reaches 240 months, on the reasoning that only real-estate-backed lending runs
-twenty years — and report a striking difference in default rates between the two
-groups. That derivation is economically well-motivated and is exactly what a
-careful analyst would do. Section 5.10.6 examines what the contrast actually rests on.
+The dataset's own documentation goes further. In discussing the data, the
+authors derive a feature *from* `Term`: a `RealEstate` indicator set where the
+term reaches 240 months, on the reasoning that only real-estate-backed lending
+runs twenty years. They report a striking difference in default rates between
+the two groups. That derivation is economically well-motivated and is exactly
+what a careful analyst would do. Section 5.10.6 examines what the contrast
+actually rests on.
 
-**No located source reports that the field itself carries outcome information.**
+No located source reports that the field itself carries outcome information.
 Chapter 5 presents evidence that it does. This is stated as a finding the author
 has not found documented elsewhere, which is weaker than a claim of priority and
 is the appropriate claim given a non-exhaustive search.
 
 ## 3.8 Research gap
 
-Consolidating, the following are **not** contributions of this study, contrary to
+Consolidating, the following are not contributions of this study, contrary to
 the original proposal:
 
 - combining weighted financial ratios into a credit score ([3], and
@@ -376,20 +382,20 @@ the original proposal:
 
 What the literature leaves open, and what this study addresses:
 
-1. **Contamination in a widely used benchmark dataset** (Chapter 5), and the
+1. Contamination in a widely used benchmark dataset (Chapter 5), and the
    consequent methodological point that instrument-specific models cannot be
    validated on datasets lacking their variables. Situated within Kapoor and
    Narayanan's taxonomy but, on the searched literature, unreported for this
    dataset.
-2. **Formalising a specific operational instrument.** Existing models select
+2. Formalising a specific operational instrument. Existing models select
    criteria from theory or from researcher judgement. None located takes a named
    state bank's production appraisal form and derives a computable model from it
    clause by clause, with traceability maintained as a design constraint.
-3. **Keeping dual objectives unaggregated.** Prior dual-objective systems combine
+3. Keeping dual objectives unaggregated. Prior dual-objective systems combine
    social and financial scores. This study reports them separately by design and
-   never produces a combined figure, and — unlike the prior work — tests whether
+   never produces a combined figure, and, unlike the prior work, tests whether
    the separation is warranted rather than assuming it (Section 5.17).
-4. **The Sri Lankan state-bank context**, documented as finance-constrained but
+4. The Sri Lankan state-bank context, documented as finance-constrained but
    not studied at the level of appraisal process.
 
 Contribution 1 is the substantial one and the most transferable. Contributions 2

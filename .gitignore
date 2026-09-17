@@ -63,3 +63,6 @@ web/src/generated/
 # mistaken for data later. One already did - see the removal of
 # elicited_weights.json containing a single TESTDATA respondent.
 docs/elicitation-test-answers.txt
+
+# Thesis preview scratch files
+docs/06-thesis/_preview.*

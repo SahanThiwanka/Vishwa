@@ -140,8 +140,19 @@ REFERENCE = re.compile(
     rf"(?P<dash>\s*[–—-]\s*(?P<b>{NUM}))?"
 )
 
+# Chapter-level references need the same treatment as section references. The
+# draft's six chapters are not the document's six chapters: the literature
+# review moves from 2 to 3 and the methodology from 3 to 4, so a sentence
+# reading "Chapter 2 establishes that ..." pointed the reader at the Objectives.
+# Chapter 4 of the draft is deliberately absent from this map because it is
+# split across two chapters of the document; those few references are reworded
+# in the source instead of renumbered here.
+CHAPTER = re.compile(r"\b(?P<lead>[Cc]hapter )(?P<n>[1-6])\b")
+CHAPTER_MAP = {"1": "1", "2": "3", "3": "4", "5": "5", "6": "6"}
 
-def fix_cross_references(path: Path, mapping: dict[str, str]) -> None:
+
+def fix_cross_references(path: Path, mapping: dict[str, str],
+                         chapters: bool = True) -> None:
     """Update section cross-references after renumbering.
 
     ONE simultaneous pass, deliberately. Substituting the mapping entry by entry
@@ -162,6 +173,15 @@ def fix_cross_references(path: Path, mapping: dict[str, str]) -> None:
         return out
 
     text = REFERENCE.sub(translate, path.read_text(encoding="utf-8"))
+    if chapters:
+        # Only ever applied to a file this run has just regenerated from the
+        # draft. Applying it to a hand-maintained file would renumber the same
+        # reference again on every run, walking "Chapter 2" up to "Chapter 6"
+        # over four builds.
+        text = CHAPTER.sub(
+            lambda m: m.group("lead") + CHAPTER_MAP.get(m.group("n"),
+                                                        m.group("n")),
+            text)
     path.write_text(text, encoding="utf-8")
 
 
@@ -271,8 +291,11 @@ def main() -> int:
     }
     for name in ("01-introduction.md", "03-literature-review.md",
                  "04-methodology.md", "05-results.md",
-                 "06-discussion-conclusions.md", "02-objectives.md"):
+                 "06-discussion-conclusions.md"):
         fix_cross_references(CH / name, mapping)
+    # Hand-maintained, so it is not regenerated and must not have its chapter
+    # references renumbered again on each run.
+    fix_cross_references(CH / "02-objectives.md", mapping, chapters=False)
 
     print("\nCross-references updated.")
     print("Source chapters left untouched - they remain the editable originals.")

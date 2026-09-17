@@ -51,6 +51,7 @@ from pathlib import Path
 
 from docx import Document
 from docx.enum.section import WD_SECTION
+from docx.enum.style import WD_STYLE_TYPE
 from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement
@@ -182,6 +183,10 @@ def enable_hyphenation(doc) -> None:
     settings = doc.settings.element
     for name, value in (("w:autoHyphenation", "true"),
                         ("w:hyphenationZone", "288"),
+                        # Never more than two hyphenated lines in a row: a
+                        # ladder of hyphens down the right edge is as
+                        # distracting as the white space it prevents.
+                        ("w:consecutiveHyphenLimit", "2"),
                         ("w:doNotHyphenateCaps", "true")):
         el = OxmlElement(name)
         el.set(qn("w:val"), value)
@@ -310,6 +315,61 @@ def heading(doc, text: str, level: int, page_break_before: bool = False):
     return p
 
 
+TABLE_CAPTION_STYLE = "Table Caption"
+FIGURE_CAPTION_STYLE = "Figure Caption"
+
+
+def blacken_contents_styles(doc) -> None:
+    """Black, unlinked contents entries.
+
+    A TOC field built with \\h makes every entry a hyperlink, and Word paints
+    hyperlinks in theme blue. The Table of Contents, the List of Figures and the
+    List of Tables therefore came out blue on a thesis that is black
+    everywhere else, and would print that way. The links themselves are worth
+    keeping for the PDF, so the colour is changed and the underline removed
+    instead of dropping \\h.
+    """
+    for name in ("Hyperlink", "FollowedHyperlink",
+                 "TOC 1", "TOC 2", "TOC 3", "TOC 4"):
+        try:
+            style = doc.styles[name]
+        except KeyError:
+            if not name.startswith("TOC"):
+                style = doc.styles.add_style(name, WD_STYLE_TYPE.CHARACTER)
+            else:
+                continue
+        style.font.color.rgb = RGBColor(0, 0, 0)
+        style.font.underline = False
+        style.font.name = BODY_FONT
+
+
+def ensure_caption_styles(doc) -> None:
+    """Separate paragraph styles for table and figure captions.
+
+    THE LISTS OF FIGURES AND TABLES CAME OUT EMPTY BEFORE THIS. They were built
+    with the TOC \\c switch, which collects SEQ fields, and these captions carry
+    no SEQ field: their numbers are section-relative (Table 5.13) and are
+    written by this script, not counted by Word. Word therefore reported "No
+    table of figures entries found" on both pages.
+
+    Collecting by paragraph STYLE instead works with numbers we write
+    ourselves, and needs one style per list so the two do not merge.
+    """
+    base = doc.styles["Caption"]
+    for name in (TABLE_CAPTION_STYLE, FIGURE_CAPTION_STYLE):
+        try:
+            style = doc.styles[name]
+        except KeyError:
+            style = doc.styles.add_style(name, WD_STYLE_TYPE.PARAGRAPH)
+            style.base_style = base
+        style.font.name = BODY_FONT
+        style.font.size = Pt(11)
+        style.font.italic = False
+        style.font.bold = False
+        style.font.color.rgb = RGBColor(0, 0, 0)
+        style.quick_style = False
+
+
 def caption(doc, text: str, above: bool = True):
     p = doc.add_paragraph()
     p.paragraph_format.line_spacing = 1.0
@@ -318,9 +378,11 @@ def caption(doc, text: str, above: bool = True):
     # A caption above its table must not be orphaned at the foot of a page.
     p.paragraph_format.keep_with_next = above
     p.paragraph_format.keep_together = True
-    # The Caption style is what the List of Tables / Figures field codes collect.
+    # Tables are captioned above, figures below, so `above` identifies which
+    # list this caption belongs in.
     try:
-        p.style = doc.styles["Caption"]
+        p.style = doc.styles[TABLE_CAPTION_STYLE if above
+                             else FIGURE_CAPTION_STYLE]
     except KeyError:
         pass
     run = p.add_run(text)
@@ -583,7 +645,14 @@ def render(doc, path: Path, counters: dict,
                 counters["table"] = 0
                 counters["figure"] = 0
                 m2 = re.match(r"^(\d+)\s", text)
-                counters["section"] = m2.group(1) if m2 else counters["section"]
+                if m2:
+                    counters["section"] = m2.group(1)
+                elif text.upper().startswith("APPENDIC"):
+                    # The appendices carry no chapter number, so the counter
+                    # kept the previous chapter's and produced a second
+                    # "Table 6.1" - two different tables with one number, both
+                    # listed in the List of Tables.
+                    counters["section"] = "A"
                 # Not on the very first chapter: the body already opens on a
                 # fresh page, and a break there would leave one blank.
                 brk = chapter_breaks and counters["chapters_seen"] > 0
@@ -652,6 +721,8 @@ def main() -> int:
 
     doc = Document()
     enable_hyphenation(doc)
+    ensure_caption_styles(doc)
+    blacken_contents_styles(doc)
 
     normal = doc.styles["Normal"]
     normal.font.name = BODY_FONT
@@ -735,8 +806,10 @@ def main() -> int:
     # Table of contents and lists, as field codes Word populates on update.
     for title, instruction in [
         ("TABLE OF CONTENTS", r'TOC \o "1-3" \h \z \u'),
-        ("LIST OF FIGURES", r'TOC \h \z \c "Figure"'),
-        ("LIST OF TABLES", r'TOC \h \z \c "Table"'),
+        # Collected by paragraph STYLE, not by SEQ field: see
+        # ensure_caption_styles for why the \c switch cannot work here.
+        ("LIST OF FIGURES", rf'TOC \h \z \t "{FIGURE_CAPTION_STYLE},1"'),
+        ("LIST OF TABLES", rf'TOC \h \z \t "{TABLE_CAPTION_STYLE},1"'),
     ]:
         doc.add_page_break()
         heading(doc, title, 1)

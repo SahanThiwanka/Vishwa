@@ -21,7 +21,7 @@ Appraisal Report for SME Credit Facility* from which it derives.
 | Credit Risk | Market and Competitive Position | 7 | 3.10 |
 | Credit Risk | Risk, Security and Compliance | 6 | 3.3, 3.5, 3.6, 3.11, 3.12, 6.5 |
 | Development Impact | Economic and Social Contribution | 8 | 5, 3.4.1 |
-| **Total** | **7 dimensions** | **49** | |
+| Total | 7 dimensions | 49 | |
 
 Twenty-eight criteria are quantitative and twenty-one qualitative.
 
@@ -46,7 +46,7 @@ against 168 under classical pairwise AHP.
 > comparisons. There are no right answers — the study is measuring experienced
 > judgement, including where practitioners disagree.
 >
-> **Participation and confidentiality.** Participation is voluntary and you may
+> Participation and confidentiality. Participation is voluntary and you may
 > stop at any point. Do not enter your name or any customer information.
 > Responses are identified only by the code you choose below, are used solely for
 > academic research, and are reported only in aggregate.
@@ -54,7 +54,7 @@ against 168 under classical pairwise AHP.
 ### Appendix 2.3 Data collected
 
 Participant code (self-chosen), years in credit or appraisal work, institution
-type, and role. **No name and no customer information are collected.**
+type, and role. No name and no customer information are collected.
 
 ### Appendix 2.4 Comparison scale
 

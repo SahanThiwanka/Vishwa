@@ -96,8 +96,15 @@ scorecard failing the four-fifths rule on four of five attributes and declining
 though agriculture defaults least. The dataset records no protected
 characteristic, so no claim about lawful discrimination follows.
 
-Weight elicitation was instrumented but not administered, and that limitation is
-reported throughout.
+Criterion weights were elicited from **ten credit practitioners** by the
+Best-Worst Method, three of eighty level-responses being excluded for
+inconsistency. Practitioners weight forward-looking project viability above
+historic financial performance by more than two to one, inverting the emphasis of
+an instrument whose longest section is the historic financial analysis. The
+elicited weights depart from the equal weighting used during development by up to
+79% within a level — three times the perturbation a prior sensitivity analysis had
+tested — yet rank correlation between the two scorings is 0.91 and 0.97 and no
+appraisal moves two risk bands.
 
 **Keywords:** SME credit appraisal, multi-criteria decision analysis, fuzzy sets,
 decision support systems, data leakage, algorithmic fairness, missing data,

@@ -407,6 +407,36 @@ def main() -> int:
                             f"{irregular['default_other'] * 100:.2f}%",
                             docs, BOTH_RE))
 
+    # ---- elicitation --------------------------------------------------------
+    elicited = load_json("elicited_weights.json")
+    if elicited:
+        BOTH_E = ["ch6-results-discussion-conclusion.md",
+                  "06-discussion-conclusions.md"]
+        checks.append(check("elicitation respondents",
+                            str(elicited["n_respondents"]), docs, BOTH_E))
+        w = elicited["weights"].get("objective:credit_risk", {})
+        for item, label in (("project_viability", "project viability weight"),
+                            ("risk_security", "risk & security weight")):
+            if item in w:
+                checks.append(check(label, f"{w[item]:.4f}", docs, BOTH_E))
+
+    vs = load_json("elicited_vs_placeholder.json")
+    if vs:
+        BOTH_E = ["ch6-results-discussion-conclusion.md",
+                  "06-discussion-conclusions.md"]
+        checks.append(check("largest within-level weight ratio",
+                            f"{vs['largest_within_level_ratio']:.2f}", docs,
+                            BOTH_E))
+        for oid, label in (("credit_risk", "credit"),
+                           ("development_impact", "development")):
+            o = vs["objectives"].get(oid)
+            if o:
+                checks.append(check(f"elicited-vs-placeholder rho, {label}",
+                                    f"{o['spearman']:.4f}", docs, BOTH_E))
+                checks.append(check(f"same band after elicitation, {label}",
+                                    f"{o['same_band'] * 100:.1f}%", docs,
+                                    BOTH_E))
+
     # ---- fairness / disparate impact ---------------------------------------
     BOTH = ["ch5-empirical-validation.md", "05-results.md"]
     fair = load_csv("fairness_groups.csv")

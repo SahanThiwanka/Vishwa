@@ -86,6 +86,29 @@ def score_objective(
     dimension_scores: dict[str, pd.Series] = {}
     criterion_scores: dict[str, pd.Series] = {}
 
+    def _weights_for(nodes: list[dict], present) -> np.ndarray:
+        """Weights for the nodes actually present, renormalised to sum to one.
+
+        Reads `weight` from the criteria tree, which derive_weights.py writes
+        after elicitation. Falls back to equal weighting for any node without
+        one, so the scorecard still runs against a PLACEHOLDER tree.
+
+        This used to hardcode equal weights with a comment saying elicitation
+        was outstanding. When elicitation completed, every scored result stayed
+        exactly as it had been - the weights were written into the tree and the
+        analysis silently ignored them. A hardcoded constant standing in for
+        data is fine until the data arrives; the danger is that nothing fails
+        when it does.
+        """
+        by_id = {n["id"]: n for n in nodes}
+        raw = np.array(
+            [float(by_id[i].get("weight") or 0.0) for i in present],
+            dtype=float,
+        )
+        if raw.sum() <= 0:
+            return np.full(len(present), 1.0 / len(present))
+        return raw / raw.sum()
+
     for dimension in objective["dimensions"]:
         per_criterion = {}
 
@@ -101,12 +124,11 @@ def score_objective(
             criterion_scores[criterion["id"]] = scored
 
         block = pd.DataFrame(per_criterion)
-        # Equal weights within a dimension while elicitation is outstanding.
-        weights = np.full(block.shape[1], 1.0 / block.shape[1])
+        weights = _weights_for(dimension["criteria"], block.columns)
         dimension_scores[dimension["id"]] = _weighted_mean_ignoring_nan(block, weights)
 
     dim_frame = pd.DataFrame(dimension_scores)
-    dim_weights = np.full(dim_frame.shape[1], 1.0 / dim_frame.shape[1])
+    dim_weights = _weights_for(objective["dimensions"], dim_frame.columns)
     objective_score = _weighted_mean_ignoring_nan(dim_frame, dim_weights)
 
     return objective_score, pd.DataFrame(criterion_scores)

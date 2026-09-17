@@ -369,7 +369,7 @@ verified against shared expectations.
 An appraisal stores its **inputs, its complete result document, and the model
 version that produced it** — not merely a score column.
 
-The criteria tree will change: elicitation replaces the placeholder weights, and
+The criteria tree changes over time: elicitation replaced the placeholder weights, and
 bands may be revised. Without versioned storage, every historical recommendation
 would silently re-interpret under the current model, and an appraisal signed in
 March could not be explained in September. Storing the result document makes past

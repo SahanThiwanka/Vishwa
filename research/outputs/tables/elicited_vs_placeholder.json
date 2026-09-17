@@ -1,0 +1,85 @@
+{
+  "n_cases": 2000,
+  "n_respondents": 10,
+  "level_spreads": [
+    {
+      "level": "objective:credit_risk",
+      "n": 6,
+      "max_over_min": 2.3674,
+      "max_departure_from_equal": 0.0838,
+      "max_relative_departure": 0.5027
+    },
+    {
+      "level": "dimension:borrower_management",
+      "n": 6,
+      "max_over_min": 2.0835,
+      "max_departure_from_equal": 0.0869,
+      "max_relative_departure": 0.5212
+    },
+    {
+      "level": "dimension:credit_conduct",
+      "n": 5,
+      "max_over_min": 3.254,
+      "max_departure_from_equal": 0.1587,
+      "max_relative_departure": 0.7936
+    },
+    {
+      "level": "dimension:historic_financials",
+      "n": 9,
+      "max_over_min": 2.5568,
+      "max_departure_from_equal": 0.0487,
+      "max_relative_departure": 0.4385
+    },
+    {
+      "level": "dimension:project_viability",
+      "n": 8,
+      "max_over_min": 2.0821,
+      "max_departure_from_equal": 0.0678,
+      "max_relative_departure": 0.5427
+    },
+    {
+      "level": "dimension:market_position",
+      "n": 7,
+      "max_over_min": 1.755,
+      "max_departure_from_equal": 0.0445,
+      "max_relative_departure": 0.3112
+    },
+    {
+      "level": "dimension:risk_security",
+      "n": 6,
+      "max_over_min": 1.8059,
+      "max_departure_from_equal": 0.0741,
+      "max_relative_departure": 0.4449
+    },
+    {
+      "level": "objective:development_impact",
+      "n": 1,
+      "max_over_min": 1.0,
+      "max_departure_from_equal": 0.0,
+      "max_relative_departure": 0.0
+    },
+    {
+      "level": "dimension:dev_impact",
+      "n": 8,
+      "max_over_min": 3.1379,
+      "max_departure_from_equal": 0.0728,
+      "max_relative_departure": 0.5822
+    }
+  ],
+  "largest_within_level_ratio": 3.254,
+  "largest_relative_departure": 0.7936,
+  "objectives": {
+    "credit_risk": {
+      "spearman": 0.9136,
+      "same_band": 0.867,
+      "two_or_more_bands": 0.0,
+      "mean_absolute_score_shift": 1.8528
+    },
+    "development_impact": {
+      "spearman": 0.9662,
+      "same_band": 0.841,
+      "two_or_more_bands": 0.0,
+      "mean_absolute_score_shift": 2.4463
+    }
+  }
+}

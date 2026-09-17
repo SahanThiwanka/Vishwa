@@ -135,7 +135,7 @@ without echoing the submitted value back.
 | Weak case falls to band C or D | pass |
 | Objectives reported separately, not merged | pass |
 | Contributions sum to parent score | pass |
-| Weight status still flagged PLACEHOLDER | pass |
+| Weight status correctly reflects the elicitation state | pass |
 
 The system was additionally verified end to end through the browser: all 49
 criteria entered through the interface, producing credit risk 80.2 (band A)
@@ -148,15 +148,22 @@ Chapter 5, and the answer given there is heavily qualified.
 
 ## 5.7 Status of the weights
 
-Throughout this chapter the model carries `weightStatus: PLACEHOLDER`. All
-criteria are equally weighted within their level.
+The model now carries `weightStatus: ELICITED`, recording ten respondents, three
+level-responses excluded for inconsistency, and the date. §6.1 reports the
+elicitation; the weights themselves are in §6.1.4.
 
-This is enforced rather than merely noted. The model synchronisation script warns
-on every run; the interface displays a standing notice; and the weight-derivation
-pipeline refuses to mark the model `ELICITED` without usable elicitation
-responses. Scores computed under placeholder weights are structurally valid and
-**must not be reported as research results**. Chapter 6 describes the elicitation
-that replaces them.
+**The state is machine-enforced rather than merely documented, and that mattered.**
+While elicitation was outstanding the model carried the placeholder state, all
+criteria equally weighted within their level. The synchronisation script warned on every
+run, the interface displayed a standing notice, and the weight-derivation
+pipeline refused to mark the model `ELICITED` without usable responses. A claim
+check also fails the build if any chapter still describes the weights as
+placeholders once the model says otherwise — which is how the stale passages in
+this chapter were caught when elicitation completed.
+
+The design principle is worth stating separately from this instance: a
+placeholder that is only described in prose will outlive the condition it
+describes, because nothing breaks when the condition changes.
 
 ## 5.8 Purpose and scope of this chapter
 
@@ -625,11 +632,16 @@ methodological requirement rather than a fallback.
 
 ## 5.16 How much do the weights matter?
 
-The criteria model carries placeholder weights until elicitation is complete
-(§5.7), and that is ordinarily treated as blocking: no elicited weights, no
-reportable result. But the question underneath — *how much does the output depend
-on the weight vector at all?* — is answerable now, and answering it bounds the
-damage the placeholders can be doing.
+This analysis was carried out while the criteria model still carried placeholder
+weights, and that is ordinarily treated as blocking: no elicited weights, no
+reportable result. The question underneath — *how much does the output depend on
+the weight vector at all?* — was answerable without respondents, and answering it
+bounded the damage the placeholders could be doing.
+
+It is retained here, unchanged, because elicitation has since been completed and
+§6.1.5 checks its prediction against the weights that actually arrived. A
+sensitivity analysis that is only reported after the answer is known is worth
+less than one that made a prediction first.
 
 ### 5.16.1 Method
 
@@ -994,10 +1006,14 @@ aggregation, not fuzzy inference.
 **Maturity filtering biases composition.** Restricting to fully-matured loans
 removes censoring but over-represents short-term facilities in later cohorts.
 
-**Weights were placeholders.** All results here use equal weights within each
-level, so they test structure rather than the elicited model. Section 5.16 bounds
-how much this matters: within ±25% perturbation the ranking is preserved
-(ρ ≈ 0.98) and ~94% of risk bands are unchanged. The limitation stands, but its
+**These results were computed under placeholder weights.** All figures in this
+chapter use equal weights within each level, so they test structure rather than
+the elicited model. Elicitation completed after the analyses were run (§6.1), and
+§6.1.5 measures the consequence directly: moving from the placeholder vector to
+the elicited one preserves the ranking (ρ = 0.91 credit, 0.97 development) and
+moves no case by two risk bands, though 13–16% move by one. §5.16 bounds it
+independently: within ±25% perturbation ρ ≈ 0.98 and ~94% of bands are
+unchanged. The limitation stands, but its
 magnitude is now measured rather than merely acknowledged.
 
 **The independence test uses thin development proxies.** SBA data carries

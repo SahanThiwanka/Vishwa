@@ -493,11 +493,16 @@ methodological requirement rather than a fallback.
 
 ## 5.6a How much do the weights matter?
 
-The criteria model carries placeholder weights until elicitation is complete
-(§4.10), and that is ordinarily treated as blocking: no elicited weights, no
-reportable result. But the question underneath — *how much does the output depend
-on the weight vector at all?* — is answerable now, and answering it bounds the
-damage the placeholders can be doing.
+This analysis was carried out while the criteria model still carried placeholder
+weights, and that is ordinarily treated as blocking: no elicited weights, no
+reportable result. The question underneath — *how much does the output depend on
+the weight vector at all?* — was answerable without respondents, and answering it
+bounded the damage the placeholders could be doing.
+
+It is retained here, unchanged, because elicitation has since been completed and
+§6.1.5 checks its prediction against the weights that actually arrived. A
+sensitivity analysis that is only reported after the answer is known is worth
+less than one that made a prediction first.
 
 ### 5.6a.1 Method
 
@@ -862,10 +867,14 @@ aggregation, not fuzzy inference.
 **Maturity filtering biases composition.** Restricting to fully-matured loans
 removes censoring but over-represents short-term facilities in later cohorts.
 
-**Weights were placeholders.** All results here use equal weights within each
-level, so they test structure rather than the elicited model. Section 5.6a bounds
-how much this matters: within ±25% perturbation the ranking is preserved
-(ρ ≈ 0.98) and ~94% of risk bands are unchanged. The limitation stands, but its
+**These results were computed under placeholder weights.** All figures in this
+chapter use equal weights within each level, so they test structure rather than
+the elicited model. Elicitation completed after the analyses were run (§6.1), and
+§6.1.5 measures the consequence directly: moving from the placeholder vector to
+the elicited one preserves the ranking (ρ = 0.91 credit, 0.97 development) and
+moves no case by two risk bands, though 13–16% move by one. §5.6a bounds it
+independently: within ±25% perturbation ρ ≈ 0.98 and ~94% of bands are
+unchanged. The limitation stands, but its
 magnitude is now measured rather than merely acknowledged.
 
 **The independence test uses thin development proxies.** SBA data carries

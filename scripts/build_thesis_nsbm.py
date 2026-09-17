@@ -45,6 +45,18 @@ ROOT = Path(__file__).resolve().parents[1]
 CHAPTERS = ROOT / "docs" / "06-thesis"
 OUTPUT = CHAPTERS / "THESIS-NSBM.docx"
 
+# Word holds an exclusive lock on an open document, so a rebuild while the
+# thesis is open fails with PermissionError - and does so after the previous
+# build has already been superseded in the author's mind, which is the worst
+# moment to lose a file. THESIS_OUT redirects the build somewhere else when the
+# usual target cannot be written, so a rebuild on submission day is never
+# blocked by having the document open to read it.
+import os as _os
+if _os.environ.get("THESIS_OUT"):
+    # Resolved, because the closing status line reports the path relative to the
+    # repository root and a bare relative path is not under it.
+    OUTPUT = Path(_os.environ["THESIS_OUT"]).resolve()
+
 TITLE = ("A DUAL-OBJECTIVE DECISION SUPPORT MODEL FOR SME CREDIT APPRAISAL "
          "IN SRI LANKAN DEVELOPMENT BANKING")
 AUTHOR = "A. A. V. ATHUKORALA"

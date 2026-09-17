@@ -1,52 +1,109 @@
 # 6 DISCUSSION AND CONCLUSIONS
 
-## 6.1 Weight elicitation: prepared, not administered
+## 6.1 Weight elicitation
 
-The methodology in §4.5 specifies weight elicitation by Best-Worst Method. **That
-elicitation was not carried out.** This section states plainly what was built,
-what was not done, and what follows.
+The methodology in §4.5 specifies weight elicitation by Best-Worst Method. It was
+carried out, and this section reports it.
 
-### 6.1.1 What exists
+### 6.1.1 The instrument
 
 - A web instrument implementing BWM across eight comparison levels — 86
   comparisons, approximately fifteen minutes — with a participation and
   confidentiality notice, collecting a self-chosen participant code, years of
   experience, institution type and role, and **no name or customer information**.
-- A linear BWM solver [21] verified against the published worked
-  example, reproducing its weights exactly (ξ\* = 0, CR = 0) and flagging a
-  deliberately contradictory response at CR = 1.18.
+- A linear BWM solver [21], verified two ways on deliberately
+  inconsistent inputs: the maximum deviation recomputed from the returned weights
+  matches the reported ξ\*, and an independent optimiser from forty random starts
+  finds no better solution, agreeing to six decimal places (§4.5.3).
 - An analysis pipeline computing per-respondent consistency ratios, excluding
   responses above CR 0.25, and aggregating by geometric mean.
 
-The pipeline was verified end to end with a synthetic respondent, which produced
-consistency ratios of 0.031–0.042 across the eight levels. **That synthetic
-response was then deleted**, and the criteria model carries
-`weightStatus: PLACEHOLDER`.
+The instrument was deployed publicly so that practitioners could complete it from
+their own device without an account, which is what made recruitment feasible.
 
-### 6.1.2 What was not done, and why
+### 6.1.2 Respondents
 
-No practitioner responses were collected. Recruiting credit officers requires
-institutional access and participant time that were not secured within the study
-period.
+**Ten credit practitioners** completed the instrument, above the five-to-eight
+range typical of published BWM studies.
 
-The consequence is stated without softening: **the original RQ2 — what weights
-practitioners assign — is unanswered by this study.** The weights reported
-throughout are equal splits within each level, and every score computed from them
-is labelled accordingly. `derive_weights.py` refuses to mark the model `ELICITED`
-without usable responses, so no analysis in this thesis can have silently treated
-placeholder weights as elicited ones.
+| | |
+|---|---|
+| Respondents | 10 |
+| Experience | 1–12 years, median 8 |
+| Credit / appraisal officers | 4 |
+| Branch managers | 3 |
+| Regional or head-office credit | 2 |
+| Not stated | 1 |
+| Institution | State commercial bank (9); not stated (1) |
 
-### 6.1.3 What was done instead
+All respondents are from state commercial banking, which is the setting the
+instrument comes from and also a limitation: these weights describe one segment
+of Sri Lankan SME lending, not the sector.
 
-Rather than leave the question open, the study asks a different one that is
-answerable without respondents and is arguably more useful: **how much does the
-model's output depend on its weights at all?** That is the revised RQ2, and §5.16
-answers it.
+### 6.1.3 Consistency
 
-This is a genuine narrowing of scope, not a substitution of equivalent value.
-Elicited weights would tell us what Sri Lankan practitioners believe. The
-sensitivity analysis tells us only how much such beliefs would matter. Both are
-worth knowing; only the second was obtainable here.
+Each respondent produced eight level-responses, giving 80 in total. **Three were
+excluded for a consistency ratio above 0.25** and the remaining 77 retained. The
+exclusions are reported rather than absorbed: two fell in
+`dimension:borrower_management` and `dimension:credit_conduct` from one
+respondent (CR 0.298 and 0.377), and one at `objective:credit_risk` from another
+(CR 0.293).
+
+Most responses were highly consistent — a majority at CR = 0.000, meaning the
+stated comparisons admit a weight vector that reproduces them exactly.
+
+### 6.1.4 The weights
+
+At the objective level, practitioners weight the six credit-risk areas as:
+
+| Dimension | Weight | Against equal |
+|---|---:|---:|
+| Project Viability & Projections | 0.2504 | ×1.50 |
+| Borrower & Management Capacity | 0.2062 | ×1.24 |
+| Credit History & Banking Conduct | 0.1733 | ×1.04 |
+| Market & Competitive Position | 0.1527 | ×0.92 |
+| Historic Financial Performance | 0.1116 | ×0.67 |
+| Risk, Security & Compliance | 0.1058 | ×0.63 |
+
+The ordering is itself a finding. **Forward-looking project viability outranks
+historic financial performance by more than two to one**, which inverts the
+emphasis of an instrument whose longest section is the historic financial
+analysis. Security and compliance ranks last of the six, despite occupying a full
+clause of the form.
+
+`weightStatus` is now `ELICITED`, recording ten respondents, three exclusions and
+the date. Every score in the system is computed from these weights.
+
+### 6.1.5 What the placeholders cost
+
+Until elicitation completed, every scored result used equal weights within each
+level. §5.16 argued this mattered less than it appeared, on a simulation
+perturbing weights by up to ±25%.
+
+**The elicited weights fall outside that range.** Within a level the ratio of
+largest to smallest reaches **3.25**, and the largest departure from equal
+weighting is **79%** — three times the perturbation tested. The earlier
+reassurance was therefore about a narrower disturbance than the one that actually
+occurred.
+
+It survives the test anyway. Scoring the same 2,000 simulated appraisals under
+both vectors:
+
+| | Credit risk | Development impact |
+|---|---:|---:|
+| Spearman correlation | **0.9136** | **0.9662** |
+| Same risk band | 86.7% | 84.1% |
+| Two or more bands apart | **0.0%** | **0.0%** |
+| Mean absolute score shift | 1.85 | 2.45 |
+
+No case moves two bands. Between 13% and 16% move one band, which is not nothing
+— those are appraisals that would carry a different recommendation — but the
+ordering is substantially preserved across a weight change far larger than the
+one §5.16 modelled.
+
+This is a stronger result than the simulation it replaces, because it is not a
+simulation of possible weights. It is the placeholder vector against the elicited
+one, on identical cases.
 
 ## 6.2 Answers to the research questions
 

@@ -223,7 +223,7 @@ verified against shared expectations.
 An appraisal stores its **inputs, its complete result document, and the model
 version that produced it** — not merely a score column.
 
-The criteria tree will change: elicitation replaces the placeholder weights, and
+The criteria tree changes over time: elicitation replaced the placeholder weights, and
 bands may be revised. Without versioned storage, every historical recommendation
 would silently re-interpret under the current model, and an appraisal signed in
 March could not be explained in September. Storing the result document makes past
@@ -316,7 +316,7 @@ without echoing the submitted value back.
 | Weak case falls to band C or D | pass |
 | Objectives reported separately, not merged | pass |
 | Contributions sum to parent score | pass |
-| Weight status still flagged PLACEHOLDER | pass |
+| Weight status correctly reflects the elicitation state | pass |
 
 The system was additionally verified end to end through the browser: all 49
 criteria entered through the interface, producing credit risk 80.2 (band A)
@@ -329,12 +329,19 @@ Chapter 5, and the answer given there is heavily qualified.
 
 ## 4.10 Status of the weights
 
-Throughout this chapter the model carries `weightStatus: PLACEHOLDER`. All
-criteria are equally weighted within their level.
+The model now carries `weightStatus: ELICITED`, recording ten respondents, three
+level-responses excluded for inconsistency, and the date. §6.1 reports the
+elicitation; the weights themselves are in §6.1.4.
 
-This is enforced rather than merely noted. The model synchronisation script warns
-on every run; the interface displays a standing notice; and the weight-derivation
-pipeline refuses to mark the model `ELICITED` without usable elicitation
-responses. Scores computed under placeholder weights are structurally valid and
-**must not be reported as research results**. Chapter 6 describes the elicitation
-that replaces them.
+**The state is machine-enforced rather than merely documented, and that mattered.**
+While elicitation was outstanding the model carried the placeholder state, all
+criteria equally weighted within their level. The synchronisation script warned on every
+run, the interface displayed a standing notice, and the weight-derivation
+pipeline refused to mark the model `ELICITED` without usable responses. A claim
+check also fails the build if any chapter still describes the weights as
+placeholders once the model says otherwise — which is how the stale passages in
+this chapter were caught when elicitation completed.
+
+The design principle is worth stating separately from this instance: a
+placeholder that is only described in prose will outlive the condition it
+describes, because nothing breaks when the condition changes.

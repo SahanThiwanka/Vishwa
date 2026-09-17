@@ -27,9 +27,10 @@ Twenty-eight criteria are quantitative and twenty-one qualitative.
 
 ## Appendix 2 The weight elicitation instrument
 
-The instrument was built and verified but **not administered** (Section 5.19).
-It is reproduced here so that the design can be assessed and so that a
-subsequent study can administer it unchanged.
+The instrument was built, verified and administered; ten practitioners completed
+it and Section 6.1 reports the result. It is reproduced here so that the design
+can be assessed independently of its findings, and so that a later study can
+administer it unchanged and compare.
 
 ### Appendix 2.1 Structure
 
@@ -74,28 +75,37 @@ Even values represent intermediate judgements.
 Every quantitative result in this thesis is produced by code in the accompanying
 repository. No value was entered by hand.
 
-```
-python research/src/prepare_sba.py            # clean the raw dataset
-python research/src/leakage_analysis.py       # contamination evidence
-python research/src/benchmark.py              # clean vs contaminated benchmarks
-python research/src/statistical_tests.py      # intervals, DeLong, calibration
-python research/src/weight_sensitivity.py     # weight perturbation study
-python research/src/objective_independence.py # objective separability
-python research/src/cost_analysis.py          # cost-sensitive evaluation
-python research/src/modulus_probe.py          # is twelve arbitrary?
-python research/src/realestate_probe.py       # the documentation's own feature
-python research/src/fairness_analysis.py      # disparate impact, bootstrapped
-python research/src/missingness_analysis.py   # what withholding does
-python research/src/make_figures.py           # all figures
-python research/src/test_parity.py            # engine agreement check
-python research/src/bwm.py                    # solver self-test
-python scripts/verify_claims.py               # consistency checks
-cd web && npm test                            # system unit tests
-```
+The commands below regenerate every figure and table, in order. Each writes its
+output to `research/outputs/`, from which the thesis draws its numbers.
 
-`scripts/verify_claims.py` re-derives the load-bearing figures from the generated
-result files and checks each against what this thesis states. It reports 25
-checks and currently passes all of them.
+[Table: Analysis scripts and the results each produces]
+
+| Script | Produces |
+|---|---|
+| `prepare_sba.py` | The cleaned dataset, with leakage-bearing fields removed |
+| `leakage_analysis.py` | Evidence that the term field carries outcome information |
+| `sba_foia_replication.py` | The same artefact in the SBA's own FOIA extracts |
+| `benchmark.py` | Clean against contaminated model benchmarks |
+| `statistical_tests.py` | Confidence intervals, DeLong tests, calibration |
+| `weight_sensitivity.py` | The weight perturbation study |
+| `derive_weights.py` | Best-Worst Method weights from the elicitation responses |
+| `elicited_vs_placeholder.py` | What changed when elicited weights replaced equal ones |
+| `objective_independence.py` | Separability of the two objectives |
+| `cost_analysis.py` | Cost-sensitive evaluation |
+| `modulus_probe.py` | Whether a twelve-month modulus is arbitrary |
+| `realestate_probe.py` | The feature the dataset documentation itself proposes |
+| `fairness_analysis.py` | Disparate impact, with bootstrap intervals |
+| `missingness_analysis.py` | The effect of withholding a field |
+| `make_figures.py` | Every figure in the thesis |
+| `test_parity.py` | Agreement between the Python and TypeScript engines |
+| `bwm.py` | Solver self-test against a known-inconsistent input |
+
+Two further checks guard the document itself. `scripts/verify_claims.py`
+re-derives the load-bearing figures from the generated result files and compares
+each against what the chapters state; it currently runs ninety checks. `npm test`
+in `web/` exercises the system's own unit tests. A failure in the first means a
+number in the thesis no longer matches the analysis that produced it, and the
+chapter is corrected rather than the check.
 
 ## Appendix 4 Dataset
 
@@ -117,9 +127,12 @@ as described in `research/data/DATASETS.md`.
 customer file, borrower record or internal credit policy document was accessed at
 any point, and the system was demonstrated using constructed cases.
 
-**Human participants.** The elicitation instrument was designed to collect no
-name and no customer information, with voluntary participation and aggregate-only
-reporting. It was not administered, so no participant data exists.
+**Human participants.** The elicitation instrument collects no name and no
+customer information. Participation was voluntary, participants identified
+themselves only by a code of their own choosing, and the responses are reported
+in aggregate. Ten practitioners took part. What is stored is a participant code,
+years of experience, institution type, role, and the comparison judgements
+themselves; nothing in that record identifies a person or a borrower.
 
 **Research integrity.** Every reported result is generated by code and is
 regenerable from the raw data. Where an experiment could not be run, the claim is

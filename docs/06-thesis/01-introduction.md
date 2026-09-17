@@ -3,8 +3,12 @@
 ## 1.1 Background
 
 Small and medium enterprises are reported to account for approximately 75% of
-active enterprises in Sri Lanka, 45% of employment and 52% of GDP.[^smestats] Their access to formal credit is
-persistently constrained. Documented supply-side barriers include the absence of
+active enterprises in Sri Lanka, 45% of employment and 52% of gross domestic
+product [1]. Those proportions carry a
+caveat that is rarely stated alongside them: Sri Lanka had no uniform SME
+definition before that framework was issued, so series spanning the change are
+not strictly comparable. The direction, however, is not in dispute. The sector is
+large, and its access to formal credit is persistently constrained. Documented supply-side barriers include the absence of
 formal accounting records, insufficient tangible collateral, non-submission of
 financial statements, and limited management capacity — with policy responses
 proposed around SME credit rating, credit guarantee schemes, and SME-friendly
@@ -13,13 +17,6 @@ banking practice.
 Most of that literature examines whether credit is *available*. This study
 examines something narrower and less studied: how a bank *decides*, once an
 application is in front of an officer.
-
-[^smestats]: These figures are widely reported but currently rest on secondary
-    sources. **Attribute them to a primary source — the National Policy Framework
-    for SME Development, Department of Census and Statistics, or Central Bank of
-    Sri Lanka — before submission.** Note also that Sri Lanka had no uniform SME
-    definition before 2015, so figures spanning that boundary are not necessarily
-    comparable.
 
 ## 1.2 The appraisal problem
 
@@ -48,7 +45,7 @@ computations are performed by hand for every application.
 **It is inconsistent.** Two officers with the same file may reach different
 conclusions, because the method for combining the evidence lives in each
 officer's head rather than in the instrument. This is not speculation: Cortés,
-Duchin and Sosyura [1] show that officers' credit approvals move with their
+Duchin and Sosyura [2] show that officers' credit approvals move with their
 mood — instrumented by local sunshine — and that the effect is **larger where
 decisions carry more discretion and reviews are less automated**, which is
 exactly the regime this form operates in.
@@ -77,19 +74,20 @@ codifies what to look at without codifying how to judge it.
 These differ from the questions in the original research proposal, for two
 reasons, both stated openly.
 
-First, the literature review (§3.5.3) established that the contribution
+First, the literature review (Section 3.5.3) established that the contribution
 originally claimed — applying fuzzy multi-criteria methods to SME credit scoring —
 is already published. The questions were revised rather than restated in a form
 the literature no longer supports.
 
-Second, the original RQ2 asked what weights practitioners assign to the criteria.
-Answering it requires practitioner participation that was not obtained within the
-study period (§6.1). Rather than pose a question the study cannot answer, RQ2 now
-asks something it can: how much the model's output depends on its weights at all.
-That is answerable by simulation, is arguably the more useful question for anyone
-deploying such a model, and it bounds what the missing elicitation costs. The
-elicitation instrument was nonetheless built, tested and is reported in §6.1 as
-prepared but not administered.
+Second, the original RQ2 asked only what weights practitioners assign to the
+criteria. That question is worth answering, and Section 6.1 answers it from ten
+respondents. On its own, however, it leaves the more consequential question
+untouched: whether the answer changes anything. RQ2 was therefore widened to ask
+both what the weights are and how much the model's output depends on them. The
+widened form proved to be the useful one. The elicited weights differ sharply
+from the equal weighting used during development, yet the rankings they produce
+are almost the same, and a thesis that reported only the first half would have
+left that unsaid.
 
 ## 1.4 A note on the second objective
 
@@ -105,9 +103,9 @@ model.
 
 This study therefore scores two objectives and **reports them separately, never
 combining them into a single figure**. Prior work has scored social impact
-alongside credit risk (§3.6.1); what is done differently here is the refusal to
+alongside credit risk (Section 3.6.1); what is done differently here is the refusal to
 aggregate. The refusal was originally justified on evidence that development
-and credit concerns are independent at appraisal (§3.6.2). Chapter 5 tests that
+and credit concerns are independent at appraisal (Section 3.6.2). Chapter 5 tests that
 premise and finds the two moderately associated, so the justification is rebuilt
 on what the data does support: the two objectives place the same facility in
 different risk bands 88.2% of the time, and a combined score would discard that
@@ -140,7 +138,7 @@ follows from that honestly, including a negative result.
 2. **A methodological consequence**: an instrument-specific appraisal model
    cannot be validated on a dataset lacking its variables. Substituting available
    proxies tests the proxies, not the model — evidenced by a scorecard that failed
-   to discriminate (§5.15).
+   to discriminate (Section 5.15).
 3. **A clause-traceable formalisation method** taking a named state bank's
    production form to a 49-criterion computable model, transferable to comparable
    institutions.
@@ -148,20 +146,22 @@ follows from that honestly, including a negative result.
    exporting them in the bank's own report format.
 5. **A design finding**: weight renormalisation over unassessed criteria allows a
    sparse appraisal to produce a confident score, requiring an explicit
-   completeness gate (§5.3).
+   completeness gate (Section 5.3).
 6. **Evidence on objective separability**: across 652,284 facilities the two
    objectives correlate moderately (r = +0.40) yet band the same facility
    differently 88.2% of the time — and development impact is positively
    associated with default. Reporting them separately preserves information a
-   combined score would destroy (§5.17).
+   combined score would destroy (Section 5.17).
 7. **A calibration finding**: reliability degrades roughly 700-fold across a
    temporal boundary while discrimination falls far less, so a scorecard can
-   continue to rank while systematically mispricing risk (§5.13).
+   continue to rank while systematically mispricing risk (Section 5.13).
 
 Contributions 1 and 2 are the substantial ones. Contributions 3 to 7 are real but
 incremental, and are described as such throughout.
 
 ## 1.7 Structure
+
+[Table: Structure of the thesis by chapter]
 
 | Chapter | Content |
 |---|---|
@@ -173,7 +173,7 @@ incremental, and are described as such throughout.
 
 A note on presentation. This thesis reports several things that did not work: a
 claimed contribution withdrawn after the literature review, a scorecard that
-failed to discriminate, a mechanism hypothesis tested and rejected, an elicitation
-designed but not administered, an independence premise that its own data
-overturns, and a source this thesis initially over-read. These are reported because a study that presents only its
+failed to discriminate, a mechanism hypothesis tested and rejected, an
+independence premise that its own data overturns, and a source this thesis
+initially over-read. These are reported because a study that presents only its
 successes gives the reader no way to judge the reliability of any of them.

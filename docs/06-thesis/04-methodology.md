@@ -2,31 +2,33 @@
 
 ## 4.1 Research design
 
-This study follows **Design Science Research** [29]: knowledge is
+This study follows **Design Science Research** [30]: knowledge is
 produced by building an artefact and evaluating it, rather than by testing
 hypotheses about existing phenomena. The process follows the six activities set
-out by Peffers et al. [30] — problem identification, objectives, design and
+out by Peffers et al. [31] — problem identification, objectives, design and
 development, demonstration, evaluation, and communication. The artefact is a dual-objective decision-support
 system for SME credit appraisal, together with the criteria model beneath it.
 
 Three activities make up the design:
 
+[Table: Research activities, the questions they address and their outputs]
+
 | Activity | Addresses | Method | Output |
 |---|---|---|---|
 | Formalisation | RQ1 | Clause-by-clause derivation from the bank's form | 49-criterion model, working system |
-| Weight sensitivity | RQ2 | Monte Carlo over perturbed weight vectors | §5.16 |
-| Empirical validation | RQ3 | Benchmarking against realised outcomes, with CIs and paired tests | §5.10–5.15 |
-| Objective separability | RQ4 | Correlation and band agreement across 652,284 facilities | §5.17 |
+| Weight sensitivity | RQ2 | Monte Carlo over perturbed weight vectors | Section 5.16 |
+| Empirical validation | RQ3 | Benchmarking against realised outcomes, with CIs and paired tests | Sections 5.3 to 5.6 |
+| Objective separability | RQ4 | Correlation and band agreement across 652,284 facilities | Section 5.17 |
 
 Weight elicitation by Best-Worst Method was designed and instrumented but not
-administered; §4.5 documents it as a prepared method and §6.1 reports it as not
+administered; Section 4.5 documents it as a prepared method and Section 6.1 reports it as not
 carried out.
 
 ## 4.2 Research questions
 
 The questions were revised from the original proposal after the literature review
 established that the initially claimed contribution was already published
-(§3.5.3). The revised set:
+(Section 3.5.3). The revised set:
 
 - **RQ1** — How can the narrative, multi-section appraisal instrument used by a
   Sri Lankan state bank be formalised into a computable multi-criteria model
@@ -47,7 +49,7 @@ for SME Credit Facility* (Annexure I–V), an operational form in current use.
 
 Each clause was classified as directly computable, structured judgement,
 unstructured judgement, or administrative, and criteria were derived accordingly
-(§4.10.2). One constraint governed the process:
+(Section 4.10.2). One constraint governed the process:
 
 > **No criterion may exist without a source clause.**
 
@@ -66,14 +68,14 @@ the paper" and "the model in the system" is possible.
 Quantitative criteria map to 0–100 through piecewise-linear band anchors.
 Qualitative criteria are captured on a five-point linguistic scale represented as
 triangular fuzzy numbers, aggregated by fuzzy weighted average and defuzzified by
-centroid. Full specification in §4.4.
+centroid. Full specification in Section 4.4.
 
 Three rules govern edge cases, each chosen deliberately:
 
 1. **Unassessed criteria are excluded and weights renormalised**, never treated as
    zero — an incomplete appraisal is not a bad one.
 2. **Below a completeness threshold, no recommendation is issued** — rule 1 alone
-   allows a sparse file to produce a confident score (§5.3).
+   allows a sparse file to produce a confident score (Section 5.3).
 3. **Critical criteria are evaluated on raw values** and surfaced separately, so a
    DSCR below 1.0 cannot be averaged away.
 
@@ -87,11 +89,11 @@ attention, and response quality degrades well before the end. Inconsistency
 introduced by fatigue would make the resulting weights unusable regardless of how
 carefully the instrument was designed.
 
-The Best-Worst Method [20] requires 2n−3 comparisons per level,
+The Best-Worst Method [21] requires 2n−3 comparisons per level,
 reducing the instrument to **86 comparisons** — roughly fifteen minutes. Because
 every comparison is anchored to a fixed reference rather than a rotating partner,
 BWM also tends to yield more consistent responses. The linear formulation
-[21] is used, giving a unique solution.
+[22] is used, giving a unique solution.
 
 The choice is a response to a real constraint on practitioner time, not a
 convenience.
@@ -170,10 +172,10 @@ determines what Chapter 5 is entitled to conclude.
   places the same economic cycle on both sides and overstates performance.
 - The unfitted expert scorecard is compared against logistic regression and
   gradient boosting, both trained on hundreds of thousands of labelled outcomes.
-- Metrics: area under the ROC curve [31], Kolmogorov-
-  Smirnov separation, average precision, the Brier score [32] under
-  Murphy's decomposition [33], and F1 at the Youden-optimal threshold.
-- Paired comparisons of AUC use DeLong's test [34], which accounts for the correlation induced by
+- Metrics: area under the ROC curve [32], Kolmogorov-
+  Smirnov separation, average precision, the Brier score [33] under
+  Murphy's decomposition [34], and F1 at the Youden-optimal threshold.
+- Paired comparisons of AUC use DeLong's test [35], which accounts for the correlation induced by
   evaluating both models on identical cases.
 - Interval estimates are stratified bootstrap percentile intervals, resampling
   positives and negatives separately.
@@ -188,7 +190,7 @@ which is the common situation in Sri Lankan SME lending.
 ### 4.6.3 Treatment of anomalous results
 
 An unexpectedly strong result is treated as a suspected defect until explained.
-This rule was applied during the study and is what produced the finding in §5.10:
+This rule was applied during the study and is what produced the finding in Section 5.10:
 an AUC of 0.97 was investigated rather than reported, and proved to arise from
 contamination in a predictor. The rule is stated here because it is part of the
 method, not a lucky accident.
@@ -218,7 +220,7 @@ produced by code in the accompanying repository and is regenerable from the raw
 data. No value is entered by hand. Where an experiment could not be run, the claim
 is withdrawn and the gap recorded as a limitation rather than filled with an
 estimate. Negative results — including a scorecard that failed to discriminate
-(§5.15) — are reported as they occurred.
+(Section 5.15) — are reported as they occurred.
 
 ## 4.8 Limitations of the design
 
@@ -309,6 +311,8 @@ ratio uses the third form: it peaks at 2.0 and declines above it, since a ratio 
 Qualitative criteria are captured on a five-point linguistic scale — Very Poor,
 Poor, Fair, Good, Excellent — represented as triangular fuzzy numbers:
 
+[Table: Five-point linguistic scale and its triangular fuzzy numbers]
+
 | Code | Label | TFN |
 |---|---|---|
 | VP | Very Poor | [0, 0, 25] |
@@ -333,7 +337,7 @@ renormalised** — never treated as zero. Scoring an incomplete file as though t
 missing sections had scored nothing would misrepresent an unfinished appraisal as
 a bad one.
 
-This choice creates a hazard addressed in §5.3.
+This choice creates a hazard addressed in Section 5.3.
 
 ### 4.11.4 Critical criteria
 
@@ -346,6 +350,8 @@ cannot dilute them, and the interface displays them above the scores rather than
 within them.
 
 ## 4.12 System architecture
+
+[Table: System architecture by layer, with the reason for each choice]
 
 | Layer | Technology | Rationale |
 |---|---|---|
@@ -385,6 +391,8 @@ name, and the trail would look complete while proving nothing. The system now
 authenticates users and takes the signatory from the session.
 
 Roles map directly onto the chain in clause 7 of the form:
+
+[Table: Application roles and permitted actions, against clause 7 of the form]
 
 | Role | Permitted |
 |---|---|

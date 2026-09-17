@@ -10,9 +10,9 @@
 > **That reading changed this chapter.** Three of the sources did not say what an
 > earlier draft had said they said: Arvanitis, Stampini and Vencatachellum's
 > independence result is a non-significant relationship in 109 observations
-> (§2.6.2); Lessmann et al. used seven datasets rather than eight and report a
-> tendency rather than a uniform result (§2.2); and Cortés, Duchin and Sosyura's
-> evidence comes from US residential mortgages rather than SME lending (§2.4).
+> (Section 2.6.2); Lessmann et al. used seven datasets rather than eight and report a
+> tendency rather than a uniform result (Section 2.2); and Cortés, Duchin and Sosyura's
+> evidence comes from US residential mortgages rather than SME lending (Section 2.4).
 > Each is corrected here and the correction is stated rather than absorbed
 > silently.
 >
@@ -31,7 +31,7 @@ This review covers six bodies of work bearing on the research questions:
 5. non-financial objectives in lending;
 6. data quality and reproducibility in machine-learning-based science.
 
-It closes (§2.8) by stating what this study adds — which, after examining the
+It closes (Section 2.8) by stating what this study adds — which, after examining the
 literature, is narrower than the research proposal supposed.
 
 ## 2.2 Credit scoring: sixty years of weighted ratios
@@ -41,7 +41,7 @@ discriminant analysis to twenty-two financial ratios across sixty-six firms to
 produce the Z-score. Ohlson (1980) replaced discriminant analysis with conditional
 logit, shifting the output from a classification to a probability — a change that
 matters here, because a probability can be checked for *calibration* while a class
-label cannot (§5.5).
+label cannot (Section 5.5).
 
 Hand and Henley (1997) reviewed the statistical methods then in use, and Thomas,
 Crook and Edelman (1992) and Thomas, Edelman and Crook (2002) provided the
@@ -88,7 +88,7 @@ information in exactly this sense.
 > appraisal is an attempt to *harden* soft information. Stein's analysis implies
 > something is necessarily lost in that transformation. The design response — a
 > five-point linguistic scale represented as fuzzy numbers rather than a forced
-> crisp value (§4.4.2) — is an attempt to lose less, not to avoid the loss.
+> crisp value (Section 4.4.2) — is an attempt to lose less, not to avoid the loss.
 
 Ciampi, Giannozzi, Marzi and Altman (2021) provide the anchoring review: a
 systematic analysis of over a hundred articles on SME default prediction across
@@ -148,7 +148,7 @@ similarly motivate their work by observing that traditional credit assessment
 
 The premise is therefore supported by the literature. This study does **not**
 itself measure inter-rater reliability, which remains its most significant gap
-(§6.4); Cohen (1960), Landis and Koch (1977) and Krippendorff's α provide the
+(Section 6.4); Cohen (1960), Landis and Koch (1977) and Krippendorff's α provide the
 instruments a proper measurement would use.
 
 ## 2.5 Multi-criteria decision methods
@@ -177,10 +177,10 @@ comparison vectors — the best criterion against all others, and all others aga
 the worst — requiring 2n−3 comparisons rather than AHP's n(n−1)/2. Anchoring every
 comparison to a fixed reference tends to produce more consistent responses.
 Rezaei (2016) gave a linear formulation with a unique solution, which is the form
-implemented here (§3.5).
+implemented here (Section 3.5).
 
 For this study's criteria tree the difference is decisive: **168 comparisons under
-pairwise AHP against 86 under BWM** (§3.5.1). That is the difference between an
+pairwise AHP against 86 under BWM** (Section 3.5.1). That is the difference between an
 hour of a practitioner's attention and fifteen minutes, and therefore between
 usable and unusable responses.
 
@@ -203,13 +203,13 @@ withdrawn here.
 Two differences are worth stating precisely, because they cut in opposite
 directions and the honest positioning depends on both.
 
-Roy and Shaw **elicited their weights**; this study did not (§6.1), which is the
+Roy and Shaw **elicited their weights**; this study did not (Section 6.1), which is the
 more serious gap of the two and is theirs to claim. Against that, their
 validation rests on **31 SMEs** — an accuracy of 90.32% is 28 firms out of 31,
 and a Type-II rate of 14.28% is one or two misclassifications. A sample that size
 cannot separate a good model from a fortunate one. This study validates its
 scoring method on 652,284 facilities with realised outcomes, and reports that the
-expert-structured scorecard fails on them (§5.6).
+expert-structured scorecard fails on them (Section 5.6).
 
 They also aggregate. TOPSIS returns a single closeness coefficient, so
 development and credit considerations, where both are present, are resolved into
@@ -248,7 +248,7 @@ criteria here are not selected by the researcher from a development framework bu
 taken from clause 5 of an instrument a state bank already uses in production. The
 second is aggregation. Their system merges financial ratios and social indicators
 in one model to produce a single assessment; this study keeps the two objectives
-apart and never issues a combined figure, which §5.6b shows changes the answer for
+apart and never issues a combined figure, which Section 5.6b shows changes the answer for
 88.2% of facilities.
 
 ### 2.6.2 Development returns and credit risk
@@ -276,7 +276,7 @@ The strong reading — that the objectives are independent, so aggregating them
 destroys information — is not available on this evidence. The weaker and
 defensible reading is that no one has shown the two can be inferred from each
 other, and that a bank with a development mandate therefore has no warrant for
-collapsing them into one number. §5.6b tests the association directly on a sample
+collapsing them into one number. Section 5.6b tests the association directly on a sample
 large enough to resolve it.
 
 ## 2.7 Explainability, regulation, and data quality
@@ -298,7 +298,7 @@ with uniqueness guarantees.
 **This study takes a different route, and the distinction is worth stating.**
 LIME and SHAP explain an opaque model after the fact. The model here is additive
 by construction, so per-criterion contributions are exact rather than
-approximated, and they sum precisely to the score (§4.7). That is a stronger
+approximated, and they sum precisely to the score (Section 4.7). That is a stronger
 guarantee than a post-hoc method can offer — at the cost of the discrimination a
 flexible model might achieve, which Chapter 5 shows to be a real cost.
 
@@ -321,6 +321,8 @@ survive correction.
 
 Their contribution most relevant here is a **taxonomy of eight leakage types**,
 grouped in three families:
+
+[Table: Taxonomy of leakage types, after Kapoor and Narayanan]
 
 | Family | Types | Character |
 |---|---|---|
@@ -374,7 +376,7 @@ derive a feature *from* `Term` — a `RealEstate` indicator set where the term
 reaches 240 months, on the reasoning that only real-estate-backed lending runs
 twenty years — and report a striking difference in default rates between the two
 groups. That derivation is economically well-motivated and is exactly what a
-careful analyst would do. §5.10.6 examines what the contrast actually rests on.
+careful analyst would do. Section 5.10.6 examines what the contrast actually rests on.
 
 **No located source reports that the field itself carries outcome information.**
 Chapter 5 presents evidence that it does. This is stated as a finding the author
@@ -389,7 +391,7 @@ the original proposal:
 - combining weighted financial ratios into a credit score (Altman, 1968, and
   sixty years of work after it);
 - applying BWM or fuzzy MCDM to SME credit scoring (Roy and Shaw, 2021, and the
-  surrounding literature in §2.5.3);
+  surrounding literature in Section 2.5.3);
 - scoring social or developmental impact alongside credit risk (Gutiérrez-Nieto
   et al., 2016);
 - observing that development banks appraise against two objectives (Arvanitis
@@ -409,7 +411,7 @@ What the literature leaves open, and what this study addresses:
 3. **Keeping dual objectives unaggregated.** Prior dual-objective systems combine
    social and financial scores. This study reports them separately by design and
    never produces a combined figure, and — unlike the prior work — tests whether
-   the separation is warranted rather than assuming it (§5.6b).
+   the separation is warranted rather than assuming it (Section 5.6b).
 4. **The Sri Lankan state-bank context**, documented as finance-constrained but
    not studied at the level of appraisal process.
 

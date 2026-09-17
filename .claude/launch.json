@@ -4,8 +4,25 @@
     {
       "name": "appraisal-web",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--prefix", "web"],
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--prefix",
+        "web"
+      ],
       "port": 3000
+    },
+    {
+      "name": "thesis-preview",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8777",
+        "--directory",
+        "docs/06-thesis"
+      ],
+      "port": 8777
     }
   ]
 }

@@ -1,26 +1,43 @@
 # DECLARATION
 
-I declare that the content of this postgraduate thesis titled *A Dual-Objective
-Decision Support Model for SME Credit Appraisal in Sri Lankan Development
-Banking* is my own work and this dissertation does not incorporate without
-acknowledgement any material previously submitted for any other degree in any
-university or institution of higher learning.
+I declare that the content of this thesis, titled *A Dual-Objective Decision
+Support Model for SME Credit Appraisal in Sri Lankan Development Banking*, is my
+own work, and that it does not incorporate without acknowledgement any material
+previously submitted for a degree or diploma at any university or other
+institution of higher learning.
 
-Signature ……………………                                    …………………….
+Where the work of others has been used, it is acknowledged in the text and listed
+in the references. The datasets, source code and analysis scripts that produced
+every quantitative result reported here are included with this submission.
 
-&nbsp;
+&SPACE;
 
-Signature of the Supervisor
+Signature: ...................................................
 
-.……………………………………
+Name: A. A. V. Athukorala
 
-Dr. Pabudi Abeyrathne
+Date: ...........................
+
+&SPACE;
+
+&SPACE;
+
+I certify that this thesis was prepared under my supervision, and that it is of a
+standard suitable for examination.
+
+&SPACE;
+
+Signature: ...................................................
+
+Name: Dr. Pabudi Abeyrathne
+
+Date: ...........................
+
 Principal Supervisor
-Senior Lecturer
-Department of Computing and Information Systems,
-NSBM Green University
 
-Name …………………… Date ……………………
+Senior Lecturer, Department of Computing and Information Systems
+
+NSBM Green University
 
 <<<PAGEBREAK>>>
 

@@ -50,15 +50,18 @@ Test whether credit risk and development impact behave as distinct objectives on
 a large population of facilities, and establish what a single combined score
 would conceal.
 
-### 2.2.7 Prepare a weight elicitation instrument
+### 2.2.7 Elicit criterion weights from credit practitioners
 
-Design and implement an instrument for eliciting criterion weights from credit
-practitioners, with a response burden realistic for professional participants and
-a measurable consistency criterion.
+Design, administer and analyse an instrument for eliciting criterion weights from
+credit practitioners, with a response burden realistic for working professionals,
+a measurable consistency criterion, and a stated rule for excluding inconsistent
+responses before aggregation.
 
-> **Status note.** Objective 2.2.7 was met in that the instrument, solver and
-> analysis pipeline were built and verified. The elicitation itself was **not
-> administered**: no practitioner responses were obtained within the study period.
-> Section 5.9 reports this, and Section 6.3 treats it as a principal limitation.
-> The criteria model accordingly carries placeholder weights throughout, and every
-> score derived from them is labelled as such.
+> **Status note.** The instrument, solver and analysis pipeline were built and
+> verified, and the instrument was administered. Ten practitioners completed it,
+> three of eighty level-responses were excluded for inconsistency, and the
+> resulting weights now govern every score the system produces. Section 6.1
+> reports the elicitation in full, including what changed when the elicited
+> weights replaced the equal weighting used during development. The recruited
+> sample is drawn from state commercial banking alone, which Section 6.3 treats
+> as a limitation on how far the weights generalise.

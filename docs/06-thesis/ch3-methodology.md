@@ -11,22 +11,24 @@ system for SME credit appraisal, together with the criteria model beneath it.
 
 Three activities make up the design:
 
+[Table: Research activities, the questions they address and their outputs]
+
 | Activity | Addresses | Method | Output |
 |---|---|---|---|
 | Formalisation | RQ1 | Clause-by-clause derivation from the bank's form | 49-criterion model, working system |
-| Weight sensitivity | RQ2 | Monte Carlo over perturbed weight vectors | §5.6a |
-| Empirical validation | RQ3 | Benchmarking against realised outcomes, with CIs and paired tests | §5.3–5.6 |
-| Objective separability | RQ4 | Correlation and band agreement across 652,284 facilities | §5.6b |
+| Weight sensitivity | RQ2 | Monte Carlo over perturbed weight vectors | Section 5.6a |
+| Empirical validation | RQ3 | Benchmarking against realised outcomes, with CIs and paired tests | Sections 5.3 to 5.6 |
+| Objective separability | RQ4 | Correlation and band agreement across 652,284 facilities | Section 5.6b |
 
 Weight elicitation by Best-Worst Method was designed and instrumented but not
-administered; §3.5 documents it as a prepared method and §6.1 reports it as not
+administered; Section 3.5 documents it as a prepared method and Section 6.1 reports it as not
 carried out.
 
 ## 3.2 Research questions
 
 The questions were revised from the original proposal after the literature review
 established that the initially claimed contribution was already published
-(§2.3.3). The revised set:
+(Section 2.3.3). The revised set:
 
 - **RQ1** — How can the narrative, multi-section appraisal instrument used by a
   Sri Lankan state bank be formalised into a computable multi-criteria model
@@ -47,7 +49,7 @@ for SME Credit Facility* (Annexure I–V), an operational form in current use.
 
 Each clause was classified as directly computable, structured judgement,
 unstructured judgement, or administrative, and criteria were derived accordingly
-(§4.2.2). One constraint governed the process:
+(Section 4.2.2). One constraint governed the process:
 
 > **No criterion may exist without a source clause.**
 
@@ -66,14 +68,14 @@ the paper" and "the model in the system" is possible.
 Quantitative criteria map to 0–100 through piecewise-linear band anchors.
 Qualitative criteria are captured on a five-point linguistic scale represented as
 triangular fuzzy numbers, aggregated by fuzzy weighted average and defuzzified by
-centroid. Full specification in §4.4.
+centroid. Full specification in Section 4.4.
 
 Three rules govern edge cases, each chosen deliberately:
 
 1. **Unassessed criteria are excluded and weights renormalised**, never treated as
    zero — an incomplete appraisal is not a bad one.
 2. **Below a completeness threshold, no recommendation is issued** — rule 1 alone
-   allows a sparse file to produce a confident score (§4.5).
+   allows a sparse file to produce a confident score (Section 4.5).
 3. **Critical criteria are evaluated on raw values** and surfaced separately, so a
    DSCR below 1.0 cannot be averaged away.
 
@@ -189,7 +191,7 @@ which is the common situation in Sri Lankan SME lending.
 ### 3.6.3 Treatment of anomalous results
 
 An unexpectedly strong result is treated as a suspected defect until explained.
-This rule was applied during the study and is what produced the finding in §5.3:
+This rule was applied during the study and is what produced the finding in Section 5.3:
 an AUC of 0.97 was investigated rather than reported, and proved to arise from
 contamination in a predictor. The rule is stated here because it is part of the
 method, not a lucky accident.
@@ -219,7 +221,7 @@ produced by code in the accompanying repository and is regenerable from the raw
 data. No value is entered by hand. Where an experiment could not be run, the claim
 is withdrawn and the gap recorded as a limitation rather than filled with an
 estimate. Negative results — including a scorecard that failed to discriminate
-(§5.6) — are reported as they occurred.
+(Section 5.6) — are reported as they occurred.
 
 ## 3.8 Limitations of the design
 

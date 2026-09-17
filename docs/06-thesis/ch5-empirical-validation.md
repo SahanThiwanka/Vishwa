@@ -26,11 +26,13 @@ available within this study, and would in any case be confidential.
 The validation is therefore split three ways, and the three claims are kept
 separate throughout:
 
+[Table: The three validation claims and the evidence available for each]
+
 | Component | Evidence | Reported in |
 |---|---|---|
-| Scoring **method** (band mapping, weighted aggregation, defuzzification) | Real default outcomes, SBA National | §5.3–5.5 |
+| Scoring **method** (band mapping, weighted aggregation, defuzzification) | Real default outcomes, SBA National | Sections 5.3 to 5.5 |
 | **Criterion weights** | Expert elicitation, Best-Worst Method | Chapter 6 |
-| Full 49-criterion **tree** | Design contribution; not empirically validated | §5.7 |
+| Full 49-criterion **tree** | Design contribution; not empirically validated | Section 5.7 |
 
 The distinction matters. A claim that "the model was validated" would be false.
 What is validated here is the scoring machinery, on a proxy dataset, for the
@@ -64,6 +66,8 @@ has elapsed.
 Restricting to the 1990–2010 approval window (847,980 loans) and separating those
 whose full term elapsed before the cut-off:
 
+[Table: Default rate by censoring status, 1990-2010 approvals]
+
 | Cohort | n | Default rate |
 |---|---:|---:|
 | Censored (term not yet elapsed) | 195,696 | 7.77% |
@@ -72,7 +76,7 @@ whose full term elapsed before the cut-off:
 The difference is large enough to dominate any model permitted to infer censoring
 status. All analysis below uses the 652,284 fully-matured loans. This biases the
 sample toward shorter terms in later years, which is noted as a limitation in
-§5.7.
+Section 5.7.
 
 ## 5.3 A contaminated predictor
 
@@ -91,6 +95,8 @@ discrimination was coming from a **non-monotone** structure in the variable.
 ### 5.3.2 The structure
 
 Default rates by exact term value, 2007 approvals:
+
+[Table: Default rate by exact term in months, 2007 approvals]
 
 | Term (months) | n | Default rate |
 |---:|---:|---:|
@@ -126,6 +132,8 @@ Irregular-term loans became more common over the period, and so did defaults, so
 the association might be an artefact of pooling cohorts. It is not. Computed
 within each approval year separately:
 
+[Table: Default rate and roundness AUC within each approval year]
+
 | Year | n | Default, round term | Default, irregular term | AUC |
 |---:|---:|---:|---:|---:|
 | 1990 | 14,859 | 0.6% | 19.2% | 0.859 |
@@ -155,7 +163,7 @@ charged-off loans with both disbursement and charge-off dates:
 rewritten on restructuring, recomputed under some servicing convention, or
 introduced when this derivative file was assembled. The third would make the
 finding uninteresting — a packaging error in one upload rather than a property of
-the data — and §5.3.5 rules it out.
+the data — and Section 5.3.5 rules it out.
 
 The dataset codebook documents `Term` as "loan term in months" — the contractual
 term. The observed distribution is not consistent with that definition for
@@ -172,6 +180,8 @@ the derivative did not create it.
 
 It appears there. Across **603,665 resolved 7(a) facilities approved between
 FY2000 and FY2009**:
+
+[Table: Term roundness in the SBA FOIA 7(a) extract against the SBA National dataset]
 
 | | SBA FOIA 7(a) | SBA National (derivative) |
 |---|---:|---:|
@@ -234,6 +244,8 @@ of six, four, three and two — so raw discrimination is reported alongside
 non-multiples separately, which strips out whatever a modulus inherits from
 twelve.
 
+[Table: Share of terms divisible by each modulus, with the resulting AUC]
+
 | Modulus | Share ≡ 0 | Raw AUC |
 |---:|---:|---:|
 | **12** | 70.07% | **0.8859** |
@@ -260,7 +272,7 @@ quarter- and half-year terms independently of whole years. The pattern is
 roundness on a calendar grid rather than annual roundness alone, which is if
 anything the more natural reading of a contractual convention.
 
-(The 0.8859 here and the 0.8894 in §5.3.2 differ because this probe additionally
+(The 0.8859 here and the 0.8894 in Section 5.3.2 differ because this probe additionally
 excludes facilities with a term of zero; both are produced by code in
 `research/src/`.)
 
@@ -310,6 +322,8 @@ AUCs are reported with 95% stratified bootstrap confidence intervals (300
 replicates, positives and negatives resampled separately so the interval
 reflects uncertainty in discrimination rather than in prevalence).
 
+[Table: Discrimination under random and temporal validation, with bootstrap confidence intervals]
+
 | Model | Fitted | Random AUC [95% CI] | Temporal AUC [95% CI] |
 |---|:--:|---|---|
 | **Clean specification** | | | |
@@ -331,6 +345,8 @@ sampling variation.
 Paired DeLong tests confirm this formally. Because the models are compared on
 identical cases, the paired test is the correct one; treating the AUCs as
 independent would overstate the uncertainty.
+
+[Table: Paired DeLong tests of the leakage and protocol effects]
 
 | Comparison | Protocol | AUCs | p |
 |---|---|---|---|
@@ -383,6 +399,8 @@ how far predicted probabilities sit from observed rates (lower is better; zero i
 perfect) and **resolution** measures how far the model separates cases from the
 base rate (higher is better).
 
+[Table: Brier score decomposed into reliability and resolution]
+
 | Model | Protocol | Brier | Reliability | Resolution |
 |---|---|---:|---:|---:|
 | Gradient boosting (clean) | random | 0.1319 | **0.00005** | 0.03003 |
@@ -403,7 +421,7 @@ learned the base rate of a benign period and carries it into a stressed one.
 
 [Image: calibration.png | Reliability diagrams under random and temporal validation. Marker area is proportional to the number of facilities in each bin. Under temporal validation the curve lifts above the diagonal, indicating systematic under-prediction of default.]
 
-### Why this matters more than the AUC result
+### 5.5a.1 Why this matters more than the AUC result
 
 For a lender this is the more consequential finding. A model whose discrimination
 falls is visibly worse and invites scrutiny. A model that still ranks tolerably
@@ -419,7 +437,7 @@ frequently conflated.
 **A caveat on scope.** This concerns the trained benchmark models, not the
 criteria model this study proposes. The proposed model produces an ordinal band
 rather than a probability, and is therefore not calibrated in this sense at all —
-which is itself a limitation (§5.7) and the reason it must never be used to price
+which is itself a limitation (Section 5.7) and the reason it must never be used to price
 a facility.
 
 ## 5.5b What the models are worth to a lender
@@ -434,6 +452,8 @@ swept rather than assumed, because the right value is a policy question for the
 lender.
 
 Two fixed policies provide the floor: approve everything, or decline everything.
+
+[Table: Expected cost per application at a 10:1 loss ratio]
 
 | Temporal split, 10:1 | Expected cost | vs best fixed policy |
 |---|---:|---:|
@@ -500,7 +520,7 @@ the weight vector at all?* — was answerable without respondents, and answering
 bounded the damage the placeholders could be doing.
 
 It is retained here, unchanged, because elicitation has since been completed and
-§6.1.5 checks its prediction against the weights that actually arrived. A
+Section 6.1.5 checks its prediction against the weights that actually arrived. A
 sensitivity analysis that is only reported after the answer is known is worth
 less than one that made a prediction first.
 
@@ -519,6 +539,8 @@ three measures: Spearman rank correlation, the proportion of cases keeping their
 risk band, and the largest score shift.
 
 ### 5.6a.2 Results
+
+[Table: Rank correlation and band stability under weight perturbation]
 
 | Perturbation | Credit risk ρ | Band unchanged | Development ρ | Band unchanged |
 |---:|---:|---:|---:|---:|
@@ -549,6 +571,8 @@ stated rather than hoped.
 Estimating each criterion's influence separately — by doubling its weight within
 its dimension and measuring the shift — exposed an asymmetry in the tree itself.
 
+[Table: Leverage of a single criterion over its objective]
+
 | Objective | Dimensions | One criterion's share of the objective |
 |---|---:|---|
 | Credit risk | 6 | 0.0185 – 0.0333 |
@@ -571,11 +595,11 @@ development weights deserve more respondents rather than fewer.
 ## 5.6b Are the two objectives independent? (RQ4)
 
 The model reports two scores and refuses to combine them. That decision was
-justified in §4.3.2 on Arvanitis, Stampini and Vencatachellum (2015), who report
+justified in Section 4.3.2 on Arvanitis, Stampini and Vencatachellum (2015), who report
 that development and credit concerns in development-bank appraisal are "rather
 independent from each other".
 
-As §2.6.2 sets out, their evidence is a *positive but non-significant*
+As Section 2.6.2 sets out, their evidence is a *positive but non-significant*
 relationship — slope 0.048, p = 0.49 — across the 109 African Development Bank
 operations carrying both ratings. That is an underpowered null. A sample of 109
 cannot distinguish independence from a moderate association, so the premise the
@@ -584,6 +608,8 @@ design rests on has never actually been tested with the power to resolve it.
 It can be here, on 652,284 small-business facilities with realised outcomes.
 
 ### 5.6b.1 The objectives are not independent
+
+[Table: Association between the credit-risk and development-impact scores]
 
 | Measure | Value |
 |---|---|
@@ -612,7 +638,7 @@ independence. It had not.
 What is contradicted is the *strong* form of the premise — that the objectives
 are independent and therefore that aggregation destroys information. On this
 population they are moderately associated, and that form of the argument is no
-longer available. §5.6b.2 sets out why the design decision nevertheless stands,
+longer available. Section 5.6b.2 sets out why the design decision nevertheless stands,
 by a different route.
 
 ### 5.6b.2 The practical case survives by a different route
@@ -620,6 +646,8 @@ by a different route.
 Correlation describes average co-movement across a population. It does not say
 whether the two objectives agree about any *particular* facility, which is the
 question a combined score actually settles.
+
+[Table: Agreement between the two objectives' risk bands]
 
 | Relationship between the two bands | Share of facilities |
 |---|---:|
@@ -641,6 +669,8 @@ decision-maker needs is whether *this* application is one of the many where they
 diverge.
 
 ### 5.6b.3 Development impact is associated with higher default
+
+[Table: Default rate by development-impact band]
 
 | Development band | n | Default rate |
 |---|---:|---:|
@@ -706,6 +736,8 @@ attributes; the expert scorecard fails on four of five. Intervals are 95%
 bootstrap percentiles over 400 resamples of the test cohort, with the decline
 threshold recomputed inside each resample.
 
+[Table: Equal-opportunity ratios by attribute, with bootstrap intervals]
+
 | Attribute | Gradient boosting | Expert scorecard |
 |---|---|---|
 | Rurality | **0.325** [0.308, 0.344] — fails | **0.183** [0.170, 0.209] — fails |
@@ -768,12 +800,12 @@ That reading does not survive inspection. The group is confounded: its records
 are mostly 2004 approvals, carry a far higher SBA guarantee share (0.83 against
 0.58), are larger, and are missing several other fields as well. Their decline
 rate is explained by those characteristics, not by the absent flag. The
-hypothesis was therefore tested directly rather than inferred, and §5.6d reports
+hypothesis was therefore tested directly rather than inferred, and Section 5.6d reports
 what that test found — which is the opposite.
 
 ## 5.6d What the models do with information the applicant did not supply
 
-§4.5 reported a completeness gate: the artefact refuses to return a band when too
+Section 4.5 reported a completeness gate: the artefact refuses to return a band when too
 little of an objective has been assessed. It was introduced as a safety measure
 after testing found a 14%-complete appraisal being handed a recommendation. This
 section asks what the alternative actually does, and the answer is a stronger
@@ -785,9 +817,9 @@ The question is causal, so it is answered by counterfactual rather than by
 comparing groups. Take the 201,566 test-cohort applicants whose records are
 complete, blank one field, and re-score the same applicant. Everything else is
 held fixed, so whatever moves is caused by the absence itself. The decline
-threshold is the same portfolio rule as §5.6c — decline the riskiest 20%, which
+threshold is the same portfolio rule as Section 5.6c — decline the riskiest 20%, which
 on these applicants falls at a predicted default probability of **0.2293**.
-§5.6d.3 shows the conclusion does not depend on that choice.
+Section 5.6d.3 shows the conclusion does not depend on that choice.
 
 ### 5.6d.2 The models reward withholding
 
@@ -831,7 +863,7 @@ bank might actually operate, an applicant who answers nothing is approved.
 
 ### 5.6d.4 Why this matters for the artefact
 
-The completeness gate was justified in §4.5 on safety grounds: a score computed
+The completeness gate was justified in Section 4.5 on safety grounds: a score computed
 from 14% of the evidence should not be presented as a recommendation. This
 analysis shows the weaker justification was the wrong one. A scoring model that
 answers regardless of how much it was told is not merely unreliable on thin
@@ -861,7 +893,7 @@ quantitative, so each input enters as a degenerate triangular fuzzy number
 `[x,x,x]`. Centroid defuzzification returns `x`, and the fuzzy weighted average
 reduces exactly to an ordinary weighted mean. **On this dataset the fuzzy
 machinery does no work.** It is exercised only by qualitative criteria, which SBA
-data does not contain. What §5.3–5.6 validates is band mapping and weighted
+data does not contain. What Sections 5.3 to 5.6 validates is band mapping and weighted
 aggregation, not fuzzy inference.
 
 **Maturity filtering biases composition.** Restricting to fully-matured loans
@@ -869,16 +901,16 @@ removes censoring but over-represents short-term facilities in later cohorts.
 
 **These results were computed under placeholder weights.** All figures in this
 chapter use equal weights within each level, so they test structure rather than
-the elicited model. Elicitation completed after the analyses were run (§6.1), and
-§6.1.5 measures the consequence directly: moving from the placeholder vector to
+the elicited model. Elicitation completed after the analyses were run (Section 6.1), and
+Section 6.1.5 measures the consequence directly: moving from the placeholder vector to
 the elicited one preserves the ranking (ρ = 0.91 credit, 0.97 development) and
-moves no case by two risk bands, though 13–16% move by one. §5.6a bounds it
+moves no case by two risk bands, though 13–16% move by one. Section 5.6a bounds it
 independently: within ±25% perturbation ρ ≈ 0.98 and ~94% of bands are
 unchanged. The limitation stands, but its
 magnitude is now measured rather than merely acknowledged.
 
 **The independence test uses thin development proxies.** SBA data carries
-employment only; five of the nine items in clause 5 have no counterpart. §5.6b
+employment only; five of the nine items in clause 5 have no counterpart. Section 5.6b
 tests the employment dimension of development impact, not the whole objective.
 
 **The proposed model is not calibrated.** It produces an ordinal risk band, not a

@@ -85,6 +85,39 @@ def check_restructure_current() -> tuple[bool, str]:
 HEADING = re.compile(r"^#{1,4}\s+(\d+(?:\.\d+)*[a-z]?(?:\.\d+)*)\s+(.*)$", re.M)
 
 
+def check_headings_are_numbered() -> list[tuple[bool, str]]:
+    """Every subheading in a source chapter must carry a section number.
+
+    THIS EXISTS BECAUSE SECTION 6.2 - THE ANSWERS TO THE RESEARCH QUESTIONS -
+    WAS SILENTLY EMPTY IN A SUBMITTED DRAFT. Its four subheadings were written
+    as "RQ1 - Can the instrument be formalised?" with no number. The restructure
+    selects blocks by heading number, so an unnumbered heading matches nothing
+    and is dropped with its entire body. Coverage checking did not catch it
+    either: that check compares heading TITLES, and it collects titles with the
+    same numbered pattern, so an unnumbered heading is invisible to both.
+
+    The chapter title itself is exempt, as is a trailing per-chapter reference
+    list, which is drafting scaffolding and is not meant to be carried across.
+    """
+    exempt = re.compile(r"^(references|references cited in this chapter)$", re.I)
+    unnumbered: list[str] = []
+    for path in sorted(CHAPTERS.glob("ch*.md")):
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if not line.startswith("##"):
+                continue          # "# Chapter 5 - ..." is the title, exempt
+            title = line.lstrip("#").strip()
+            if HEADING.match(line) or exempt.match(title):
+                continue
+            unnumbered.append(f"{path.name}: {title[:58]}")
+
+    if unnumbered:
+        out = [(False, f"FAIL  {len(unnumbered)} source heading(s) carry no "
+                       f"section number and will be dropped")]
+        out += [(False, f"        {u}") for u in unnumbered[:8]]
+        return out
+    return [(True, "OK    every source subheading carries a section number")]
+
+
 def check_section_coverage() -> list[tuple[bool, str]]:
     """Did every drafted section survive into the generated document?
 
@@ -569,6 +602,7 @@ def main() -> int:
     checks.append(check("dimension count", str(n_dims), docs))
 
     checks.append(check_restructure_current())
+    checks.extend(check_headings_are_numbered())
     checks.extend(check_section_coverage())
     checks.append(check_cross_references())
 

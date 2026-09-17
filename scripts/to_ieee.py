@@ -231,6 +231,14 @@ REFERENCES: dict[str, tuple[tuple[str, ...], str, str]] = {
         'J. Brooke, "SUS: a \'quick and dirty\' usability scale," in *Usability '
         "Evaluation in Industry*, P. W. Jordan et al., Eds. London, U.K.: "
         "Taylor & Francis, 1996, pp. 189-194."),
+    # The source of the sector statistics quoted in the Introduction. Cited so
+    # that those figures carry a primary attribution rather than the "widely
+    # reported" hedge they had while the draft was being written.
+    "moic2015": (
+        ("Ministry of Industry and Commerce",), "2015",
+        "Ministry of Industry and Commerce, *National Policy Framework for "
+        "Small and Medium Enterprise (SME) Development*. Colombo, Sri Lanka: "
+        "Government of Sri Lanka, 2015."),
 }
 
 

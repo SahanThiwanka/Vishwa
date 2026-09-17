@@ -21,25 +21,41 @@ Undergraduate and Postgraduate Degree Programmes":
   references   IEEE numbered style, applied by to_ieee.py
 
 Pipeline:  restructure_thesis.py  ->  to_ieee.py  ->  this script
+           ->  export_pdf.py  (updates the contents fields and writes the PDF)
 
 The Table of Contents and the Lists of Figures and Tables are inserted as Word
-field codes. They appear empty until the document is opened in Word and the
-fields are updated (Ctrl+A, F9) - that is expected, and is the only way to get
-correct page numbers without laying out the document ourselves.
+field codes, which stay empty until a field update runs. export_pdf.py drives
+Word to do that, so the delivered .docx and .pdf both carry real page numbers.
+
+Typesetting decisions this file makes, beyond the guideline:
+
+  * Tables are laid out at FIXED width, with columns sized from their content
+    and the total pinned to the 6.02" text column. Word's automatic layout sizes
+    to content with no upper bound, which pushed the wider tables past the right
+    margin and off the page.
+  * Body paragraphs are justified, with automatic hyphenation. Ragged-right at
+    12 pt over a 6" measure leaves visibly uneven lines.
+  * Headings, table captions and figures are marked keep-with-next, so a heading
+    cannot be stranded at the foot of a page and a caption cannot be separated
+    from what it captions.
+  * Fenced code blocks render as monospaced, single-spaced paragraphs. Before
+    this they were flattened into the surrounding prose, backticks and all.
 """
 
 from __future__ import annotations
 
+import os
 import re
 import sys
 from pathlib import Path
 
 from docx import Document
 from docx.enum.section import WD_SECTION
+from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
-from docx.shared import Inches, Pt
+from docx.shared import Inches, Pt, RGBColor
 
 ROOT = Path(__file__).resolve().parents[1]
 CHAPTERS = ROOT / "docs" / "06-thesis"
@@ -51,11 +67,10 @@ OUTPUT = CHAPTERS / "THESIS-NSBM.docx"
 # moment to lose a file. THESIS_OUT redirects the build somewhere else when the
 # usual target cannot be written, so a rebuild on submission day is never
 # blocked by having the document open to read it.
-import os as _os
-if _os.environ.get("THESIS_OUT"):
+if os.environ.get("THESIS_OUT"):
     # Resolved, because the closing status line reports the path relative to the
     # repository root and a bare relative path is not under it.
-    OUTPUT = Path(_os.environ["THESIS_OUT"]).resolve()
+    OUTPUT = Path(os.environ["THESIS_OUT"]).resolve()
 
 TITLE = ("A DUAL-OBJECTIVE DECISION SUPPORT MODEL FOR SME CREDIT APPRAISAL "
          "IN SRI LANKAN DEVELOPMENT BANKING")
@@ -77,6 +92,14 @@ BODY_SECTIONS = [
 ]
 
 PAGEBREAK = "<<<PAGEBREAK>>>"
+SPACER = "&SPACE;"
+
+BODY_FONT = "Times New Roman"
+MONO_FONT = "Consolas"
+BODY_PT = 12
+
+# A4 (8.27") less the 1.25" binding margin and the 1" right margin.
+TEXT_WIDTH_IN = 8.27 - 1.25 - 1.0
 
 
 # ---------------------------------------------------------------------------
@@ -134,8 +157,8 @@ def footer_page_number(section, show: bool = True) -> None:
     if show:
         add_field(p, "PAGE")
         for run in p.runs:
-            run.font.name = "Times New Roman"
-            run.font.size = Pt(12)
+            run.font.name = BODY_FONT
+            run.font.size = Pt(BODY_PT)
 
 
 def configure(section, left: float = 1.25) -> None:
@@ -148,6 +171,38 @@ def configure(section, left: float = 1.25) -> None:
     section.left_margin = Inches(left)
 
 
+def enable_hyphenation(doc) -> None:
+    """Turn on automatic hyphenation.
+
+    Justified 12 pt text over a 6" measure without hyphenation opens rivers of
+    white space between words, which is the usual reason a justified thesis
+    looks worse than a ragged-right one. Capitals are left unhyphenated so the
+    bold capitalised chapter headings are not broken.
+    """
+    settings = doc.settings.element
+    for name, value in (("w:autoHyphenation", "true"),
+                        ("w:hyphenationZone", "288"),
+                        ("w:doNotHyphenateCaps", "true")):
+        el = OxmlElement(name)
+        el.set(qn("w:val"), value)
+        settings.append(el)
+
+
+def style_run(run, size: int = BODY_PT, font: str = BODY_FONT):
+    run.font.name = font
+    run.font.size = Pt(size)
+    # ascii/hAnsi alone leave complex-script and East Asian runs on the theme
+    # font, which shows up as a different typeface on the Greek letters.
+    rpr = run._element.get_or_add_rPr()
+    rfonts = rpr.find(qn("w:rFonts"))
+    if rfonts is None:
+        rfonts = OxmlElement("w:rFonts")
+        rpr.insert(0, rfonts)
+    for attr in ("w:ascii", "w:hAnsi", "w:cs", "w:eastAsia"):
+        rfonts.set(qn(attr), font)
+    return run
+
+
 def centred(doc, text: str, size: int, bold: bool = False,
             space_after: int = 6):
     p = doc.add_paragraph()
@@ -156,8 +211,7 @@ def centred(doc, text: str, size: int, bold: bool = False,
     p.paragraph_format.line_spacing = 1.5
     run = p.add_run(text)
     run.bold = bold
-    run.font.name = "Times New Roman"
-    run.font.size = Pt(size)
+    style_run(run, size)
     return p
 
 
@@ -169,22 +223,31 @@ INLINE_BOLD = re.compile(r"\*\*(.+?)\*\*")
 INLINE_CODE = re.compile(r"`(.+?)`")
 LINK = re.compile(r"\[(.+?)\]\((.+?)\)")
 
+# Only these bracketed forms open a block. Breaking a paragraph at any line
+# beginning with "[" split it at IEEE citation numbers, leaving fragments like
+# "[8], who benchmarked forty-one classifiers ..." standing as paragraphs.
+BLOCK_MARKER = re.compile(r"^\[(Image|Table|Figure):")
+
 
 def clean(text: str) -> str:
     text = INLINE_BOLD.sub(r"\1", text)
     text = re.sub(r"(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)", r"\1", text)
     text = INLINE_CODE.sub(r"\1", text)
     text = LINK.sub(r"\1", text)
-    return text.strip()
+    return text.replace("\\*", "*").strip()
 
 
-def rich_paragraph(doc, text: str, style: str | None = None, indent: float = 0):
+def rich_paragraph(doc, text: str, style: str | None = None, indent: float = 0,
+                   justify: bool = True, size: int = BODY_PT):
     # A markdown-escaped asterisk (as in the symbol xi-star) must reach the page
     # as a plain asterisk, not as backslash-asterisk.
     text = text.replace("\\*", "*")
     p = doc.add_paragraph(style=style)
     p.paragraph_format.line_spacing = 1.5
     p.paragraph_format.space_after = Pt(6)
+    p.paragraph_format.widow_control = True
+    if justify:
+        p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
     if indent:
         p.paragraph_format.left_indent = Inches(indent)
 
@@ -200,31 +263,48 @@ def rich_paragraph(doc, text: str, style: str | None = None, indent: float = 0):
             run = p.add_run(LINK.sub(r"\1", part[1:-1]))
             run.italic = True
         elif part.startswith("`") and part.endswith("`"):
-            run = p.add_run(part[1:-1])
+            style_run(p.add_run(part[1:-1]), size - 1, MONO_FONT)
+            continue
         else:
-            run = p.add_run(LINK.sub(r"", part))
-        run.font.name = "Times New Roman"
-        run.font.size = Pt(12)
+            run = p.add_run(LINK.sub(r"\1", part))
+        style_run(run, size)
     return p
 
 
-def heading(doc, text: str, level: int):
+def reference_paragraph(doc, text: str):
+    """An IEEE reference entry, with its number hanging in the left margin."""
+    p = rich_paragraph(doc, text, justify=False)
+    p.paragraph_format.left_indent = Inches(0.4)
+    p.paragraph_format.first_line_indent = Inches(-0.4)
+    p.paragraph_format.space_after = Pt(8)
+    return p
+
+
+def heading(doc, text: str, level: int, page_break_before: bool = False):
     """Headings per the guideline, applied directly rather than via styles.
 
-    Word's built-in Heading styles carry their own fonts and colours; the
-    guideline specifies Times New Roman 12 throughout, so the formatting is set
-    on the run and the built-in style is used only so the field-code Table of
-    Contents can find the entry.
+    Word's built-in Heading styles carry their own fonts AND COLOURS - the
+    default theme renders them in blue, which is how a thesis ends up with a
+    blue heading on almost every page. The guideline specifies Times New Roman
+    12 in black throughout, so both are set explicitly on the run: assigning
+    None to the colour does not override the style, it only stops overriding
+    it. The built-in style is kept so the field-code Table of Contents finds
+    the entry.
     """
     p = doc.add_paragraph(style=f"Heading {min(level, 4)}")
     p.paragraph_format.line_spacing = 1.5
-    p.paragraph_format.space_before = Pt(12)
+    p.paragraph_format.space_before = Pt(14 if level == 1 else 12)
     p.paragraph_format.space_after = Pt(6)
+    p.paragraph_format.keep_with_next = True
+    p.paragraph_format.keep_together = True
+    # Opening each chapter with a break-before, rather than closing the previous
+    # one with an explicit page break, avoids the stray blank page that appears
+    # whenever a chapter happens to end near the foot of a page.
+    p.paragraph_format.page_break_before = page_break_before
 
     run = p.add_run(text)
-    run.font.name = "Times New Roman"
-    run.font.size = Pt(12)
-    run.font.color.rgb = None
+    style_run(run)
+    run.font.color.rgb = RGBColor(0, 0, 0)
     # Level 1 and 2 are bold; deeper levels are plain per the guideline.
     run.bold = level <= 2
     return p
@@ -232,56 +312,183 @@ def heading(doc, text: str, level: int):
 
 def caption(doc, text: str, above: bool = True):
     p = doc.add_paragraph()
-    p.paragraph_format.line_spacing = 1.5
-    p.paragraph_format.space_before = Pt(6 if above else 2)
-    p.paragraph_format.space_after = Pt(2 if above else 6)
+    p.paragraph_format.line_spacing = 1.0
+    p.paragraph_format.space_before = Pt(8 if above else 4)
+    p.paragraph_format.space_after = Pt(4 if above else 10)
+    # A caption above its table must not be orphaned at the foot of a page.
+    p.paragraph_format.keep_with_next = above
+    p.paragraph_format.keep_together = True
     # The Caption style is what the List of Tables / Figures field codes collect.
     try:
         p.style = doc.styles["Caption"]
     except KeyError:
         pass
     run = p.add_run(text)
-    run.font.name = "Times New Roman"
-    run.font.size = Pt(12)
+    style_run(run, 11)
     run.bold = False
     run.italic = False
-    run.font.color.rgb = None
+    run.font.color.rgb = RGBColor(0, 0, 0)
     return p
 
 
-def parse_table(lines: list[str], start: int) -> tuple[list[list[str]], int]:
-    rows, i = [], start
+def code_block(doc, lines: list[str]) -> None:
+    """A fenced code block: monospaced, single-spaced, indented, not justified."""
+    for idx, raw in enumerate(lines):
+        p = doc.add_paragraph()
+        p.paragraph_format.line_spacing = 1.0
+        p.paragraph_format.space_before = Pt(8 if idx == 0 else 0)
+        p.paragraph_format.space_after = Pt(8 if idx == len(lines) - 1 else 0)
+        p.paragraph_format.left_indent = Inches(0.3)
+        p.paragraph_format.keep_together = True
+        p.paragraph_format.keep_with_next = idx < len(lines) - 1
+        style_run(p.add_run(raw), 10, MONO_FONT)
+
+
+# ---------------------------------------------------------------------------
+# Tables
+# ---------------------------------------------------------------------------
+
+def parse_table(lines: list[str], start: int):
+    """Read a pipe table. Returns (rows, alignments, next index).
+
+    The delimiter row is not content, but it does carry the column alignment,
+    which is how the numeric columns come out right-aligned instead of ragged.
+    """
+    rows: list[list[str]] = []
+    aligns: list[str] = []
+    i = start
     while i < len(lines) and lines[i].strip().startswith("|"):
         cells = [c.strip() for c in lines[i].strip().strip("|").split("|")]
-        if not all(re.fullmatch(r":?-{2,}:?", c) for c in cells if c):
+        if cells and all(re.fullmatch(r":?-{2,}:?", c) for c in cells if c):
+            aligns = ["center" if c.startswith(":") and c.endswith(":")
+                      else "right" if c.endswith(":")
+                      else "left" for c in cells]
+        else:
             rows.append(cells)
         i += 1
-    return rows, i
+    return rows, aligns, i
 
 
-def add_table(doc, rows: list[list[str]]) -> None:
+def set_repeat_header(row) -> None:
+    """Repeat this row at the top of every page the table continues onto."""
+    tr_pr = row._tr.get_or_add_trPr()
+    el = OxmlElement("w:tblHeader")
+    el.set(qn("w:val"), "true")
+    tr_pr.append(el)
+
+
+def set_fixed_layout(table) -> None:
+    tbl_pr = table._tbl.tblPr
+    for existing in tbl_pr.findall(qn("w:tblLayout")):
+        tbl_pr.remove(existing)
+    layout = OxmlElement("w:tblLayout")
+    layout.set(qn("w:type"), "fixed")
+    tbl_pr.append(layout)
+
+
+def column_widths(rows: list[list[str]], ncol: int) -> list[float]:
+    """Inches per column, summing to the text width.
+
+    Word's automatic layout has no upper bound, so a table holding one
+    129-character cell simply grew until it ran off the right-hand edge of the
+    page. Sizing happens here instead: each column asks for the width of its
+    longest cell, capped so long prose wraps rather than dictating the layout,
+    and never narrower than its longest single word so words are not broken.
+    """
+    longest = [1] * ncol
+    longest_word = [1] * ncol
+    for row in rows:
+        for j in range(min(len(row), ncol)):
+            cell = clean(row[j])
+            longest[j] = max(longest[j], len(cell))
+            for word in cell.split():
+                longest_word[j] = max(longest_word[j], len(word))
+
+    # 45 characters is roughly a third of the text column at 10 pt; past that a
+    # cell is prose and should wrap.
+    demand = [max(min(longest[j], 45), min(longest_word[j], 22))
+              for j in range(ncol)]
+    total = sum(demand) or 1
+
+    min_in = min(0.6, TEXT_WIDTH_IN / ncol)
+    widths = [max(min_in, TEXT_WIDTH_IN * d / total) for d in demand]
+
+    # Re-normalise: the minimum-width floor can push the total over the measure.
+    scale = TEXT_WIDTH_IN / sum(widths)
+    return [w * scale for w in widths]
+
+
+def table_font_size(rows: list[list[str]], ncol: int) -> int:
+    """Shrink the type for tables carrying a lot of text, rather than overflow."""
+    bulk = max(sum(len(clean(c)) for c in row) for row in rows)
+    if bulk > 130 or ncol >= 6:
+        return 9
+    if bulk > 85 or ncol == 5:
+        return 10
+    return 11
+
+
+def add_table(doc, rows: list[list[str]], aligns: list[str]) -> None:
     if not rows:
         return
-    width = max(len(r) for r in rows)
-    table = doc.add_table(rows=0, cols=width)
+    # A table written with an empty header row - "| | |" - is a two-column
+    # layout of labels and values, not a headed table. Rendering the blank row
+    # put an empty bold band across the top of it.
+    if all(not c.strip() for c in rows[0]):
+        rows = rows[1:]
+        has_header = False
+    else:
+        has_header = True
+    if not rows:
+        return
+
+    ncol = max(len(r) for r in rows)
+    widths = column_widths(rows, ncol)
+    size = table_font_size(rows, ncol)
+
+    table = doc.add_table(rows=0, cols=ncol)
     # A plain grid: the guideline forbids shading in table cells.
     table.style = "Table Grid"
+    table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    table.autofit = False
+    set_fixed_layout(table)
+
+    align_map = {"right": WD_ALIGN_PARAGRAPH.RIGHT,
+                 "center": WD_ALIGN_PARAGRAPH.CENTER,
+                 "left": WD_ALIGN_PARAGRAPH.LEFT}
 
     for r_i, row in enumerate(rows):
         cells = table.add_row().cells
-        for c_i in range(width):
-            cells[c_i].text = ""
-            para = cells[c_i].paragraphs[0]
+        for c_i in range(ncol):
+            cell = cells[c_i]
+            cell.width = Inches(widths[c_i])
+            cell.text = ""
+            para = cell.paragraphs[0]
             para.paragraph_format.line_spacing = 1.0
+            para.paragraph_format.space_before = Pt(2)
             para.paragraph_format.space_after = Pt(2)
-            run = para.add_run(clean(row[c_i]) if c_i < len(row) else "")
-            run.font.name = "Times New Roman"
-            run.font.size = Pt(11)
-            run.bold = r_i == 0
+            if c_i < len(aligns):
+                para.alignment = align_map.get(aligns[c_i],
+                                               WD_ALIGN_PARAGRAPH.LEFT)
+            text = clean(row[c_i]) if c_i < len(row) else ""
+            run = para.add_run(text)
+            style_run(run, size)
+            run.bold = has_header and r_i == 0
+
+    # Widths have to be set on every cell AND on the grid, or Word recomputes
+    # them from content when the document is opened.
+    for c_i, width in enumerate(widths):
+        table.columns[c_i].width = Inches(width)
+    if has_header and table.rows:
+        set_repeat_header(table.rows[0])
 
 
-def render(doc, path: Path, counters: dict) -> None:
+# ---------------------------------------------------------------------------
+
+def render(doc, path: Path, counters: dict,
+           chapter_breaks: bool = False) -> None:
     lines = path.read_text(encoding="utf-8").split("\n")
+    is_references = path.name.startswith("07-")
     i = 0
     pending_caption: str | None = None
 
@@ -294,8 +501,26 @@ def render(doc, path: Path, counters: dict) -> None:
             i += 1
             continue
 
+        if line == SPACER:
+            doc.add_paragraph()
+            i += 1
+            continue
+
         if not line:
             i += 1
+            continue
+
+        # Fenced code block. Previously unhandled, which flattened the whole
+        # block into one run-on paragraph with the fence marks still in it.
+        if line.startswith("```"):
+            i += 1
+            block: list[str] = []
+            while i < len(lines) and not lines[i].strip().startswith("```"):
+                block.append(lines[i].rstrip())
+                i += 1
+            i += 1
+            if block:
+                code_block(doc, block)
             continue
 
         # Embedded figure:  [Image: file.png | Caption text]
@@ -308,8 +533,15 @@ def render(doc, path: Path, counters: dict) -> None:
                 para.alignment = WD_ALIGN_PARAGRAPH.CENTER
                 para.paragraph_format.space_before = Pt(10)
                 para.paragraph_format.space_after = Pt(2)
-                # Sized to the 6.02in text column (A4 less 1.25in + 1in margins).
-                para.add_run().add_picture(str(src), width=Inches(5.9))
+                para.paragraph_format.keep_with_next = True
+                # Sized to the 6.02in text column, then capped on height so a
+                # tall figure cannot push its own caption onto the next page.
+                run = para.add_run()
+                picture = run.add_picture(str(src), width=Inches(5.9))
+                if picture.height > Inches(7.4):
+                    picture.width = int(picture.width * Inches(7.4)
+                                        / picture.height)
+                    picture.height = Inches(7.4)
                 # The guideline puts figure captions BELOW the figure.
                 caption(doc,
                         f"Figure {counters['section']}.{counters['figure']}: "
@@ -328,7 +560,7 @@ def render(doc, path: Path, counters: dict) -> None:
             continue
 
         if line.startswith("|"):
-            rows, i = parse_table(lines, i)
+            rows, aligns, i = parse_table(lines, i)
             # Front matter (section "0") carries the abbreviations list, which
             # is not a numbered thesis table and takes no caption.
             if counters["section"] != "0":
@@ -338,19 +570,25 @@ def render(doc, path: Path, counters: dict) -> None:
                     label += f": {pending_caption.split('|', 1)[1]}"
                     pending_caption = None
                 caption(doc, label, above=True)
-            add_table(doc, rows)
-            doc.add_paragraph()
+            add_table(doc, rows, aligns)
+            spacer = doc.add_paragraph()
+            spacer.paragraph_format.space_after = Pt(0)
             continue
 
         if line.startswith("#"):
             level = len(line) - len(line.lstrip("#"))
             text = clean(line.lstrip("#").strip())
+            brk = False
             if level == 1:
                 counters["table"] = 0
                 counters["figure"] = 0
                 m2 = re.match(r"^(\d+)\s", text)
                 counters["section"] = m2.group(1) if m2 else counters["section"]
-            heading(doc, text, level)
+                # Not on the very first chapter: the body already opens on a
+                # fresh page, and a break there would leave one blank.
+                brk = chapter_breaks and counters["chapters_seen"] > 0
+                counters["chapters_seen"] += 1
+            heading(doc, text, level, page_break_before=brk)
             i += 1
             continue
 
@@ -369,7 +607,9 @@ def render(doc, path: Path, counters: dict) -> None:
                 i += 1
             joined = " ".join(q for q in quote if q)
             if joined:
-                rich_paragraph(doc, joined, indent=0.4)
+                p = rich_paragraph(doc, joined, indent=0.4)
+                p.paragraph_format.right_indent = Inches(0.4)
+                p.paragraph_format.space_before = Pt(6)
             continue
 
         m3 = re.match(r"^(\s*)([-*]|\d+\.)\s+(.*)", raw)
@@ -385,13 +625,20 @@ def render(doc, path: Path, counters: dict) -> None:
         i += 1
         while i < len(lines):
             nxt = lines[i].strip()
-            if (not nxt or nxt.startswith(("#", "|", ">", "-", "*", "["))
-                    or nxt == PAGEBREAK or re.match(r"^\d+\.\s", nxt)):
+            if (not nxt or nxt.startswith(("#", "|", ">", "```"))
+                    or BLOCK_MARKER.match(nxt)
+                    or nxt in (PAGEBREAK, SPACER)
+                    or re.match(r"^\s*([-*]\s|\d+\.\s)", nxt)
+                    or re.fullmatch(r"-{3,}", nxt)):
                 break
             buffer.append(nxt)
             i += 1
 
-        rich_paragraph(doc, " ".join(buffer))
+        joined = " ".join(buffer)
+        if is_references and re.match(r"^\[\d+\]", joined):
+            reference_paragraph(doc, joined)
+        else:
+            rich_paragraph(doc, joined)
 
 
 # ---------------------------------------------------------------------------
@@ -404,12 +651,29 @@ def main() -> int:
         return 1
 
     doc = Document()
+    enable_hyphenation(doc)
 
     normal = doc.styles["Normal"]
-    normal.font.name = "Times New Roman"
-    normal.font.size = Pt(12)
+    normal.font.name = BODY_FONT
+    normal.font.size = Pt(BODY_PT)
     normal.paragraph_format.line_spacing = 1.5
     normal.paragraph_format.space_after = Pt(6)
+    normal.paragraph_format.widow_control = True
+
+    # The list and caption styles otherwise inherit a font from the template.
+    for name in ("Heading 1", "Heading 2", "Heading 3", "Heading 4",
+                 "List Bullet", "List Number", "Caption"):
+        try:
+            style = doc.styles[name]
+        except KeyError:
+            continue
+        style.font.name = BODY_FONT
+        style.font.size = Pt(11 if name == "Caption" else BODY_PT)
+        style.font.color.rgb = RGBColor(0, 0, 0)
+        if name == "Caption":
+            style.font.italic = False
+            style.font.bold = False
+            style.font.color.rgb = None
 
     # ---- Section 1: cover page, unnumbered ---------------------------------
     configure(doc.sections[0])
@@ -428,7 +692,6 @@ def main() -> int:
     centred(doc, DEPARTMENT, 14)
     centred(doc, "NSBM Green University", 14)
     centred(doc, "Sri Lanka", 14)
-    doc.add_paragraph()
     centred(doc, SUBMISSION, 14)
 
     # ---- Section 2: front matter, lower-case Roman -------------------------
@@ -443,29 +706,30 @@ def main() -> int:
         for run in list(p.runs):
             run._r.getparent().remove(run._r)
 
-    for _ in range(3):
+    # Spacing on both title pages is counted, not eyeballed. At 1.5 line
+    # spacing Word sets a 14 pt line at about 30 pt, and one blank paragraph
+    # too many pushed the closing lines onto a page of their own.
+    for _ in range(2):
         doc.add_paragraph()
     centred(doc, TITLE, 16, bold=True, space_after=12)
-    for _ in range(4):
+    for _ in range(3):
         doc.add_paragraph()
     centred(doc, "A thesis submitted to NSBM Green University for the degree of", 14)
     centred(doc, DEGREE, 14)
-    for _ in range(3):
+    for _ in range(2):
         doc.add_paragraph()
     centred(doc, "By", 14)
-    doc.add_paragraph()
     centred(doc, AUTHOR, 14)
-    for _ in range(5):
+    for _ in range(3):
         doc.add_paragraph()
     centred(doc, DEPARTMENT, 14)
     centred(doc, FACULTY, 14)
     centred(doc, "NSBM Green University", 14)
     centred(doc, "Sri Lanka", 14)
-    doc.add_paragraph()
     centred(doc, SUBMISSION, 14)
     doc.add_page_break()
 
-    counters = {"section": "0", "table": 0, "figure": 0}
+    counters = {"section": "0", "table": 0, "figure": 0, "chapters_seen": 0}
     render(doc, CHAPTERS / "00-front-matter.md", counters)
 
     # Table of contents and lists, as field codes Word populates on update.
@@ -478,13 +742,6 @@ def main() -> int:
         heading(doc, title, 1)
         p = doc.add_paragraph()
         add_field(p, instruction)
-        note = doc.add_paragraph()
-        run = note.add_run(
-            "(Open in Word and press Ctrl+A then F9 to populate this list.)"
-        )
-        run.italic = True
-        run.font.name = "Times New Roman"
-        run.font.size = Pt(10)
 
     # ---- Section 3: body, Arabic restarting at 1 ---------------------------
     body = doc.add_section(WD_SECTION.NEW_PAGE)
@@ -498,8 +755,7 @@ def main() -> int:
         counters["table"] = 0
         counters["figure"] = 0
         print(f"  {name}")
-        render(doc, path, counters)
-        doc.add_page_break()
+        render(doc, path, counters, chapter_breaks=True)
 
     doc.save(OUTPUT)
 
@@ -507,9 +763,14 @@ def main() -> int:
                 for n in BODY_SECTIONS)
     words += len((CHAPTERS / "00-front-matter.md").read_text(encoding="utf-8").split())
 
-    print(f"\nWrote {OUTPUT.relative_to(ROOT)}")
+    try:
+        shown = OUTPUT.relative_to(ROOT)
+    except ValueError:
+        shown = OUTPUT
+    print(f"\nWrote {shown}")
     print(f"  ~{words:,} words, {len(doc.tables)} tables")
-    print("\nOpen in Word and press Ctrl+A then F9 to populate the contents lists.")
+    print("\nRun scripts/export_pdf.py to populate the contents lists and "
+          "write the PDF.")
     return 0
 
 

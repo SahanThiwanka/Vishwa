@@ -58,6 +58,8 @@ agreed to.
 
 ### 4.2.3 Result
 
+[Table: The derived criteria model: criterion counts and source clauses by dimension]
+
 | Objective | Dimension | Criteria | Form clauses |
 |---|---|---:|---|
 | Credit Risk | Borrower & Management Capacity | 6 | 2.8, 2.10, 3.2, 3.4 |
@@ -110,7 +112,7 @@ score of 60 would render them identical. Making the divergence visible is the
 contribution; resolving it is a policy question that belongs to the bank, not to
 the model.
 
-Verification of this behaviour appears in the test case of §4.9: the same
+Verification of this behaviour appears in the test case of Section 4.9: the same
 application scored **80.2 on credit risk (band A) and 74.6 on development impact
 (band B)**.
 
@@ -132,6 +134,8 @@ ratio uses the third form: it peaks at 2.0 and declines above it, since a ratio 
 
 Qualitative criteria are captured on a five-point linguistic scale — Very Poor,
 Poor, Fair, Good, Excellent — represented as triangular fuzzy numbers:
+
+[Table: Five-point linguistic scale and its triangular fuzzy numbers]
 
 | Code | Label | TFN |
 |---|---|---|
@@ -157,7 +161,7 @@ renormalised** — never treated as zero. Scoring an incomplete file as though t
 missing sections had scored nothing would misrepresent an unfinished appraisal as
 a bad one.
 
-This choice creates a hazard addressed in §4.5.
+This choice creates a hazard addressed in Section 4.5.
 
 ### 4.4.4 Critical criteria
 
@@ -177,7 +181,7 @@ During verification, an appraisal with only seven of forty-nine criteria entered
 14% complete — returned a credit risk score of 73.7 and the recommendation *"Band
 B — recommend with conditions."*
 
-The arithmetic was correct. Weight renormalisation (§4.4.3) had worked exactly as
+The arithmetic was correct. Weight renormalisation (Section 4.4.3) had worked exactly as
 designed: the seven entered criteria carried the full weight, and they happened to
 score well. But the system was confidently recommending a facility on almost no
 information, and nothing in the output signalled that.
@@ -200,6 +204,8 @@ impression that the system had an opinion. It does not; it has insufficient
 information, and saying so is the correct output.
 
 ## 4.6 System architecture
+
+[Table: System architecture by layer, with the reason for each choice]
 
 | Layer | Technology | Rationale |
 |---|---|---|
@@ -239,6 +245,8 @@ name, and the trail would look complete while proving nothing. The system now
 authenticates users and takes the signatory from the session.
 
 Roles map directly onto the chain in clause 7 of the form:
+
+[Table: Application roles and permitted actions, against clause 7 of the form]
 
 | Role | Permitted |
 |---|---|
@@ -306,6 +314,8 @@ POST rather than only through the application's own forms, so every action
 validates its input before use, and validation failures report which field failed
 without echoing the submitted value back.
 
+[Table: Behavioural tests of the scoring engine and their outcomes]
+
 | Check | Result |
 |---|---|
 | Strong case scores above weak on credit risk | pass |
@@ -330,8 +340,8 @@ Chapter 5, and the answer given there is heavily qualified.
 ## 4.10 Status of the weights
 
 The model now carries `weightStatus: ELICITED`, recording ten respondents, three
-level-responses excluded for inconsistency, and the date. §6.1 reports the
-elicitation; the weights themselves are in §6.1.4.
+level-responses excluded for inconsistency, and the date. Section 6.1 reports the
+elicitation; the weights themselves are in Section 6.1.4.
 
 **The state is machine-enforced rather than merely documented, and that mattered.**
 While elicitation was outstanding the model carried the placeholder state, all

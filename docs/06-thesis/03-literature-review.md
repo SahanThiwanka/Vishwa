@@ -11,22 +11,22 @@ This review covers six bodies of work bearing on the research questions:
 5. non-financial objectives in lending;
 6. data quality and reproducibility in machine-learning-based science.
 
-It closes (§3.8) by stating what this study adds — which, after examining the
+It closes (Section 3.8) by stating what this study adds — which, after examining the
 literature, is narrower than the research proposal supposed.
 
 ## 3.2 Credit scoring: sixty years of weighted ratios
 
-Quantitative credit assessment begins with Altman [2], who applied multiple
+Quantitative credit assessment begins with Altman [3], who applied multiple
 discriminant analysis to twenty-two financial ratios across sixty-six firms to
-produce the Z-score. Ohlson [3] replaced discriminant analysis with conditional
+produce the Z-score. Ohlson [4] replaced discriminant analysis with conditional
 logit, shifting the output from a classification to a probability — a change that
 matters here, because a probability can be checked for *calibration* while a class
-label cannot (§5.12).
+label cannot (Section 5.12).
 
-Hand and Henley [4] reviewed the statistical methods then in use, and Thomas,
-Crook and Edelman [5] and Thomas, Edelman and Crook [6] provided the
+Hand and Henley [5] reviewed the statistical methods then in use, and Thomas,
+Crook and Edelman [6] and Thomas, Edelman and Crook [7] provided the
 standard textbook treatments. The most useful modern reference point is Lessmann et al.
-[7], who benchmarked **forty-one classifiers across seven** real-world retail
+[8], who benchmarked **forty-one classifiers across seven** real-world retail
 credit scoring datasets, updating Baesens et al. (2003). They report a *tendency*
 for homogeneous ensembles to outperform individual classifiers — the five best
 methods all belong to that family, with random forest giving the most accurate
@@ -46,10 +46,10 @@ by analogy rather than directly.
 
 SMEs are harder than consumer credit. Financial statements are frequently
 unaudited or absent, trading histories are short, and collateral is thin. Beck and
-Demirgüç-Kunt [8] is the standard reference for access to finance as a binding
+Demirgüç-Kunt [9] is the standard reference for access to finance as a binding
 growth constraint on SMEs internationally.
 
-Berger and Udell [9] provide the framework this study sits inside. They
+Berger and Udell [10] provide the framework this study sits inside. They
 identify nine distinct SME lending technologies — relationship lending, financial
 statement lending, trade credit, equipment lending, real-estate-based lending,
 leasing, factoring, small business credit scoring, and asset-based lending — and
@@ -58,7 +58,7 @@ institutional setting. **The People's Bank instrument is principally financial
 statement lending with substantial relationship and asset-based elements**, and
 this study adds a scoring layer without discarding the relationship content.
 
-Stein [10] explains why that is difficult. He distinguishes *hard* information,
+Stein [11] explains why that is difficult. He distinguishes *hard* information,
 which can be credibly transmitted through a hierarchy, from *soft* information,
 which cannot, and shows that decentralised structures outperform where information
 is soft. An appraisal officer's judgement about management quality is soft
@@ -68,9 +68,9 @@ information in exactly this sense.
 > appraisal is an attempt to *harden* soft information. Stein's analysis implies
 > something is necessarily lost in that transformation. The design response — a
 > five-point linguistic scale represented as fuzzy numbers rather than a forced
-> crisp value (§4.11.2) — is an attempt to lose less, not to avoid the loss.
+> crisp value (Section 4.11.2) — is an attempt to lose less, not to avoid the loss.
 
-Ciampi, Giannozzi, Marzi and Altman [11] provide the anchoring review: a
+Ciampi, Giannozzi, Marzi and Altman [12] provide the anchoring review: a
 systematic analysis of over a hundred articles on SME default prediction across
 thirty-four years, identifying five research streams and calling for work
 exploiting new data sources.
@@ -87,7 +87,7 @@ where this study is situated.
 This study is premised on manual appraisal being inconsistent. That premise should
 not rest on assertion, and it does not have to.
 
-Cortés, Duchin and Sosyura [1] provide causal evidence. Using daily variation
+Cortés, Duchin and Sosyura [2] provide causal evidence. Using daily variation
 in local sunshine as an instrument for sentiment, they show that the mood of
 lower-level financial officers affects day-to-day credit decisions: positive
 sentiment raises approval rates, negative sentiment lowers them by a larger
@@ -122,26 +122,26 @@ does. That is an argument, not an observation, and it is offered as one.
 Related work reaches similar conclusions from other directions: studies of
 discretion in loan rate setting, and of loan officers' subjective judgement in
 microfinance, where risk classification rests on recollected professional
-experience rather than an explicit model. SharafEldin, Idrees and Ouf [12]
+experience rather than an explicit model. SharafEldin, Idrees and Ouf [13]
 similarly motivate their work by observing that traditional credit assessment
 "often relied on subjective judgment, leading to inconsistent decisions".
 
 The premise is therefore supported by the literature. This study does **not**
 itself measure inter-rater reliability, which remains its most significant gap
-(§6.3); Cohen [13], Landis and Koch [14] and Krippendorff's α provide the
+(Section 6.3); Cohen [14], Landis and Koch [15] and Krippendorff's α provide the
 instruments a proper measurement would use.
 
 ## 3.5 Multi-criteria decision methods
 
 ### 3.5.1 Foundations
 
-Zadeh [15] introduced fuzzy sets, providing a representation for gradations of
-membership rather than binary classification. Saaty [16] introduced the
-Analytic Hierarchy Process, later defending it against criticism [17], deriving priority weights from pairwise comparisons on
+Zadeh [16] introduced fuzzy sets, providing a representation for gradations of
+membership rather than binary classification. Saaty [17] introduced the
+Analytic Hierarchy Process, later defending it against criticism [18], deriving priority weights from pairwise comparisons on
 a 1–9 scale — still the most widely used weighting method.
 
-Fuzzy extensions followed. Chang [18] proposed extent analysis for fuzzy AHP,
-and Chen [19] extended TOPSIS to fuzzy group decision-making with linguistic
+Fuzzy extensions followed. Chang [19] proposed extent analysis for fuzzy AHP,
+and Chen [20] extended TOPSIS to fuzzy group decision-making with linguistic
 ratings.
 
 **A caution that shaped this study's method choice.** Chang's extent analysis is
@@ -152,21 +152,21 @@ resistance; it is also documented to be wrong.
 
 ### 3.5.2 Best-Worst Method
 
-Rezaei [20] introduced the Best-Worst Method, which derives weights from two
+Rezaei [21] introduced the Best-Worst Method, which derives weights from two
 comparison vectors — the best criterion against all others, and all others against
 the worst — requiring 2n−3 comparisons rather than AHP's n(n−1)/2. Anchoring every
 comparison to a fixed reference tends to produce more consistent responses.
-Rezaei [21] gave a linear formulation with a unique solution, which is the form
-implemented here (§4.5).
+Rezaei [22] gave a linear formulation with a unique solution, which is the form
+implemented here (Section 4.5).
 
 For this study's criteria tree the difference is decisive: **168 comparisons under
-pairwise AHP against 86 under BWM** (§4.5.1). That is the difference between an
+pairwise AHP against 86 under BWM** (Section 4.5.1). That is the difference between an
 hour of a practitioner's attention and fifteen minutes, and therefore between
 usable and unusable responses.
 
 ### 3.5.3 Application to credit — and the nearest precedent
 
-**Roy and Shaw [22] must be acknowledged plainly.** They construct a
+**Roy and Shaw [23] must be acknowledged plainly.** They construct a
 multicriteria credit scoring model for SMEs using exactly the hybrid this study's
 proposal treated as novel: BWM to determine criteria weights, combined with a
 ranking method (TOPSIS) to score applicants. Their instrument has 30 subcriteria
@@ -183,13 +183,13 @@ withdrawn here.
 Two differences are worth stating precisely, because they cut in opposite
 directions and the honest positioning depends on both.
 
-Roy and Shaw **elicited their weights**; this study did not (§6.1), which is the
+Roy and Shaw **elicited their weights**; this study did not (Section 6.1), which is the
 more serious gap of the two and is theirs to claim. Against that, their
 validation rests on **31 SMEs** — an accuracy of 90.32% is 28 firms out of 31,
 and a Type-II rate of 14.28% is one or two misclassifications. A sample that size
 cannot separate a good model from a fortunate one. This study validates its
 scoring method on 652,284 facilities with realised outcomes, and reports that the
-expert-structured scorecard fails on them (§5.15).
+expert-structured scorecard fails on them (Section 5.15).
 
 They also aggregate. TOPSIS returns a single closeness coefficient, so
 development and credit considerations, where both are present, are resolved into
@@ -209,7 +209,7 @@ document.
 
 ### 3.6.1 Social criteria in credit scoring
 
-Gutiérrez-Nieto, Serrano-Cinca and Camón-Cala [23] build a credit score system
+Gutiérrez-Nieto, Serrano-Cinca and Camón-Cala [24] build a credit score system
 for socially responsible lending that evaluates social alongside financial
 aspects, quantifying a loan's impact on outcomes such as employment, education,
 environment and health, and using MCDM to combine them. Their system yields not
@@ -228,12 +228,12 @@ criteria here are not selected by the researcher from a development framework bu
 taken from clause 5 of an instrument a state bank already uses in production. The
 second is aggregation. Their system merges financial ratios and social indicators
 in one model to produce a single assessment; this study keeps the two objectives
-apart and never issues a combined figure, which §5.17 shows changes the answer for
+apart and never issues a combined figure, which Section 5.17 shows changes the answer for
 88.2% of facilities.
 
 ### 3.6.2 Development returns and credit risk
 
-Arvanitis, Stampini and Vencatachellum [24] examine ex-ante appraisal at the
+Arvanitis, Stampini and Vencatachellum [25] examine ex-ante appraisal at the
 African Development Bank, and their result is the closest thing in the literature
 to a test of whether the two objectives need to be reported separately. They
 conclude that the variables weighed at appraisal, "whether they pertain to
@@ -256,7 +256,7 @@ The strong reading — that the objectives are independent, so aggregating them
 destroys information — is not available on this evidence. The weaker and
 defensible reading is that no one has shown the two can be inferred from each
 other, and that a bank with a development mandate therefore has no warrant for
-collapsing them into one number. §5.17 tests the association directly on a sample
+collapsing them into one number. Section 5.17 tests the association directly on a sample
 large enough to resolve it.
 
 ## 3.7 Explainability, regulation, and data quality
@@ -270,14 +270,14 @@ creditor cannot excuse non-compliance on the grounds that its technology is too
 complex to interpret, nor satisfy the requirement by citing broad categories.
 Credit scoring is designated high-risk under the EU AI Act.
 
-The technical response has been post-hoc explanation: LIME [25] fits an interpretable local surrogate around a prediction, and
-SHAP [26] assigns each feature a Shapley-value contribution
+The technical response has been post-hoc explanation: LIME [26] fits an interpretable local surrogate around a prediction, and
+SHAP [27] assigns each feature a Shapley-value contribution
 with uniqueness guarantees.
 
 **This study takes a different route, and the distinction is worth stating.**
 LIME and SHAP explain an opaque model after the fact. The model here is additive
 by construction, so per-criterion contributions are exact rather than
-approximated, and they sum precisely to the score (§5.4). That is a stronger
+approximated, and they sum precisely to the score (Section 5.4). That is a stronger
 guarantee than a post-hoc method can offer — at the cost of the discrimination a
 flexible model might achieve, which Chapter 5 shows to be a real cost.
 
@@ -289,7 +289,7 @@ subtle: a model reading some trace of the answer scores well and the error is
 invisible in every conventional diagnostic, because the model really does predict
 the held-out data — the held-out data is simply contaminated too.
 
-Kapoor and Narayanan [27] established the scale of the problem. Surveying prior
+Kapoor and Narayanan [28] established the scale of the problem. Surveying prior
 reviews across machine-learning-based science, they find leakage in **17 fields,
 collectively affecting 294 papers**, in some cases producing what they call
 wildly overoptimistic conclusions, and argue it is the largest single cause of
@@ -300,6 +300,8 @@ survive correction.
 
 Their contribution most relevant here is a **taxonomy of eight leakage types**,
 grouped in three families:
+
+[Table: Taxonomy of leakage types, after Kapoor and Narayanan]
 
 | Family | Types | Character |
 |---|---|---|
@@ -328,7 +330,7 @@ exhibiting a variety that passes the current best-practice defence.
 
 ### 3.7.3 The SBA National dataset
 
-Li, Mickel and Taylor [28] introduced the SBA National dataset — 899,164 loan
+Li, Mickel and Taylor [29] introduced the SBA National dataset — 899,164 loan
 guarantees issued by the U.S. Small Business Administration between 1987 and
 2014, with realised outcomes — as a teaching resource, built around a case
 assignment in which students take the role of a loan officer and decide whether
@@ -353,7 +355,7 @@ derive a feature *from* `Term` — a `RealEstate` indicator set where the term
 reaches 240 months, on the reasoning that only real-estate-backed lending runs
 twenty years — and report a striking difference in default rates between the two
 groups. That derivation is economically well-motivated and is exactly what a
-careful analyst would do. §5.10.6 examines what the contrast actually rests on.
+careful analyst would do. Section 5.10.6 examines what the contrast actually rests on.
 
 **No located source reports that the field itself carries outcome information.**
 Chapter 5 presents evidence that it does. This is stated as a finding the author
@@ -365,12 +367,12 @@ is the appropriate claim given a non-exhaustive search.
 Consolidating, the following are **not** contributions of this study, contrary to
 the original proposal:
 
-- combining weighted financial ratios into a credit score ([2], and
+- combining weighted financial ratios into a credit score ([3], and
   sixty years of work after it);
-- applying BWM or fuzzy MCDM to SME credit scoring ([22], and the
-  surrounding literature in §3.5.3);
-- scoring social or developmental impact alongside credit risk [23];
-- observing that development banks appraise against two objectives [24].
+- applying BWM or fuzzy MCDM to SME credit scoring ([23], and the
+  surrounding literature in Section 3.5.3);
+- scoring social or developmental impact alongside credit risk [24];
+- observing that development banks appraise against two objectives [25].
 
 What the literature leaves open, and what this study addresses:
 
@@ -386,7 +388,7 @@ What the literature leaves open, and what this study addresses:
 3. **Keeping dual objectives unaggregated.** Prior dual-objective systems combine
    social and financial scores. This study reports them separately by design and
    never produces a combined figure, and — unlike the prior work — tests whether
-   the separation is warranted rather than assuming it (§5.17).
+   the separation is warranted rather than assuming it (Section 5.17).
 4. **The Sri Lankan state-bank context**, documented as finance-constrained but
    not studied at the level of appraisal process.
 

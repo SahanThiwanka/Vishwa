@@ -1,0 +1,33 @@
+{
+  "derivative_roundness_auc": 0.8894,
+  "datasets": [
+    {
+      "dataset": "7(a) programme, FY2000-2009 (SBA FOIA)",
+      "n_resolved": 603665,
+      "default_rate": 0.23796,
+      "round_share_repaid": 0.820231,
+      "round_share_default": 0.084575,
+      "roundness_auc": 0.8678
+    },
+    {
+      "dataset": "7(a) programme, FY2010-2019 (SBA FOIA)",
+      "n_resolved": 428652,
+      "default_rate": 0.07929,
+      "round_share_repaid": 0.864447,
+      "round_share_default": 0.101536,
+      "roundness_auc": 0.8815
+    },
+    {
+      "dataset": "504 programme, FY1991-2009 (SBA FOIA)",
+      "n_resolved": 89067,
+      "default_rate": 0.126264,
+      "round_share_repaid": 0.997957,
+      "round_share_default": 0.998488,
+      "roundness_auc": 0.4997
+    }
+  ],
+  "combined_resolved_7a": 1032317,
+  "span_low_auc": 0.8562,
+  "span_high_auc": 0.8904,
+  "five04_share_240_months": 0.955359
+}

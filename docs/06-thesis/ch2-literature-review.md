@@ -4,7 +4,7 @@
 > search and its bibliographic details checked against an authoritative record.
 > Bibliographic accuracy is not the same as having read the work, so the sources
 > carrying substantive claims were obtained and read in full, and
-> `docs/02-literature/bibliography.md` records the status of every entry
+> the accompanying bibliography records the status of each entry
 > individually.
 >
 > That reading changed this chapter. Three of the sources did not say what an
@@ -156,12 +156,12 @@ instruments a proper measurement would use.
 
 Zadeh (1965) introduced fuzzy sets, providing a representation for gradations of
 membership instead of binary classification. Saaty (1980) introduced the
-Analytic Hierarchy Process, later defending it against criticism (Saaty, 1990),
+Analytic Hierarchy Process (AHP), later defending it against criticism (Saaty, 1990),
 deriving priority weights from pairwise comparisons on a 1–9 scale, still the
 most widely used weighting method.
 
 Fuzzy extensions followed. Chang (1996) proposed extent analysis for fuzzy AHP,
-and Chen (2000) extended TOPSIS to fuzzy group decision-making with linguistic
+and Chen (2000) extended the Technique for Order Preference by Similarity to Ideal Solution (TOPSIS) to fuzzy group decision-making with linguistic
 ratings.
 
 **A caution that shaped this study's method choice.** Chang's extent analysis is
@@ -172,7 +172,7 @@ resistance; it is also documented to be wrong.
 
 ### 2.5.2 Best-Worst Method
 
-Rezaei (2015) introduced the Best-Worst Method, which derives weights from two
+Rezaei (2015) introduced the Best-Worst Method (BWM), which derives weights from two
 comparison vectors — the best criterion against all others, and all others
 against the worst — requiring 2n−3 comparisons rather than AHP's n(n−1)/2.
 Anchoring every comparison to a fixed reference tends to produce more consistent
@@ -196,9 +196,7 @@ a commercial rating agency's ratings on a real-life case study, reporting 90.32%
 accuracy and a Type-II error rate of 14.28% against the commercial model's
 28.57%.
 
-The implication is direct: applying BWM to SME credit scoring is not novel. An
-earlier draft of this research claimed the fuzzy-MCDM combination as its
-methodological contribution. The literature does not support that claim, and it
+The implication is direct: applying BWM to SME credit scoring is not novel. An earlier draft of this research claimed the combination of fuzzy sets with multi-criteria decision making (MCDM) as its methodological contribution. The literature does not support that claim, and it
 is withdrawn here.
 
 Two differences are worth stating precisely, because they cut in opposite
@@ -294,9 +292,10 @@ creditor cannot excuse non-compliance on the grounds that its technology is too
 complex to interpret, nor satisfy the requirement by citing broad categories.
 Credit scoring is designated high-risk under the EU AI Act.
 
-The technical response has been post-hoc explanation: LIME (Ribeiro, Singh and
+The technical response has been post-hoc explanation: Local Interpretable Model-agnostic Explanations, or LIME (Ribeiro, Singh and
 Guestrin, 2016) fits an interpretable local surrogate around a prediction, and
-SHAP (Lundberg and Lee, 2017) assigns each feature a Shapley-value contribution
+SHapley Additive exPlanations, or SHAP (Lundberg and Lee, 2017), assigns each
+feature a Shapley-value contribution
 with uniqueness guarantees.
 
 This study takes a different route, and the distinction is worth stating. LIME
@@ -323,10 +322,9 @@ reproducibility study of civil war prediction, where complex models had been
 reported as substantially outperforming older methods and the advantage does not
 survive correction.
 
-Their contribution most relevant here is a taxonomy of eight leakage types,
-grouped in three families:
+Their contribution most relevant here is a taxonomy of eight leakage types, grouped into the three families shown in @tbl:taxonomy-leakage-types-after.
 
-[Table: Taxonomy of leakage types, after Kapoor and Narayanan]
+[Table: taxonomy-leakage-types-after | Taxonomy of leakage types, after Kapoor and Narayanan]
 
 | Family | Types | Character |
 |---|---|---|
@@ -334,7 +332,7 @@ grouped in three families:
 | L2 Illegitimate features | the model uses a feature that should not be available, including, explicitly, *a feature that is a proxy for the outcome variable* | Requires domain judgement about each feature |
 | L3 Test set not independent of training set | temporal leakage; non-independence between train and test; sampling bias | Shades into open research problems |
 
-Their proposed remedy is a model info sheet: the researcher writes down, for
+The second family is the one this study runs into. L2 covers a model that uses a feature which should not be available, and names as an explicit sub-case a feature that is a proxy for the outcome variable. Their proposed remedy is a model info sheet: the researcher writes down, for
 each element of the design, why it is sound, including, for L2, an argument that
 every feature in the model is legitimately available.
 
@@ -364,18 +362,18 @@ small-business credit research, which is a heavier duty than it was designed
 for.
 
 Their Table 1 is the dataset's codebook. Three of its fields are populated only
-after a loan has been charged off: `ChgOffDate`, "the date when a loan is
-declared to be in default"; `ChgOffPrinGr`, "charged-off amount"; and
-`BalanceGross`, "gross amount outstanding". Any model given them is reading the outcome rather than predicting it. They are dropped in this study, and the drop is asserted in code, not assumed.
+after a loan has been charged off: *ChgOffDate*, "the date when a loan is
+declared to be in default"; *ChgOffPrinGr*, "charged-off amount"; and
+*BalanceGross*, "gross amount outstanding". Any model given them is reading the outcome rather than predicting it. They are dropped in this study, and the drop is asserted in code, not assumed.
 
-The same table defines `Term` as "Loan term in months": the contractual term
+The same table defines *Term* as "Loan term in months": the contractual term
 agreed at origination, legitimately available at appraisal time, and on that
-definition entirely proper to use. The searched literature reports `Term`,
+definition entirely proper to use. The searched literature reports *Term*,
 disbursement and approval amounts as significant predictors and uses them
 accordingly.
 
 The dataset's own documentation goes further. In discussing the data, the
-authors derive a feature *from* `Term`: a `RealEstate` indicator set where the
+authors derive a feature *from* *Term*: a *RealEstate* indicator set where the
 term reaches 240 months, on the reasoning that only real-estate-backed lending
 runs twenty years. They report a striking difference in default rates between
 the two groups. That derivation is economically well-motivated and is exactly
@@ -426,8 +424,8 @@ to 4 are real but incremental, and are stated as such throughout.
 
 ## References
 
-Full bibliography, with per-entry verification status, in
-`docs/02-literature/bibliography.md`.
+The full bibliography, with the verification status of each entry, accompanies
+this thesis.
 
 Altman, E.I. (1968) 'Financial Ratios, Discriminant Analysis and the Prediction
 of Corporate Bankruptcy', *Journal of Finance*, 23(4), pp. 589–609.

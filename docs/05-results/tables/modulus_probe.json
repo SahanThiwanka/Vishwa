@@ -1,0 +1,29 @@
+{
+  "n": 651501,
+  "share_multiple_of_12": 0.700691,
+  "best_raw_auc_year_multiples": 0.8859,
+  "best_raw_auc_other_moduli": 0.86,
+  "max_residual_auc": 0.6845,
+  "moduli_tested": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    15,
+    18,
+    20,
+    24,
+    30,
+    36,
+    48,
+    60
+  ]
+}

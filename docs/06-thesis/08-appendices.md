@@ -2,15 +2,13 @@
 
 ## Appendix 1 The criteria model
 
-The complete criteria model is held as a single machine-readable file,
-`shared/model/criteria-tree.json`, consumed by both the decision-support system
-and the analysis pipeline so that the model described in this thesis and the
-model the system runs cannot diverge.
+The complete criteria model is held as a single machine-readable file, consumed
+by both the decision-support system and the analysis pipeline, so that the model
+described in this thesis and the model the system runs cannot diverge.
 
-Every criterion records the clause of the People's Bank *Project / Business
-Appraisal Report for SME Credit Facility* from which it derives.
+Every criterion records the clause of the People's Bank *Project / Business Appraisal Report for SME Credit Facility* from which it derives. @tbl:criteria-model-summary-objective summarises the model by objective and dimension.
 
-[Table: Criteria model summary by objective and dimension]
+[Table: criteria-model-summary-objective | Criteria model summary by objective and dimension]
 
 | Objective | Dimension | Criteria | Source clauses |
 |---|---|---:|---|
@@ -58,7 +56,9 @@ type, and role. No name and no customer information are collected.
 
 ### Appendix 2.4 Comparison scale
 
-[Table: Scale used for pairwise judgements]
+Comparisons are made on the nine-point scale in @tbl:scale-used-pairwise-judgements.
+
+[Table: scale-used-pairwise-judgements | Scale used for pairwise judgements]
 
 | Value | Meaning |
 |---|---|
@@ -72,47 +72,48 @@ Even values represent intermediate judgements.
 
 ## Appendix 3 Reproducing the results
 
-Every quantitative result in this thesis is produced by code in the accompanying
-repository. No value was entered by hand.
+Every quantitative result in this thesis is produced by an analysis that can be
+re-run against the raw data. No value was entered by hand.
 
-The commands below regenerate every figure and table, in order. Each writes its
-output to `research/outputs/`, from which the thesis draws its numbers.
+@tbl:analysis-scripts-results-produces lists the analyses in the order they run,
+and the result each one produces. Each writes its output to a file from which
+the chapters draw their numbers, so a figure quoted in the text can always be
+traced back to the analysis that generated it.
 
-[Table: Analysis scripts and the results each produces]
+[Table: analysis-scripts-results-produces | The analyses, in the order they run, and what each produces]
 
-| Script | Produces |
-|---|---|
-| `prepare_sba.py` | The cleaned dataset, with leakage-bearing fields removed |
-| `leakage_analysis.py` | Evidence that the term field carries outcome information |
-| `sba_foia_replication.py` | The same artefact in the SBA's own FOIA extracts |
-| `benchmark.py` | Clean against contaminated model benchmarks |
-| `statistical_tests.py` | Confidence intervals, DeLong tests, calibration |
-| `weight_sensitivity.py` | The weight perturbation study |
-| `derive_weights.py` | Best-Worst Method weights from the elicitation responses |
-| `elicited_vs_placeholder.py` | What changed when elicited weights replaced equal ones |
-| `objective_independence.py` | Separability of the two objectives |
-| `cost_analysis.py` | Cost-sensitive evaluation |
-| `modulus_probe.py` | Whether a twelve-month modulus is arbitrary |
-| `realestate_probe.py` | The feature the dataset documentation itself proposes |
-| `fairness_analysis.py` | Disparate impact, with bootstrap intervals |
-| `missingness_analysis.py` | The effect of withholding a field |
-| `make_figures.py` | Every figure in the thesis |
-| `test_parity.py` | Agreement between the Python and TypeScript engines |
-| `bwm.py` | Solver self-test against a known-inconsistent input |
+| # | Analysis | Produces | Reported in |
+|---:|---|---|---|
+| 1 | Data preparation | The cleaned dataset, with outcome-derived fields removed | 5.2 |
+| 2 | Contamination analysis | Evidence that the term field carries outcome information | 5.3 |
+| 3 | FOIA replication | The same artefact in the SBA's own loan-level extracts | 5.3.5 |
+| 4 | Modulus probe | Whether a twelve-month modulus is arbitrary | 5.3.6 |
+| 5 | Real-estate probe | The feature the dataset documentation itself proposes | 5.3.7 |
+| 6 | Benchmarking | Clean against contaminated model performance | 5.4 |
+| 7 | Significance testing | Confidence intervals, paired DeLong tests, calibration | 5.4, 5.5a |
+| 8 | Cost-sensitive evaluation | Expected cost against fixed policies | 5.5b |
+| 9 | Weight sensitivity | The weight perturbation study | 5.6a |
+| 10 | Objective independence | Separability of the two objectives | 5.6b |
+| 11 | Subgroup analysis | Disparate impact, with bootstrap intervals | 5.6c |
+| 12 | Missingness analysis | The effect of withholding a field | 5.6d |
+| 13 | Weight derivation | Best-Worst Method weights from the elicitation responses | 6.1.4 |
+| 14 | Elicited against placeholder | What changed when the elicited weights replaced equal ones | 6.1.5 |
+| 15 | Figure generation | Every figure in the thesis | — |
+| 16 | Engine parity check | Agreement between the two implementations of the scoring engine | 4.6 |
+| 17 | Solver self-test | The Best-Worst solver against a known-inconsistent input | 3.5.3 |
 
-Two further checks guard the document itself. `scripts/verify_claims.py`
-re-derives the load-bearing figures from the generated result files and compares
-each against what the chapters state; it currently runs ninety checks. `npm test`
-in `web/` exercises the system's own unit tests. A failure in the first means a
-number in the thesis no longer matches the analysis that produced it, and the
-chapter is corrected rather than the check.
+Two further checks guard the document itself. The first re-derives the
+load-bearing figures from the generated result files and compares each against
+what the chapters state, currently over ninety separate checks; a failure means
+a number in the thesis no longer matches the analysis that produced it, and the
+chapter is corrected rather than the check. The second runs the system's own
+unit tests, of which there are 105.
 
 ## Appendix 4 Dataset
 
-The SBA National dataset is public and is not reproduced here. It may be obtained
-as described in `research/data/DATASETS.md`.
+The SBA National dataset is public and is not reproduced here; it is distributed through the Kaggle dataset repository and is described by Li, Mickel and Taylor [29]. @tbl:dataset-filtering-applied records the filtering applied to it before analysis, and the number of records surviving each stage.
 
-[Table: Dataset filtering applied]
+[Table: dataset-filtering-applied | Dataset filtering applied]
 
 | Stage | Records |
 |---|---:|

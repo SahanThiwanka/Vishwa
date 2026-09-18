@@ -10,16 +10,16 @@ development, demonstration, evaluation, and communication. The artefact is a
 dual-objective decision-support system for SME credit appraisal, together with
 the criteria model beneath it.
 
-Five activities make up the design:
+Five activities make up the design. @tbl:research-activities-questions-they sets each against the research question it addresses, the method used, and where its output is reported.
 
-[Table: Research activities, the questions they address and their outputs]
+[Table: research-activities-questions-they | Research activities, the questions they address and their outputs]
 
 | Activity | Addresses | Method | Output |
 |---|---|---|---|
 | Formalisation | RQ1 | Clause-by-clause derivation from the bank's form | 49-criterion model, working system |
 | Weight elicitation | RQ2 | Best-Worst Method with ten practitioners | Section 6.1 |
 | Weight sensitivity | RQ2 | Monte Carlo over perturbed weight vectors | Section 5.16 |
-| Empirical validation | RQ3 | Benchmarking against realised outcomes, with CIs and paired tests | Sections 5.3 to 5.6 |
+| Empirical validation | RQ3 | Benchmarking against realised outcomes, with confidence intervals (CIs) and paired tests | Sections 5.3 to 5.6 |
 | Objective separability | RQ4 | Correlation and band agreement across 652,284 facilities | Section 5.17 |
 
 Weight elicitation by Best-Worst Method is specified in Section 4.5 and was
@@ -75,7 +75,7 @@ Three rules govern edge cases, each chosen deliberately:
 1. Unassessed criteria are excluded and weights renormalised, never treated as zero, because an incomplete appraisal is not a bad one.
 2. Below a completeness threshold, no recommendation is issued, because rule 1 alone allows a sparse file to produce a confident score (Section 5.3).
 3. Critical criteria are evaluated on raw values and surfaced separately, so a
-   DSCR below 1.0 cannot be averaged away.
+   debt service cover ratio (DSCR) below 1.0 cannot be averaged away.
 
 ## 4.5 Weight elicitation (RQ2)
 
@@ -131,10 +131,10 @@ objective is minimised by sequential least-squares from forty random starts;
 because the programme is convex, no general-purpose optimiser can beat it, so a
 lower value found that way would prove the formulation wrong. Across three
 inconsistent cases the two agree to six decimal places, and the returned weights
-exhibit exactly the deviation reported. The check runs as part of
-`research/src/bwm.py`.
+exhibit exactly the deviation reported. Both checks run as part of the
+solver's own test suite.
 
-Responses with CR > 0.25 are excluded, not averaged in. The number excluded is
+Responses with a consistency ratio (CR) above 0.25 are excluded, not averaged in. The number excluded is
 reported: silently discarding respondents would make the study unreproducible.
 
 Surviving responses are aggregated by geometric mean, the standard aggregation
@@ -171,7 +171,7 @@ Chapter 5 is entitled to conclude.
   places the same economic cycle on both sides and overstates performance.
 - The unfitted expert scorecard is compared against logistic regression and
   gradient boosting, both trained on hundreds of thousands of labelled outcomes.
-- Metrics: area under the ROC curve [32], Kolmogorov–Smirnov
+- Metrics: area under the receiver operating characteristic (ROC) curve [32], Kolmogorov–Smirnov
   separation, average precision, the Brier score [33] under
   Murphy's decomposition [34], and F1 at the Youden-optimal threshold.
 - Paired comparisons of AUC use DeLong's test [35], which accounts for the correlation induced by
@@ -271,8 +271,7 @@ exhaustively and *how to weigh it* not at all.
 
 Each clause of the form was examined and classified:
 
-- Directly computable: the thirteen ratios of clause 2.17, the DSCR/ISCR/ROI
-  series of clause 4, the cost-of-project structure of clause 3.7, the working
+- Directly computable: the thirteen ratios of clause 2.17, the debt service cover, interest service cover (ISCR) and return on investment (ROI) series of clause 4, the cost-of-project structure of clause 3.7, the working
   capital computation of Annexure II. These become quantitative criteria with
   explicit thresholds.
 - Judgement, but structured: clause 3.10.3 is already Porter's five forces;
@@ -284,7 +283,7 @@ Each clause of the form was examined and classified:
   are captured by the system but carry no score.
 
 The rule applied throughout: no criterion exists without a source clause. Every
-entry in the resulting model carries a `ref` field naming the clause it derives
+entry in the resulting model carries a *ref* field naming the clause it derives
 from. This constraint is what makes the model auditable, since any score can be
 traced to the institutional document that authorises it, and it prevents the
 common failure of a scoring model quietly acquiring criteria its users never
@@ -294,7 +293,7 @@ agreed to.
 
 ### 4.11.1 Quantitative criteria
 
-Each quantitative criterion carries a set of `[rawValue, score]` anchors
+Each quantitative criterion carries a set of (raw value, score) anchors
 defining a piecewise-linear map onto 0–100. DSCR, for example, anchors at 0.8→0,
 1.0→25,
 1.25→50, 1.5→75, 2.0→100. Values outside the anchor range clamp to the nearest
@@ -309,11 +308,11 @@ above it, since a ratio of
 ### 4.11.2 Qualitative criteria
 
 Qualitative criteria are captured on a five-point linguistic scale of Very Poor,
-Poor, Fair, Good and Excellent, represented as triangular fuzzy numbers:
+Poor, Fair, Good and Excellent, represented as the triangular fuzzy numbers in @tbl:five-point-linguistic-scale.
 
-[Table: Five-point linguistic scale and its triangular fuzzy numbers]
+[Table: five-point-linguistic-scale | Five-point linguistic scale and its triangular fuzzy numbers]
 
-| Code | Label | TFN |
+| Code | Label | Triangular fuzzy number |
 |---|---|---|
 | VP | Very Poor | [0, 0, 25] |
 | P | Poor | [0, 25, 50] |
@@ -325,7 +324,8 @@ Fuzzy representation is used because appraisal judgements are linguistic and
 imprecise. An officer writing "management is sound" is not asserting 75.0; the
 triangular number carries that imprecision explicitly instead of discarding it.
 
-Quantitative values enter as degenerate TFNs `[x,x,x]`, so both criterion types
+Quantitative values enter as degenerate triangular fuzzy numbers (TFNs) of the
+form [*x*, *x*, *x*], so both criterion types
 flow through one aggregation path. Aggregation is the fuzzy weighted average;
 defuzzification is by centroid, which for a TFN reduces to the mean of its three
 points.
@@ -350,14 +350,19 @@ them.
 
 ## 4.12 System architecture
 
-[Table: System architecture by layer, with the reason for each choice]
+@tbl:system-architecture-layer-reason lists the technology used at each layer
+and the reason it was chosen. The pattern throughout is that the scoring engine
+runs where the officer is, so that a score changes as a figure is typed, while
+anything that must not be tampered with runs on the server.
+
+[Table: system-architecture-layer-reason | System architecture by layer, with the reason for each choice]
 
 | Layer | Technology | Rationale |
 |---|---|---|
 | Interface | Next.js 16, React 19, TypeScript, Tailwind 4 | Engine runs client-side for live scoring |
 | Persistence | Prisma 7, SQLite | No external services; one config change to PostgreSQL |
 | Analysis | Python, pandas, scikit-learn, SciPy | No TypeScript equivalent for the empirical work |
-| Model | `shared/model/criteria-tree.json` | Single source of truth for both stacks |
+| Model | A single machine-readable criteria file | Single source of truth for both stacks |
 
 The two stacks never communicate at runtime. The Python pipeline calibrates and
 validates, exporting weights as JSON; the web application consumes that JSON.
@@ -389,16 +394,16 @@ who *claimed* to have signed, which is no record at all: anyone could enter any
 name, and the trail would look complete while proving nothing. The system now
 authenticates users and takes the signatory from the session.
 
-Roles map directly onto the chain in clause 7 of the form:
+Roles map directly onto the sign-off chain in clause 7 of the form, as @tbl:application-roles-permitted-actions sets out.
 
-[Table: Application roles and permitted actions, against clause 7 of the form]
+[Table: application-roles-permitted-actions | Application roles and permitted actions, against clause 7 of the form]
 
 | Role | Permitted |
 |---|---|
-| `OFFICER` | prepare an appraisal |
-| `RECOMMENDER` | endorse |
-| `HEAD_OFFICE` | approve or decline |
-| `ADMIN` | all of the above, plus user administration |
+| Officer | prepare an appraisal |
+| Recommender | endorse |
+| Head office | approve or decline |
+| Administrator | all of the above, plus user administration |
 
 Three properties are enforced rather than merely displayed. The interface offers
 only the actions a user's role permits; the server re-checks the role before

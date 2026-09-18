@@ -4,6 +4,7 @@
   "test_n": 275487,
   "test_default_rate": 0.3589,
   "min_group_n": 500,
+  "n_boot": 400,
   "protected_characteristics_available": false,
   "note": "The dataset records no legally protected characteristic. These are credit-access proxies, not protected classes.",
   "disparities": [
@@ -19,7 +20,18 @@
       "equal_opportunity_ratio": 5.2104,
       "most_wrongly_declined_group": "Not recorded",
       "auc_spread": 0.1056,
-      "worst_served_group": "Rural"
+      "worst_served_group": "Rural",
+      "n_boot": 400,
+      "di_lo": 0.3085,
+      "di_hi": 0.3442,
+      "eo_lo": 4.9839,
+      "eo_hi": 5.4012,
+      "di_below_four_fifths_share": 1.0,
+      "selection_stability_approval": 1.0,
+      "most_often_least_approved": "Not recorded",
+      "selection_stability_error": 1.0,
+      "most_often_wrongly_declined": "Not recorded",
+      "null_ratio_median": 0.9923
     },
     {
       "model": "Gradient boosting (clean, temporal)",
@@ -33,7 +45,18 @@
       "equal_opportunity_ratio": 2.8106,
       "most_wrongly_declined_group": "Micro (1-4)",
       "auc_spread": 0.0469,
-      "worst_served_group": "Not reported (0)"
+      "worst_served_group": "Not reported (0)",
+      "n_boot": 400,
+      "di_lo": 0.8201,
+      "di_hi": 0.8376,
+      "eo_lo": 2.567,
+      "eo_hi": 3.9184,
+      "di_below_four_fifths_share": 0.0,
+      "selection_stability_approval": 1.0,
+      "most_often_least_approved": "Micro (1-4)",
+      "selection_stability_error": 1.0,
+      "most_often_wrongly_declined": "Micro (1-4)",
+      "null_ratio_median": 0.9836
     },
     {
       "model": "Gradient boosting (clean, temporal)",
@@ -47,7 +70,18 @@
       "equal_opportunity_ratio": 1.0338,
       "most_wrongly_declined_group": "Existing",
       "auc_spread": 0.0035,
-      "worst_served_group": "New business"
+      "worst_served_group": "New business",
+      "n_boot": 400,
+      "di_lo": 0.9893,
+      "di_hi": 0.9974,
+      "eo_lo": 1.0101,
+      "eo_hi": 1.061,
+      "di_below_four_fifths_share": 0.0,
+      "selection_stability_approval": 0.995,
+      "most_often_least_approved": "Existing",
+      "selection_stability_error": 0.9975,
+      "most_often_wrongly_declined": "Existing",
+      "null_ratio_median": 0.9986
     },
     {
       "model": "Gradient boosting (clean, temporal)",
@@ -61,7 +95,18 @@
       "equal_opportunity_ratio": 4.7832,
       "most_wrongly_declined_group": "Transportation",
       "auc_spread": 0.0956,
-      "worst_served_group": "Agriculture/Forestry/Fishing"
+      "worst_served_group": "Agriculture/Forestry/Fishing",
+      "n_boot": 400,
+      "di_lo": 0.7523,
+      "di_hi": 0.7827,
+      "eo_lo": 3.9486,
+      "eo_hi": 7.7128,
+      "di_below_four_fifths_share": 1.0,
+      "selection_stability_approval": 0.9575,
+      "most_often_least_approved": "Retail Trade",
+      "selection_stability_error": 0.8925,
+      "most_often_wrongly_declined": "Transportation",
+      "null_ratio_median": 0.973
     },
     {
       "model": "Gradient boosting (clean, temporal)",
@@ -75,7 +120,18 @@
       "equal_opportunity_ratio": 3.4226,
       "most_wrongly_declined_group": "Smallest 25%",
       "auc_spread": 0.0844,
-      "worst_served_group": "Lower-mid"
+      "worst_served_group": "Lower-mid",
+      "n_boot": 400,
+      "di_lo": 0.785,
+      "di_hi": 0.7935,
+      "eo_lo": 3.2639,
+      "eo_hi": 3.5707,
+      "di_below_four_fifths_share": 1.0,
+      "selection_stability_approval": 1.0,
+      "most_often_least_approved": "Smallest 25%",
+      "selection_stability_error": 1.0,
+      "most_often_wrongly_declined": "Smallest 25%",
+      "null_ratio_median": 0.9962
     },
     {
       "model": "Expert scorecard (unfitted)",
@@ -89,7 +145,18 @@
       "equal_opportunity_ratio": 4.9766,
       "most_wrongly_declined_group": "Not recorded",
       "auc_spread": 0.0465,
-      "worst_served_group": "Not recorded"
+      "worst_served_group": "Not recorded",
+      "n_boot": 400,
+      "di_lo": 0.1696,
+      "di_hi": 0.2091,
+      "eo_lo": 4.8642,
+      "eo_hi": 5.1008,
+      "di_below_four_fifths_share": 1.0,
+      "selection_stability_approval": 1.0,
+      "most_often_least_approved": "Not recorded",
+      "selection_stability_error": 1.0,
+      "most_often_wrongly_declined": "Not recorded",
+      "null_ratio_median": 0.9923
     },
     {
       "model": "Expert scorecard (unfitted)",
@@ -103,7 +170,18 @@
       "equal_opportunity_ratio": 3.1767,
       "most_wrongly_declined_group": "Not reported (0)",
       "auc_spread": 0.1913,
-      "worst_served_group": "Large (100+)"
+      "worst_served_group": "Large (100+)",
+      "n_boot": 400,
+      "di_lo": 0.7108,
+      "di_hi": 0.7462,
+      "eo_lo": 2.9033,
+      "eo_hi": 3.4778,
+      "di_below_four_fifths_share": 1.0,
+      "selection_stability_approval": 1.0,
+      "most_often_least_approved": "Not reported (0)",
+      "selection_stability_error": 1.0,
+      "most_often_wrongly_declined": "Not reported (0)",
+      "null_ratio_median": 0.9836
     },
     {
       "model": "Expert scorecard (unfitted)",
@@ -117,7 +195,18 @@
       "equal_opportunity_ratio": 2.9348,
       "most_wrongly_declined_group": "New business",
       "auc_spread": 0.0177,
-      "worst_served_group": "Existing"
+      "worst_served_group": "Existing",
+      "n_boot": 400,
+      "di_lo": 0.7066,
+      "di_hi": 0.7141,
+      "eo_lo": 2.8972,
+      "eo_hi": 3.0143,
+      "di_below_four_fifths_share": 1.0,
+      "selection_stability_approval": 1.0,
+      "most_often_least_approved": "New business",
+      "selection_stability_error": 1.0,
+      "most_often_wrongly_declined": "New business",
+      "null_ratio_median": 0.9986
     },
     {
       "model": "Expert scorecard (unfitted)",
@@ -131,7 +220,18 @@
       "equal_opportunity_ratio": 3.0167,
       "most_wrongly_declined_group": "Agriculture/Forestry/Fishing",
       "auc_spread": 0.1275,
-      "worst_served_group": "Wholesale Trade"
+      "worst_served_group": "Wholesale Trade",
+      "n_boot": 400,
+      "di_lo": 0.7018,
+      "di_hi": 0.7583,
+      "eo_lo": 2.7903,
+      "eo_hi": 3.288,
+      "di_below_four_fifths_share": 1.0,
+      "selection_stability_approval": 1.0,
+      "most_often_least_approved": "Agriculture/Forestry/Fishing",
+      "selection_stability_error": 1.0,
+      "most_often_wrongly_declined": "Agriculture/Forestry/Fishing",
+      "null_ratio_median": 0.973
     },
     {
       "model": "Expert scorecard (unfitted)",
@@ -145,7 +245,18 @@
       "equal_opportunity_ratio": 2.384,
       "most_wrongly_declined_group": "Largest 25%",
       "auc_spread": 0.1136,
-      "worst_served_group": "Upper-mid"
+      "worst_served_group": "Upper-mid",
+      "n_boot": 400,
+      "di_lo": 0.828,
+      "di_hi": 0.8364,
+      "eo_lo": 2.3153,
+      "eo_hi": 2.4621,
+      "di_below_four_fifths_share": 0.0,
+      "selection_stability_approval": 1.0,
+      "most_often_least_approved": "Largest 25%",
+      "selection_stability_error": 1.0,
+      "most_often_wrongly_declined": "Largest 25%",
+      "null_ratio_median": 0.9962
     }
   ]
 }

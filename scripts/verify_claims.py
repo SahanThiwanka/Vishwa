@@ -85,6 +85,135 @@ def check_restructure_current() -> tuple[bool, str]:
 HEADING = re.compile(r"^#{1,4}\s+(\d+(?:\.\d+)*[a-z]?(?:\.\d+)*)\s+(.*)$", re.M)
 
 
+BODY_ORDER = ["01-introduction.md", "02-objectives.md", "03-literature-review.md",
+              "04-methodology.md", "05-results.md", "06-discussion-conclusions.md",
+              "08-appendices.md"]
+
+
+def _body_text() -> str:
+    return "\n".join((CHAPTERS / n).read_text(encoding="utf-8")
+                     for n in BODY_ORDER if (CHAPTERS / n).exists())
+
+
+def check_abstract_length() -> list[tuple[bool, str]]:
+    """The guideline sets the abstract at 200-300 words."""
+    path = CHAPTERS / "00-front-matter.md"
+    if not path.exists():
+        return []
+    text = path.read_text(encoding="utf-8")
+    if "# ABSTRACT" not in text:
+        return [(False, "FAIL  no abstract found")]
+    body = text.split("# ABSTRACT", 1)[1].split("**Keywords:**")[0]
+    n = len(body.split())
+    if 200 <= n <= 300:
+        return [(True, f"OK    abstract length                          {n} words")]
+    return [(False, f"FAIL  abstract is {n} words, outside the 200-300 the "
+                    f"guideline specifies")]
+
+
+def check_exhibits_are_referenced() -> list[tuple[bool, str]]:
+    """Every table and figure must be named by number somewhere in the text.
+
+    The guideline requires each to appear as close as possible to its first
+    mention, which presupposes a mention. In the draft of 17 September not one
+    of the 32 tables or 7 figures was referred to anywhere, so a reader met each
+    one with no idea why it was there.
+    """
+    text = _body_text()
+    if not text:
+        return []
+    defined = ([("tbl", m) for m in
+                re.findall(r"^\[Table:\s*([a-z0-9-]+)\s*\|", text, re.M)]
+               + [("fig", m) for m in
+                  re.findall(r"^\[Image:\s*\S+\s*\|\s*([a-z0-9-]+)\s*\|",
+                             text, re.M)])
+    referenced = set(re.findall(r"@(?:tbl|fig):([a-z0-9-]+)", text))
+
+    orphans = [f"{kind}:{key}" for kind, key in defined if key not in referenced]
+    unkeyed = (len(re.findall(r"^\[Table:\s*[^|\]]+\]$", text, re.M))
+               + len(re.findall(r"^\[Image:\s*[^|]+\|\s*[^|\]]+\]$", text, re.M)))
+
+    out = []
+    if unkeyed:
+        out.append((False, f"FAIL  {unkeyed} exhibit(s) carry no reference key"))
+    if orphans:
+        out.append((False, f"FAIL  {len(orphans)} exhibit(s) never referred to "
+                           f"in the text"))
+        out += [(False, f"        {o}") for o in orphans[:8]]
+    if not out:
+        out.append((True, f"OK    all {len(defined)} tables and figures are "
+                          f"referred to by number"))
+    return out
+
+
+def check_abbreviations_expanded() -> list[tuple[bool, str]]:
+    """Each abbreviation must be explained in the text where it first appears.
+
+    Checked against the List of Abbreviations, so adding an entry to the list
+    without introducing it in the text fails, and so does the reverse.
+    """
+    front = CHAPTERS / "00-front-matter.md"
+    text = _body_text()
+    if not front.exists() or not text:
+        return []
+    table = front.read_text(encoding="utf-8")
+    if "# LIST OF ABBREVIATIONS" not in table:
+        return []
+    table = table.split("# LIST OF ABBREVIATIONS", 1)[1]
+    entries = re.findall(r"^\|\s*([A-Z][A-Za-z0-9]{1,9})\s*\|\s*([^|]+?)\s*\|$",
+                         table, re.M)
+
+    unexplained = []
+    for abbr, meaning in entries:
+        # A trailing plural "s" is still a use of the abbreviation: "SMEs" is
+        # where a reader first meets SME, and the expansion has to be there.
+        m = re.search(rf"(?<![A-Za-z]){re.escape(abbr)}s?(?![A-Za-z])", text)
+        if not m:
+            unexplained.append(f"{abbr} (listed but never used)")
+            continue
+        # The expansion has to be near the first use, not anywhere at all.
+        window = text[max(0, m.start() - 260):m.start() + 260].lower()
+        head = meaning.split("(")[0].strip().lower()
+        if head[:22] not in window:
+            unexplained.append(f"{abbr} first used without its expansion")
+
+    if unexplained:
+        out = [(False, f"FAIL  {len(unexplained)} abbreviation(s) not "
+                       f"explained at first use")]
+        return out + [(False, f"        {u}") for u in unexplained[:8]]
+    return [(True, f"OK    all {len(entries)} abbreviations expanded at first "
+                   f"use")]
+
+
+def check_no_repository_paths() -> list[tuple[bool, str]]:
+    """No file paths, script names or shell commands in the thesis body.
+
+    An examiner reads the thesis without the repository, so "run
+    research/src/bwm.py" is a dead reference and reads as a note the author
+    forgot to take out. 45 of them were in the submitted draft.
+    """
+    text = _body_text()
+    if not text:
+        return []
+    patterns = {
+        "a code span": r"`[^`]+`",
+        "a script name": r"\b\w+\.py\b",
+        "a repository path": r"\b(?:research|scripts|web|docs|shared)/[\w./-]+",
+        "a shell command": r"\b(?:npm|python|cd|pip) +[\w./:-]+",
+    }
+    hits = []
+    for label, pattern in patterns.items():
+        found = re.findall(pattern, text)
+        if found:
+            hits.append((label, sorted(set(found))[:4], len(found)))
+    if hits:
+        out = [(False, "FAIL  the thesis body still refers to the repository")]
+        for label, sample, n in hits:
+            out.append((False, f"        {n} x {label}: {', '.join(sample)}"))
+        return out
+    return [(True, "OK    no file paths or commands in the thesis body")]
+
+
 def check_headings_are_numbered() -> list[tuple[bool, str]]:
     """Every subheading in a source chapter must carry a section number.
 
@@ -603,6 +732,10 @@ def main() -> int:
 
     checks.append(check_restructure_current())
     checks.extend(check_headings_are_numbered())
+    checks.extend(check_abstract_length())
+    checks.extend(check_exhibits_are_referenced())
+    checks.extend(check_abbreviations_expanded())
+    checks.extend(check_no_repository_paths())
     checks.extend(check_section_coverage())
     checks.append(check_cross_references())
 

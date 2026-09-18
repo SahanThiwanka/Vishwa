@@ -10,16 +10,16 @@ development, demonstration, evaluation, and communication. The artefact is a
 dual-objective decision-support system for SME credit appraisal, together with
 the criteria model beneath it.
 
-Five activities make up the design:
+Five activities make up the design. @tbl:research-activities-questions-they sets each against the research question it addresses, the method used, and where its output is reported.
 
-[Table: Research activities, the questions they address and their outputs]
+[Table: research-activities-questions-they | Research activities, the questions they address and their outputs]
 
 | Activity | Addresses | Method | Output |
 |---|---|---|---|
 | Formalisation | RQ1 | Clause-by-clause derivation from the bank's form | 49-criterion model, working system |
 | Weight elicitation | RQ2 | Best-Worst Method with ten practitioners | Section 6.1 |
 | Weight sensitivity | RQ2 | Monte Carlo over perturbed weight vectors | Section 5.6a |
-| Empirical validation | RQ3 | Benchmarking against realised outcomes, with CIs and paired tests | Sections 5.3 to 5.6 |
+| Empirical validation | RQ3 | Benchmarking against realised outcomes, with confidence intervals (CIs) and paired tests | Sections 5.3 to 5.6 |
 | Objective separability | RQ4 | Correlation and band agreement across 652,284 facilities | Section 5.6b |
 
 Weight elicitation by Best-Worst Method is specified in Section 3.5 and was
@@ -75,7 +75,7 @@ Three rules govern edge cases, each chosen deliberately:
 1. Unassessed criteria are excluded and weights renormalised, never treated as zero, because an incomplete appraisal is not a bad one.
 2. Below a completeness threshold, no recommendation is issued, because rule 1 alone allows a sparse file to produce a confident score (Section 4.5).
 3. Critical criteria are evaluated on raw values and surfaced separately, so a
-   DSCR below 1.0 cannot be averaged away.
+   debt service cover ratio (DSCR) below 1.0 cannot be averaged away.
 
 ## 3.5 Weight elicitation (RQ2)
 
@@ -131,10 +131,10 @@ objective is minimised by sequential least-squares from forty random starts;
 because the programme is convex, no general-purpose optimiser can beat it, so a
 lower value found that way would prove the formulation wrong. Across three
 inconsistent cases the two agree to six decimal places, and the returned weights
-exhibit exactly the deviation reported. The check runs as part of
-`research/src/bwm.py`.
+exhibit exactly the deviation reported. Both checks run as part of the
+solver's own test suite.
 
-Responses with CR > 0.25 are excluded, not averaged in. The number excluded is
+Responses with a consistency ratio (CR) above 0.25 are excluded, not averaged in. The number excluded is
 reported: silently discarding respondents would make the study unreproducible.
 
 Surviving responses are aggregated by geometric mean, the standard aggregation
@@ -171,7 +171,7 @@ Chapter 5 is entitled to conclude.
   places the same economic cycle on both sides and overstates performance.
 - The unfitted expert scorecard is compared against logistic regression and
   gradient boosting, both trained on hundreds of thousands of labelled outcomes.
-- Metrics: area under the ROC curve (Hanley and McNeil, 1982), Kolmogorov–Smirnov
+- Metrics: area under the receiver operating characteristic (ROC) curve (Hanley and McNeil, 1982), Kolmogorov–Smirnov
   separation, average precision, the Brier score (Brier, 1950) under
   Murphy's decomposition (Murphy, 1973), and F1 at the Youden-optimal threshold.
 - Paired comparisons of AUC use DeLong's test (DeLong, DeLong and

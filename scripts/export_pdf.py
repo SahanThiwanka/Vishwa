@@ -35,7 +35,18 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_DOCX = ROOT / "docs" / "06-thesis" / "THESIS-NSBM.docx"
+CHAPTERS = ROOT / "docs" / "06-thesis"
+
+
+def latest_build() -> Path:
+    """The most recent dated build, since the builder no longer overwrites.
+
+    Every build day writes THESIS-NSBM-YYYY-MM-DD.docx, so earlier versions
+    survive for comparison. Without an argument this script exports whichever
+    of them is newest, which is the one just built.
+    """
+    builds = sorted(CHAPTERS.glob("THESIS-NSBM-20*.docx"))
+    return builds[-1] if builds else CHAPTERS / "THESIS-NSBM.docx"
 
 # wdExportFormatPDF = 17, wdExportCreateHeadingBookmarks = 1.
 # The bookmarks give the PDF a navigable outline built from the heading styles,
@@ -125,7 +136,7 @@ def export(docx: Path) -> int:
 
 
 def main() -> int:
-    docx = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else DEFAULT_DOCX
+    docx = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else latest_build()
     return export(docx)
 
 

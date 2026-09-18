@@ -23,10 +23,9 @@ feasible.
 
 ### 6.1.2 Respondents
 
-Ten credit practitioners completed the instrument, above the five-to-eight range
-typical of published BWM studies.
+Ten credit practitioners completed the instrument, above the five-to-eight range typical of published BWM studies. @tbl:profile-ten-elicitation-respondents summarises the sample by experience, role and institution.
 
-[Table: Profile of the ten elicitation respondents]
+[Table: profile-ten-elicitation-respondents | Profile of the ten elicitation respondents]
 
 | | |
 |---|---|
@@ -47,8 +46,8 @@ of Sri Lankan SME lending, not the sector.
 Each respondent produced eight level-responses, giving 80 in total. Three were
 excluded for a consistency ratio above 0.25 and the remaining 77 retained. The
 exclusions are reported rather than absorbed: two fell in
-`dimension:borrower_management` and `dimension:credit_conduct` from one
-respondent (CR 0.298 and 0.377), and one at `objective:credit_risk` from another
+the borrower and management dimension and the credit conduct dimension from one
+respondent (CR 0.298 and 0.377), and one at the credit-risk objective level from another
 (CR 0.293).
 
 Most responses were highly consistent, a majority of them at CR = 0.000, meaning
@@ -56,9 +55,9 @@ the stated comparisons admit a weight vector that reproduces them exactly.
 
 ### 6.1.4 The weights
 
-At the objective level, practitioners weight the six credit-risk areas as:
+@tbl:elicited-weights-six-credit gives the weights practitioners assign to the six credit-risk areas, each shown against the 0.1667 an equal weighting would give it.
 
-[Table: Elicited weights for the six credit-risk dimensions]
+[Table: elicited-weights-six-credit | Elicited weights for the six credit-risk dimensions]
 
 | Dimension | Weight | Against equal |
 |---|---:|---:|
@@ -75,7 +74,7 @@ emphasis of an instrument whose longest section is the historic financial
 analysis. Security and compliance ranks last of the six, despite occupying a
 full clause of the form.
 
-`weightStatus` is now `ELICITED`, recording ten respondents, three exclusions and
+the model's weight status is now elicited, recording ten respondents, three exclusions and
 the date. Every score in the system is computed from these weights.
 
 ### 6.1.5 What the placeholders cost
@@ -89,10 +88,9 @@ largest to smallest reaches 3.25, and the largest departure from equal weighting
 is 79%, three times the perturbation tested. The earlier reassurance was
 therefore about a narrower disturbance than the one that actually occurred.
 
-It survives the test anyway. Scoring the same 2,000 simulated appraisals under
-both vectors:
+It survives the test anyway. @tbl:scoring-placeholder-elicited-weights scores the same 2,000 simulated appraisals under both vectors and compares the two rankings.
 
-[Table: Scoring under placeholder and elicited weights compared]
+[Table: scoring-placeholder-elicited-weights | Scoring under placeholder and elicited weights compared]
 
 | | Credit risk | Development impact |
 |---|---:|---:|
@@ -163,7 +161,7 @@ public dataset contains its variables. Substituting SBA-observable proxies
 produced a scorecard with no discrimination (AUC 0.4144 random, 0.5275
 temporal), a negative result reported as it occurred (Section 5.6).
 
-The attempt surfaced something more useful. The SBA National dataset's `Term`
+The attempt surfaced something more useful. The SBA National dataset's *Term*
 field carries outcome information: roundness alone predicts default at AUC 0.889
 within every approval year, and excluding the field drops gradient-boosting
 temporal AUC from 0.9461 to 0.6076 (Sections 5.3 to 5.4). Confidence intervals
@@ -206,7 +204,7 @@ credit cost, exactly the trade-off the dual-objective design exists to surface.
 ### 6.3.1 What the contamination finding means
 
 The SBA National dataset is widely used in credit-scoring research and teaching.
-A model given `Term` and free to split on exact values inherits an artefact
+A model given *Term* and free to split on exact values inherits an artefact
 worth up to 0.34 AUC, and a meaningless roundness probe reaches 0.887 on its
 own.
 
@@ -354,7 +352,7 @@ verified; they need respondents.
 business age and sector to determine whether the relationship in Section 5.6b.3
 is causal. If it is, it has direct policy implications for development lending.
 
-**Establish the contamination mechanism.** Determining why `Term` behaves as it
+**Establish the contamination mechanism.** Determining why *Term* behaves as it
 does, through SBA documentation or the agency itself, would convert a caution
 into a full account, and is publishable independently.
 
@@ -377,7 +375,7 @@ bank's format.
 
 The empirical work produced results the study did not set out to find. The most
 substantial contribution is not the model but a caution about the data others
-use to evaluate such models: the `Term` field in the widely used SBA National
+use to evaluate such models: the *Term* field in the widely used SBA National
 dataset carries outcome information, inflating gradient-boosting temporal
 discrimination by 0.34 AUC. Alongside it sit a negative result, an expert
 scorecard that failed to discriminate on proxy variables, and the methodological

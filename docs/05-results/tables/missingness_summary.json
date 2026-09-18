@@ -25,5 +25,17 @@
       "decline_to_approve_share": 0.19608,
       "fields_to_halve_assessed_risk": null
     }
+  },
+  "no_information_applicant": {
+    "Gradient boosting (native NaN)": {
+      "p_no_information": 0.06145,
+      "percentile_among_real_applicants": 0.0651,
+      "crossover_decline_share": 0.9349
+    },
+    "Logistic regression (median imputation)": {
+      "p_no_information": 0.06693,
+      "percentile_among_real_applicants": 0.0389,
+      "crossover_decline_share": 0.9611
+    }
   }
 }

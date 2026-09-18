@@ -37,8 +37,7 @@ exhaustively and *how to weigh it* not at all.
 
 Each clause of the form was examined and classified:
 
-- Directly computable: the thirteen ratios of clause 2.17, the DSCR/ISCR/ROI
-  series of clause 4, the cost-of-project structure of clause 3.7, the working
+- Directly computable: the thirteen ratios of clause 2.17, the debt service cover, interest service cover (ISCR) and return on investment (ROI) series of clause 4, the cost-of-project structure of clause 3.7, the working
   capital computation of Annexure II. These become quantitative criteria with
   explicit thresholds.
 - Judgement, but structured: clause 3.10.3 is already Porter's five forces;
@@ -50,7 +49,7 @@ Each clause of the form was examined and classified:
   are captured by the system but carry no score.
 
 The rule applied throughout: no criterion exists without a source clause. Every
-entry in the resulting model carries a `ref` field naming the clause it derives
+entry in the resulting model carries a *ref* field naming the clause it derives
 from. This constraint is what makes the model auditable, since any score can be
 traced to the institutional document that authorises it, and it prevents the
 common failure of a scoring model quietly acquiring criteria its users never
@@ -58,7 +57,14 @@ agreed to.
 
 ### 4.2.3 Result
 
-[Table: Criterion counts and source clauses by dimension]
+The derivation produced forty-nine criteria across seven dimensions and two
+objectives. @tbl:criterion-counts-source-clauses gives the count for each
+dimension together with the clauses of the form it derives from. Six of the
+seven dimensions belong to credit risk; the seventh carries the whole of the
+development-impact objective, an asymmetry inherited from the source document
+that Section 5.16.3 shows to have consequences for weighting.
+
+[Table: criterion-counts-source-clauses | Criterion counts and source clauses by dimension]
 
 | Objective | Dimension | Criteria | Form clauses |
 |---|---|---:|---|
@@ -72,7 +78,7 @@ agreed to.
 | Total | 7 dimensions | 49 | |
 
 Twenty-eight criteria are quantitative and twenty-one qualitative. The model is
-held in `shared/model/criteria-tree.json` as the single source of truth,
+held in a single machine-readable file as the single source of truth,
 consumed by both the web application and the analysis pipeline.
 
 ## 4.3 The dual-objective structure
@@ -100,7 +106,7 @@ not fit the model.
 The model therefore carries two objectives and reports them separately. They are
 never combined into a single number.
 
-This is enforced in the engine, not left to convention: `AppraisalResult` holds
+This is enforced in the engine, not left to convention: a result record holds
 an array of objective results, and no code path produces an overall score. The
 interface presents them side by side; the exported report presents them as
 distinct sections with an explicit note that the trade-off is a matter for the
@@ -121,7 +127,7 @@ application scored 80.2 on credit risk (band A) and 74.6 on development impact
 
 ### 4.4.1 Quantitative criteria
 
-Each quantitative criterion carries a set of `[rawValue, score]` anchors
+Each quantitative criterion carries a set of (raw value, score) anchors
 defining a piecewise-linear map onto 0–100. DSCR, for example, anchors at 0.8→0,
 1.0→25,
 1.25→50, 1.5→75, 2.0→100. Values outside the anchor range clamp to the nearest
@@ -136,11 +142,11 @@ above it, since a ratio of
 ### 4.4.2 Qualitative criteria
 
 Qualitative criteria are captured on a five-point linguistic scale of Very Poor,
-Poor, Fair, Good and Excellent, represented as triangular fuzzy numbers:
+Poor, Fair, Good and Excellent, represented as the triangular fuzzy numbers in @tbl:five-point-linguistic-scale.
 
-[Table: Five-point linguistic scale and its triangular fuzzy numbers]
+[Table: five-point-linguistic-scale | Five-point linguistic scale and its triangular fuzzy numbers]
 
-| Code | Label | TFN |
+| Code | Label | Triangular fuzzy number |
 |---|---|---|
 | VP | Very Poor | [0, 0, 25] |
 | P | Poor | [0, 25, 50] |
@@ -152,7 +158,8 @@ Fuzzy representation is used because appraisal judgements are linguistic and
 imprecise. An officer writing "management is sound" is not asserting 75.0; the
 triangular number carries that imprecision explicitly instead of discarding it.
 
-Quantitative values enter as degenerate TFNs `[x,x,x]`, so both criterion types
+Quantitative values enter as degenerate triangular fuzzy numbers (TFNs) of the
+form [*x*, *x*, *x*], so both criterion types
 flow through one aggregation path. Aggregation is the fuzzy weighted average;
 defuzzification is by centroid, which for a TFN reduces to the mean of its three
 points.
@@ -196,7 +203,7 @@ difference.
 ### 4.5.2 Response
 
 An objective assessed below a completeness threshold (0.6) returns its score but
-no risk band and no recommendation. The result carries a `sufficient` flag and a
+no risk band and no recommendation. The result carries a *sufficient* flag and a
 list of outstanding criteria, and the interface tells the officer what is
 missing instead of offering a number to sign against.
 
@@ -207,14 +214,19 @@ information, and saying so is the correct output.
 
 ## 4.6 System architecture
 
-[Table: System architecture by layer, with the reason for each choice]
+@tbl:system-architecture-layer-reason lists the technology used at each layer
+and the reason it was chosen. The pattern throughout is that the scoring engine
+runs where the officer is, so that a score changes as a figure is typed, while
+anything that must not be tampered with runs on the server.
+
+[Table: system-architecture-layer-reason | System architecture by layer, with the reason for each choice]
 
 | Layer | Technology | Rationale |
 |---|---|---|
 | Interface | Next.js 16, React 19, TypeScript, Tailwind 4 | Engine runs client-side for live scoring |
 | Persistence | Prisma 7, SQLite | No external services; one config change to PostgreSQL |
 | Analysis | Python, pandas, scikit-learn, SciPy | No TypeScript equivalent for the empirical work |
-| Model | `shared/model/criteria-tree.json` | Single source of truth for both stacks |
+| Model | A single machine-readable criteria file | Single source of truth for both stacks |
 
 The two stacks never communicate at runtime. The Python pipeline calibrates and
 validates, exporting weights as JSON; the web application consumes that JSON.
@@ -246,16 +258,16 @@ who *claimed* to have signed, which is no record at all: anyone could enter any
 name, and the trail would look complete while proving nothing. The system now
 authenticates users and takes the signatory from the session.
 
-Roles map directly onto the chain in clause 7 of the form:
+Roles map directly onto the sign-off chain in clause 7 of the form, as @tbl:application-roles-permitted-actions sets out.
 
-[Table: Application roles and permitted actions, against clause 7 of the form]
+[Table: application-roles-permitted-actions | Application roles and permitted actions, against clause 7 of the form]
 
 | Role | Permitted |
 |---|---|
-| `OFFICER` | prepare an appraisal |
-| `RECOMMENDER` | endorse |
-| `HEAD_OFFICE` | approve or decline |
-| `ADMIN` | all of the above, plus user administration |
+| Officer | prepare an appraisal |
+| Recommender | endorse |
+| Head office | approve or decline |
+| Administrator | all of the above, plus user administration |
 
 Three properties are enforced rather than merely displayed. The interface offers
 only the actions a user's role permits; the server re-checks the role before
@@ -306,9 +318,10 @@ barrier entirely.
 
 ## 4.9 Verification
 
-The engine carries a structural test suite (`npm run test:scoring`) covering
-three cases: a sound manufacturing expansion, a thin startup with a DSCR breach,
-and a deliberately incomplete file:
+The engine carries a structural test suite covering
+three cases: a sound manufacturing expansion, a thin startup with a DSCR
+breach, and a deliberately incomplete file. @tbl:behavioural-tests-scoring-engine
+lists the properties asserted and the result of each.
 
 The suite covers the scoring engine, the validation schemas and the
 authorisation logic, 62 tests in total. Server Actions are reachable by direct
@@ -316,7 +329,7 @@ POST, not only through the application's own forms, so every action validates
 its input before use, and validation failures report which field failed without
 echoing the submitted value back.
 
-[Table: Behavioural tests of the scoring engine and their outcomes]
+[Table: behavioural-tests-scoring-engine | Behavioural tests of the scoring engine and their outcomes]
 
 | Check | Result |
 |---|---|
@@ -333,7 +346,7 @@ echoing the submitted value back.
 The system was additionally verified end to end through the browser: all 49
 criteria entered through the interface, producing credit risk 80.2 (band A)
 against development impact 74.6 (band B), persisted to the database, rendered
-with full contribution breakdown, and exported to a valid `.docx` in bank
+with full contribution breakdown, and exported to a valid Word in bank
 format.
 
 These are structural checks. They establish that the engine behaves as
@@ -342,7 +355,7 @@ specified, not that its scores are accurate. Accuracy is the subject of Chapter
 
 ## 4.10 Status of the weights
 
-The model now carries `weightStatus: ELICITED`, recording ten respondents, three
+The model now carries an elicited state, recording ten respondents, three
 level-responses excluded for inconsistency, and the date. Section 6.1 reports
 the elicitation; the weights themselves are in Section 6.1.4.
 
@@ -350,7 +363,7 @@ The state is machine-enforced rather than merely documented, and that mattered.
 While elicitation was outstanding the model carried the placeholder state, all
 criteria equally weighted within their level. The synchronisation script warned
 on every run, the interface displayed a standing notice, and the
-weight-derivation pipeline refused to mark the model `ELICITED` without usable
+weight-derivation pipeline refused to mark the model elicited without usable
 responses. A claim check also fails the build if any chapter still describes the
 weights as placeholders once the model says otherwise, which is how the stale
 passages in this chapter were caught when elicitation completed.

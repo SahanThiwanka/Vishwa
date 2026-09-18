@@ -2,8 +2,7 @@
 
 ## 1.1 Background
 
-Small and medium enterprises are reported to account for approximately 75% of
-active enterprises in Sri Lanka, 45% of employment and 52% of gross domestic
+Small and medium enterprises (SMEs) are reported to account for approximately 75% of active enterprises in Sri Lanka, 45% of employment and 52% of gross domestic
 product (Ministry of Industry and Commerce, 2015). Those proportions carry a
 caveat that is rarely stated alongside them: Sri Lanka had no uniform SME
 definition before that framework was issued, so series spanning the change are
@@ -144,8 +143,7 @@ follows from that honestly, including a negative result.
 
 ## 1.7 Contributions
 
-1. **Contamination in a widely used benchmark dataset.** In the SBA National
-   dataset, whether the `Term` field is an exact multiple of twelve predicts default at AUC 0.889 within every approval year, despite carrying no
+1. **Contamination in a widely used benchmark dataset.** In the National dataset published by the United States Small Business Administration (SBA), whether the *Term* field is an exact multiple of twelve predicts default at an area under the receiver operating characteristic curve (AUC) of 0.889 within every approval year, despite carrying no
    economic meaning. Excluding the field drops gradient-boosting temporal AUC
    from 0.946 to 0.608. The contamination is demonstrated; its mechanism is reported as unresolved, not asserted.
 2. A methodological consequence: an instrument-specific appraisal model
@@ -174,7 +172,12 @@ but incremental, and are described as such throughout.
 
 ## 1.8 Structure
 
-[Table: Structure of the thesis by chapter]
+@tbl:structure-thesis-chapter sets out what each of the
+remaining chapters contains. The two that carry the substantive results are
+Chapter 5, which reports the empirical work, and Chapter 6, which answers the
+research questions against it.
+
+[Table: structure-thesis-chapter | Structure of the thesis by chapter]
 
 | Chapter | Content |
 |---|---|

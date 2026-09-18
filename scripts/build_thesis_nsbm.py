@@ -47,6 +47,7 @@ from __future__ import annotations
 import os
 import re
 import sys
+from datetime import date
 from pathlib import Path
 
 from docx import Document
@@ -60,7 +61,12 @@ from docx.shared import Inches, Pt, RGBColor
 
 ROOT = Path(__file__).resolve().parents[1]
 CHAPTERS = ROOT / "docs" / "06-thesis"
-OUTPUT = CHAPTERS / "THESIS-NSBM.docx"
+
+# Each build day writes its own file. Overwriting one name in place meant the
+# only copy of the document was whatever the last run produced, and there was
+# no way to put a chapter beside the version of it that went to the supervisor
+# a week earlier. The dated file is the deliverable; the earlier ones stay.
+OUTPUT = CHAPTERS / f"THESIS-NSBM-{date.today():%Y-%m-%d}.docx"
 
 # Word holds an exclusive lock on an open document, so a rebuild while the
 # thesis is open fails with PermissionError - and does so after the previous
@@ -232,6 +238,28 @@ LINK = re.compile(r"\[(.+?)\]\((.+?)\)")
 # beginning with "[" split it at IEEE citation numbers, leaving fragments like
 # "[8], who benchmarked forty-one classifiers ..." standing as paragraphs.
 BLOCK_MARKER = re.compile(r"^\[(Image|Table|Figure):")
+
+# An in-text reference to an exhibit: @tbl:leakage-taxonomy, @fig:term-leakage.
+#
+# The guideline requires every table and figure to appear as close as possible
+# to its FIRST MENTION IN THE TEXT, which presupposes a mention. The numbers
+# cannot be written into the chapters by hand: the restructure renumbers whole
+# sections, so a table that is 5.9 today is 5.11 after one section is inserted
+# above it. The key is stable, the number is resolved at build time, and an
+# unresolved key fails the build instead of printing "Table ??" into a
+# submitted document.
+EXHIBIT_REF = re.compile(r"@(tbl|fig):([a-z0-9][a-z0-9-]*)")
+UNRESOLVED = "Table ??"
+
+
+def substitute_refs(text: str, labels: dict, missing: list) -> str:
+    def one(m: re.Match) -> str:
+        key = f"{m.group(1)}:{m.group(2)}"
+        if key in labels:
+            return labels[key]
+        missing.append(key)
+        return UNRESOLVED
+    return EXHIBIT_REF.sub(one, text)
 
 
 def clean(text: str) -> str:
@@ -549,10 +577,15 @@ def add_table(doc, rows: list[list[str]], aligns: list[str]) -> None:
 
 def render(doc, path: Path, counters: dict,
            chapter_breaks: bool = False) -> None:
-    lines = path.read_text(encoding="utf-8").split("\n")
+    text = path.read_text(encoding="utf-8")
+    if "@" in text:
+        # Whole-file, so a reference inside a table cell or on a continuation
+        # line is resolved as well as one in a plain paragraph.
+        text = substitute_refs(text, counters["labels"], counters["unresolved"])
+    lines = text.split("\n")
     is_references = path.name.startswith("07-")
     i = 0
-    pending_caption: str | None = None
+    pending_caption: tuple[str, str | None, str] | None = None
 
     while i < len(lines):
         raw = lines[i]
@@ -585,12 +618,19 @@ def render(doc, path: Path, counters: dict,
                 code_block(doc, block)
             continue
 
-        # Embedded figure:  [Image: file.png | Caption text]
-        m_img = re.match(r"^\[Image:\s*([^|\]]+?)\s*\|\s*(.+?)\]$", line)
+        # Embedded figure:  [Image: file.png | key | Caption text]
+        # The key is optional and is what prose refers to as @fig:key.
+        m_img = re.match(
+            r"^\[Image:\s*([^|\]]+?)\s*\|\s*(?:([a-z0-9-]+)\s*\|\s*)?(.+?)\]$",
+            line)
         if m_img:
             src = ROOT / "docs" / "05-results" / "figures" / m_img.group(1).strip()
             if src.exists():
                 counters["figure"] += 1
+                number = f"{counters['section']}.{counters['figure']}"
+                if m_img.group(2):
+                    counters["labels"][f"fig:{m_img.group(2)}"] = \
+                        f"Figure {number}"
                 para = doc.add_paragraph()
                 para.alignment = WD_ALIGN_PARAGRAPH.CENTER
                 para.paragraph_format.space_before = Pt(10)
@@ -605,19 +645,20 @@ def render(doc, path: Path, counters: dict,
                                         / picture.height)
                     picture.height = Inches(7.4)
                 # The guideline puts figure captions BELOW the figure.
-                caption(doc,
-                        f"Figure {counters['section']}.{counters['figure']}: "
-                        f"{m_img.group(2).strip()}",
+                caption(doc, f"Figure {number}: {m_img.group(3).strip()}",
                         above=False)
             else:
-                print(f"    ! missing figure: {src.name}")
+                if not counters.get("quiet"):
+                    print(f"    ! missing figure: {src.name}")
             i += 1
             continue
 
-        # Explicit caption markers, e.g.  [Table: Benchmark results]
-        m = re.match(r"^\[(Table|Figure):\s*(.+?)\]$", line)
+        # Explicit caption markers:  [Table: key | Benchmark results]
+        # The key is optional and is what prose refers to as @tbl:key.
+        m = re.match(r"^\[(Table|Figure):\s*(?:([a-z0-9-]+)\s*\|\s*)?(.+?)\]$",
+                     line)
         if m:
-            pending_caption = f"{m.group(1)}|{m.group(2)}"
+            pending_caption = (m.group(1), m.group(2), m.group(3))
             i += 1
             continue
 
@@ -627,9 +668,13 @@ def render(doc, path: Path, counters: dict,
             # is not a numbered thesis table and takes no caption.
             if counters["section"] != "0":
                 counters["table"] += 1
-                label = f"Table {counters['section']}.{counters['table']}"
-                if pending_caption and pending_caption.startswith("Table|"):
-                    label += f": {pending_caption.split('|', 1)[1]}"
+                number = f"{counters['section']}.{counters['table']}"
+                label = f"Table {number}"
+                if pending_caption and pending_caption[0] == "Table":
+                    _, key, text = pending_caption
+                    label += f": {text}"
+                    if key:
+                        counters["labels"][f"tbl:{key}"] = f"Table {number}"
                     pending_caption = None
                 caption(doc, label, above=True)
             add_table(doc, rows, aligns)
@@ -685,9 +730,26 @@ def render(doc, path: Path, counters: dict,
         if m3:
             spaces, marker, text = m3.groups()
             style = "List Number" if marker[0].isdigit() else "List Bullet"
-            rich_paragraph(doc, text, style=style,
-                           indent=0.6 if len(spaces) >= 2 else 0)
+            # A list item wrapped over several source lines is ONE item. Taking
+            # only the first line left every continuation to fall through to the
+            # paragraph branch below, so a two-line bullet reached the page as a
+            # bullet followed by an unbulleted paragraph set flush to the
+            # margin, and the list fell apart wherever an item ran long.
+            item = [text]
             i += 1
+            while i < len(lines):
+                nxt = lines[i]
+                stripped = nxt.strip()
+                if (not stripped or stripped.startswith(("#", "|", ">", "```"))
+                        or BLOCK_MARKER.match(stripped)
+                        or stripped in (PAGEBREAK, SPACER)
+                        or re.match(r"^\s*([-*]\s|\d+\.\s)", nxt)
+                        or re.fullmatch(r"-{3,}", stripped)):
+                    break
+                item.append(stripped)
+                i += 1
+            rich_paragraph(doc, " ".join(item), style=style,
+                           indent=0.6 if len(spaces) >= 2 else 0)
             continue
 
         buffer = [line]
@@ -712,12 +774,42 @@ def render(doc, path: Path, counters: dict,
 
 # ---------------------------------------------------------------------------
 
+def new_counters(labels: dict | None = None) -> dict:
+    return {"section": "0", "table": 0, "figure": 0, "chapters_seen": 0,
+            "labels": labels if labels is not None else {},
+            "unresolved": [], "quiet": False}
+
+
+def collect_labels() -> dict:
+    """Number every exhibit, by rendering into a document that is discarded.
+
+    A reference almost always precedes the exhibit it names, so the numbers
+    cannot be resolved in a single pass. Rather than reimplement the counting
+    rules in a separate scanner, which would drift from the renderer the first
+    time either changed, the whole body is rendered once into a throwaway
+    document purely to fill the key-to-number map.
+    """
+    scratch = Document()
+    ensure_caption_styles(scratch)
+    counters = new_counters()
+    counters["quiet"] = True
+    render(scratch, CHAPTERS / "00-front-matter.md", counters)
+    for name in BODY_SECTIONS:
+        counters["table"] = 0
+        counters["figure"] = 0
+        render(scratch, CHAPTERS / name, counters, chapter_breaks=True)
+    return counters["labels"]
+
+
 def main() -> int:
     missing = [n for n in BODY_SECTIONS if not (CHAPTERS / n).exists()]
     if missing:
         print("Missing sections: " + ", ".join(missing))
         print("Run the restructure first.")
         return 1
+
+    labels = collect_labels()
+    print(f"  numbered {len(labels)} referenced exhibits")
 
     doc = Document()
     enable_hyphenation(doc)
@@ -800,7 +892,7 @@ def main() -> int:
     centred(doc, SUBMISSION, 14)
     doc.add_page_break()
 
-    counters = {"section": "0", "table": 0, "figure": 0, "chapters_seen": 0}
+    counters = new_counters(labels)
     render(doc, CHAPTERS / "00-front-matter.md", counters)
 
     # Table of contents and lists, as field codes Word populates on update.
@@ -829,6 +921,16 @@ def main() -> int:
         counters["figure"] = 0
         print(f"  {name}")
         render(doc, path, counters, chapter_breaks=True)
+
+    if counters["unresolved"]:
+        unique = sorted(set(counters["unresolved"]))
+        print("\nUnresolved exhibit references, so the document is NOT "
+              "written:")
+        for key in unique:
+            print(f"    @{key}")
+        print("Each must match the key in a [Table: key | ...] or "
+              "[Image: file | key | ...] marker.")
+        return 1
 
     doc.save(OUTPUT)
 

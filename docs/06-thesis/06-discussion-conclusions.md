@@ -74,8 +74,9 @@ emphasis of an instrument whose longest section is the historic financial
 analysis. Security and compliance ranks last of the six, despite occupying a
 full clause of the form.
 
-the model's weight status is now elicited, recording ten respondents, three exclusions and
-the date. Every score in the system is computed from these weights.
+The model's weight status is now recorded as elicited, against ten respondents,
+three exclusions and the date of elicitation. Every score the system produces is
+computed from these weights.
 
 ### 6.1.5 What the placeholders cost
 

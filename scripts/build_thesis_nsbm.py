@@ -270,22 +270,17 @@ def clean(text: str) -> str:
     return text.replace("\\*", "*").strip()
 
 
-def rich_paragraph(doc, text: str, style: str | None = None, indent: float = 0,
-                   justify: bool = True, size: int = BODY_PT):
+def add_inline_runs(p, text: str, size: int = BODY_PT) -> None:
+    """Split markdown inline markup into Word runs.
+
+    Single-asterisk italics matter here: IEEE reference entries italicise the
+    journal or book title, and a figure caption naming a dataset field writes it
+    as *Term*. Captions used to be added as one plain run, so that caption
+    reached the page as "\\*Term\\*", asterisks and all.
+    """
     # A markdown-escaped asterisk (as in the symbol xi-star) must reach the page
     # as a plain asterisk, not as backslash-asterisk.
     text = text.replace("\\*", "*")
-    p = doc.add_paragraph(style=style)
-    p.paragraph_format.line_spacing = 1.5
-    p.paragraph_format.space_after = Pt(6)
-    p.paragraph_format.widow_control = True
-    if justify:
-        p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-    if indent:
-        p.paragraph_format.left_indent = Inches(indent)
-
-    # Single-asterisk italics matter here: IEEE reference entries italicise the
-    # journal or book title, and without this they render as literal asterisks.
     for part in re.split(r"(\*\*.+?\*\*|\*[^*]+?\*|`.+?`)", text):
         if not part:
             continue
@@ -301,7 +296,63 @@ def rich_paragraph(doc, text: str, style: str | None = None, indent: float = 0,
         else:
             run = p.add_run(LINK.sub(r"\1", part))
         style_run(run, size)
+
+
+def rich_paragraph(doc, text: str, style: str | None = None, indent: float = 0,
+                   justify: bool = True, size: int = BODY_PT):
+    p = doc.add_paragraph(style=style)
+    p.paragraph_format.line_spacing = 1.5
+    p.paragraph_format.space_after = Pt(6)
+    p.paragraph_format.widow_control = True
+    if justify:
+        p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+    if indent:
+        p.paragraph_format.left_indent = Inches(indent)
+    add_inline_runs(p, text, size)
     return p
+
+
+LIST_ITEM = re.compile(r"^\s*([-*]\s|\d+\.\s)")
+
+
+def more_list_items(lines: list[str], i: int) -> bool:
+    """Is another item of the same list still to come, from position i?"""
+    while i < len(lines) and not lines[i].strip():
+        i += 1
+    return i < len(lines) and bool(LIST_ITEM.match(lines[i]))
+
+
+def list_run_length(lines: list[str], i: int) -> int:
+    """How many items remain in this list, counting from position i."""
+    count = 0
+    while i < len(lines):
+        line = lines[i]
+        if not line.strip():
+            i += 1
+            continue
+        if LIST_ITEM.match(line):
+            count += 1
+            i += 1
+            while (i < len(lines) and lines[i].strip()
+                   and not LIST_ITEM.match(lines[i])
+                   and not lines[i].strip().startswith(("#", "|", ">", "```"))):
+                i += 1
+            continue
+        break
+    return count
+
+
+def set_tab_stop(paragraph, inches: float) -> None:
+    """A left tab stop, so a hanging number and its text align."""
+    p_pr = paragraph._p.get_or_add_pPr()
+    tabs = p_pr.find(qn("w:tabs"))
+    if tabs is None:
+        tabs = OxmlElement("w:tabs")
+        p_pr.append(tabs)
+    tab = OxmlElement("w:tab")
+    tab.set(qn("w:val"), "left")
+    tab.set(qn("w:pos"), str(int(inches * 1440)))
+    tabs.append(tab)
 
 
 def reference_paragraph(doc, text: str):
@@ -413,11 +464,9 @@ def caption(doc, text: str, above: bool = True):
                              else FIGURE_CAPTION_STYLE]
     except KeyError:
         pass
-    run = p.add_run(text)
-    style_run(run, 11)
-    run.bold = False
-    run.italic = False
-    run.font.color.rgb = RGBColor(0, 0, 0)
+    add_inline_runs(p, text, 11)
+    for run in p.runs:
+        run.font.color.rgb = RGBColor(0, 0, 0)
     return p
 
 
@@ -465,6 +514,21 @@ def set_repeat_header(row) -> None:
     el = OxmlElement("w:tblHeader")
     el.set(qn("w:val"), "true")
     tr_pr.append(el)
+
+
+def set_cannot_split(row) -> None:
+    """Never break a single row across a page."""
+    tr_pr = row._tr.get_or_add_trPr()
+    el = OxmlElement("w:cantSplit")
+    el.set(qn("w:val"), "true")
+    tr_pr.append(el)
+
+
+# Above this many rows a table is allowed to break across a page, because
+# holding a long one together would push a large gap ahead of it. Below it the
+# table stays whole: the chapter-structure table was breaking after its header,
+# leaving one row and a repeated header alone at the top of a page.
+KEEP_WHOLE_ROWS = 9
 
 
 def set_fixed_layout(table) -> None:
@@ -571,6 +635,14 @@ def add_table(doc, rows: list[list[str]], aligns: list[str]) -> None:
         table.columns[c_i].width = Inches(width)
     if has_header and table.rows:
         set_repeat_header(table.rows[0])
+
+    keep_whole = len(table.rows) <= KEEP_WHOLE_ROWS
+    for r_i, row in enumerate(table.rows):
+        set_cannot_split(row)
+        if keep_whole and r_i < len(table.rows) - 1:
+            for cell in row.cells:
+                for para in cell.paragraphs:
+                    para.paragraph_format.keep_with_next = True
 
 
 # ---------------------------------------------------------------------------
@@ -729,7 +801,15 @@ def render(doc, path: Path, counters: dict,
         m3 = re.match(r"^(\s*)([-*]|\d+\.)\s+(.*)", raw)
         if m3:
             spaces, marker, text = m3.groups()
-            style = "List Number" if marker[0].isdigit() else "List Bullet"
+            # Word's List Number style numbers EVERY list in the document from
+            # one running sequence, so the six numbered lists here came out as
+            # 1-7, 8-13, 14-17, 18-20, 21-23 and 24-34. Chapter 5's summary of
+            # findings opened at item 24. The number is therefore written as
+            # text, taken from the source, with a hanging indent: it is then
+            # always the number the author wrote and no list can inherit a
+            # count from the one before it.
+            ordered = marker[0].isdigit()
+            style = None if ordered else "List Bullet"
             # A list item wrapped over several source lines is ONE item. Taking
             # only the first line left every continuation to fall through to the
             # paragraph branch below, so a two-line bullet reached the page as a
@@ -748,8 +828,25 @@ def render(doc, path: Path, counters: dict,
                     break
                 item.append(stripped)
                 i += 1
-            rich_paragraph(doc, " ".join(item), style=style,
-                           indent=0.6 if len(spaces) >= 2 else 0)
+
+            body_text = " ".join(item)
+            base = 0.6 if len(spaces) >= 2 else 0.0
+            if ordered:
+                p = rich_paragraph(doc, f"{marker}\t{body_text}",
+                                   indent=base + 0.35, justify=False)
+                p.paragraph_format.first_line_indent = Inches(-0.35)
+                set_tab_stop(p, base + 0.35)
+            else:
+                p = rich_paragraph(doc, body_text, style=style, indent=base)
+
+            # A short list is kept whole. The four contributions at the end of
+            # the Literature Review were splitting three-and-one, leaving item 4
+            # alone on a page of its own, and hand-tuning the text above it only
+            # moves the break to the next edit. Long lists are still allowed to
+            # split, because holding an eleven-item list together would push
+            # half a page of white space ahead of it.
+            if more_list_items(lines, i) and list_run_length(lines, i) <= 5:
+                p.paragraph_format.keep_with_next = True
             continue
 
         buffer = [line]

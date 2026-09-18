@@ -95,6 +95,35 @@ def _body_text() -> str:
                      for n in BODY_ORDER if (CHAPTERS / n).exists())
 
 
+def check_no_self_references() -> list[tuple[bool, str]]:
+    """No section may point the reader at itself.
+
+    "Full specification in Section 4.4" was printed inside Section 4.4. The
+    reference was correct in the draft, where that material sat in a different
+    chapter, and the restructure's mapping had no entry for 4.4, so it was left
+    pointing where it already was. Every cross-reference resolved to a real
+    section, so the existing check passed.
+    """
+    offenders = []
+    for path in sorted(CHAPTERS.glob("0[0-9]-*.md")):
+        current = None
+        for line in path.read_text(encoding="utf-8").splitlines():
+            head = HEADING.match(line)
+            if head:
+                current = head.group(1)
+                continue
+            if not current:
+                continue
+            for m in CROSSREF.finditer(line):
+                if m.group(1) == current:
+                    offenders.append(f"{path.name}: {current} -> itself")
+    if offenders:
+        out = [(False, f"FAIL  {len(offenders)} section(s) reference "
+                       f"themselves")]
+        return out + [(False, f"        {o}") for o in offenders[:8]]
+    return [(True, "OK    no section references itself")]
+
+
 def check_abstract_length() -> list[tuple[bool, str]]:
     """The guideline sets the abstract at 200-300 words."""
     path = CHAPTERS / "00-front-matter.md"
@@ -732,6 +761,7 @@ def main() -> int:
 
     checks.append(check_restructure_current())
     checks.extend(check_headings_are_numbered())
+    checks.extend(check_no_self_references())
     checks.extend(check_abstract_length())
     checks.extend(check_exhibits_are_referenced())
     checks.extend(check_abbreviations_expanded())

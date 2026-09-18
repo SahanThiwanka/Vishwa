@@ -68,7 +68,7 @@ model in the paper" and "the model in the system" is possible.
 Quantitative criteria map to 0–100 through piecewise-linear band anchors.
 Qualitative criteria are captured on a five-point linguistic scale represented
 as triangular fuzzy numbers, aggregated by fuzzy weighted average and
-defuzzified by centroid. Full specification in Section 4.4.
+defuzzified by centroid. Full specification in Section 4.11.
 
 Three rules govern edge cases, each chosen deliberately:
 

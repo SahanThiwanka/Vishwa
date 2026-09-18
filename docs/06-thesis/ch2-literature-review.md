@@ -399,26 +399,26 @@ the original proposal:
 - observing that development banks appraise against two objectives (Arvanitis
   et al., 2015).
 
-What the literature leaves open, and what this study addresses:
+What the literature leaves open, and what this study addresses, is set out
+below. The first is the substantial contribution and the most transferable;
+the remaining three are real but incremental, and are described as such
+throughout.
 
 1. Contamination in a widely used benchmark dataset (Chapter 5), and the
-   consequent methodological point that instrument-specific models cannot be
-   validated on datasets lacking their variables. Situated within Kapoor and
-   Narayanan's taxonomy but, on the searched literature, unreported for this
-   dataset.
+   methodological point that follows: instrument-specific models cannot be
+   validated on datasets lacking their variables. It sits within Kapoor and
+   Narayanan's taxonomy, but the searched literature does not report it for
+   this dataset.
 2. Formalising a specific operational instrument. Existing models select
-   criteria from theory or from researcher judgement. None located takes a named
-   state bank's production appraisal form and derives a computable model from it
-   clause by clause, with traceability maintained as a design constraint.
+   criteria from theory or researcher judgement; none located derives a
+   computable model clause by clause from a named state bank's production form,
+   with traceability held as a design constraint.
 3. Keeping dual objectives unaggregated. Prior dual-objective systems combine
-   social and financial scores. This study reports them separately by design and
-   never produces a combined figure, and, unlike the prior work, tests whether
-   the separation is warranted rather than assuming it (Section 5.6b).
+   social and financial scores. This study reports them separately, never
+   issues a combined figure, and, unlike the prior work, tests whether the
+   separation is warranted (Section 5.6b).
 4. The Sri Lankan state-bank context, documented as finance-constrained but
    not studied at the level of appraisal process.
-
-Contribution 1 is the substantial one and the most transferable. Contributions 2
-to 4 are real but incremental, and are stated as such throughout.
 
 ---
 

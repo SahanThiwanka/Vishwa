@@ -38,7 +38,7 @@ def figure_inflation() -> None:
     models = ["Expert scorecard (unfitted)", "Logistic regression", "Gradient boosting"]
     short = ["Expert\nscorecard", "Logistic\nregression", "Gradient\nboosting"]
 
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.4), sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(6.6, 3.1), sharey=True)
 
     for ax, protocol in zip(axes, ["random", "temporal"]):
         sub = df[df["protocol"] == protocol]
@@ -75,7 +75,7 @@ def figure_within_year() -> None:
     """Roundness AUC by approval year - shows it is not a cohort artefact."""
     df = pd.read_csv(TABLES / "leakage_within_year.csv")
 
-    fig, ax = plt.subplots(figsize=(7.5, 3.8))
+    fig, ax = plt.subplots(figsize=(6.3, 3.0))
     ax.plot(df["year"], df["auc"], marker="o", color=CONTAM, lw=1.8)
     ax.axhline(0.5, color="#999999", ls="--", lw=1)
     ax.text(df["year"].min(), 0.515, "chance", fontsize=8, color="#777777")
@@ -93,13 +93,13 @@ def figure_adjacent_terms() -> None:
     """The 60-month discontinuity."""
     df = pd.read_csv(TABLES / "leakage_adjacent_terms.csv")
 
-    fig, ax = plt.subplots(figsize=(6.5, 3.8))
+    fig, ax = plt.subplots(figsize=(6.3, 3.2))
     colours = [CLEAN if t % 12 == 0 else CONTAM for t in df["Term"]]
     ax.bar(df["Term"].astype(str), df["mean"] * 100, color=colours)
 
-    for _, row in df.iterrows():
-        ax.text(str(row["Term"]), row["mean"] * 100 + 2,
-                f"{row['mean']*100:.0f}%", ha="center", fontsize=8)
+    for pos, (_, row) in enumerate(df.iterrows()):
+        ax.text(pos, row["mean"] * 100 + 2.5, f"{row['mean']*100:.0f}%",
+                ha="center", va="bottom", fontsize=8)
 
     ax.set_xlabel("Contractual term (months)")
     ax.set_ylabel("Default rate (%)")
@@ -113,7 +113,7 @@ def figure_weight_sensitivity() -> None:
     """How far rankings and bands move as criterion weights are perturbed."""
     df = pd.read_csv(TABLES / "weight_sensitivity.csv")
 
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.2))
+    fig, axes = plt.subplots(1, 2, figsize=(6.6, 3.1))
     colours = {"credit_risk": CREDIT, "development_impact": DEVELOPMENT}
     names = {"credit_risk": "Credit risk",
              "development_impact": "Development impact"}
@@ -162,13 +162,13 @@ def figure_calibration() -> None:
     df = pd.read_csv(TABLES / "reliability_curves.csv")
     summary = pd.read_csv(TABLES / "calibration.csv")
 
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.6), sharex=True, sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(6.6, 3.3), sharex=True, sharey=True)
     colours = {"Gradient boosting (clean)": CLEAN,
                "Logistic regression (clean)": CONTAM}
 
     for ax, protocol in zip(axes, ["random", "temporal"]):
         ax.plot([0, 1], [0, 1], ls="--", color="#999999", lw=1.2)
-        ax.text(0.52, 0.46, "perfect calibration", fontsize=7.5,
+        ax.text(0.52, 0.46, "Perfect calibration", fontsize=7.5,
                 color="#777777", rotation=38)
 
         sub = df[df["protocol"] == protocol]
@@ -216,7 +216,7 @@ def figure_missingness() -> None:
         "Logistic regression (median imputation)": (CONTAM, "--", "Logistic regression\n(median imputation)"),
     }
 
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.4))
+    fig, axes = plt.subplots(1, 2, figsize=(6.6, 3.3))
 
     for model, (colour, ls, label) in styles.items():
         sub = prog[prog["model"] == model].sort_values("fields_withheld")
@@ -269,7 +269,7 @@ def figure_term_leakage() -> None:
     residue = pd.read_csv(TABLES / "leakage_residue_distribution.csv")
     within = pd.read_csv(TABLES / "leakage_within_year.csv")
 
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.2))
+    fig, axes = plt.subplots(1, 2, figsize=(6.6, 3.1))
 
     x = np.arange(len(residue))
     w = 0.4

@@ -364,13 +364,36 @@ export function AppraisalForm() {
           </div>
         )}
 
-        <div className="rounded-lg border border-amber-300 bg-amber-50 p-4">
-          <h3 className="text-xs font-semibold text-amber-900">
+        {/*
+          The heading read the state from the model while the sentence under it
+          was hardcoded, so once the weights were elicited this panel announced
+          "Weights: ELICITED" and then said, directly beneath, that they had not
+          been. Both halves now come from the same place.
+        */}
+        <div
+          className={
+            result.weightStatus.state === "ELICITED"
+              ? "rounded-lg border border-slate-200 bg-slate-50 p-4"
+              : "rounded-lg border border-amber-300 bg-amber-50 p-4"
+          }
+        >
+          <h3
+            className={
+              result.weightStatus.state === "ELICITED"
+                ? "text-xs font-semibold text-slate-700"
+                : "text-xs font-semibold text-amber-900"
+            }
+          >
             Weights: {result.weightStatus.state}
           </h3>
-          <p className="mt-1 text-xs text-amber-800/90">
-            Criterion weights have not been elicited. Scores are structurally
-            valid but must not be reported as research results.
+          <p
+            className={
+              result.weightStatus.state === "ELICITED"
+                ? "mt-1 text-xs text-slate-600"
+                : "mt-1 text-xs text-amber-800/90"
+            }
+          >
+            {result.weightStatus.detail}
           </p>
         </div>
 

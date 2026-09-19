@@ -9,6 +9,7 @@ dimension:borrower_management,Rcu725,0.0,True
 dimension:borrower_management,R027,0.0,True
 dimension:borrower_management,R23,0.044,True
 dimension:borrower_management,R16,0.0,True
+dimension:borrower_management,R35,0.0531,True
 dimension:credit_conduct,R01,0.0724,True
 dimension:credit_conduct,R06,0.0686,True
 dimension:credit_conduct,R07,0.377,False
@@ -19,6 +20,7 @@ dimension:credit_conduct,R24,0.0417,True
 dimension:credit_conduct,Rcu725,0.0,True
 dimension:credit_conduct,R23,0.0813,True
 dimension:credit_conduct,R16,0.1212,True
+dimension:credit_conduct,R35,0.0875,True
 dimension:dev_impact,R01,0.0158,True
 dimension:dev_impact,R06,0.0,True
 dimension:dev_impact,R07,0.029,True
@@ -29,6 +31,7 @@ dimension:dev_impact,Rcu725,0.0,True
 dimension:dev_impact,R027,0.0,True
 dimension:dev_impact,R23,0.043,True
 dimension:dev_impact,R16,0.1553,True
+dimension:dev_impact,R35,0.0617,True
 dimension:historic_financials,R06,0.2105,True
 dimension:historic_financials,R07,0.0221,True
 dimension:historic_financials,R03,0.0,True
@@ -39,6 +42,7 @@ dimension:historic_financials,R01,0.0,True
 dimension:historic_financials,R027,0.0,True
 dimension:historic_financials,R23,0.0678,True
 dimension:historic_financials,R16,0.0445,True
+dimension:historic_financials,R35,0.0534,True
 dimension:market_position,R01,0.0,True
 dimension:market_position,R06,0.0,True
 dimension:market_position,R07,0.0,True
@@ -49,6 +53,7 @@ dimension:market_position,Rcu725,0.0,True
 dimension:market_position,R027,0.0,True
 dimension:market_position,R23,0.1307,True
 dimension:market_position,R16,0.0809,True
+dimension:market_position,R35,0.1074,True
 dimension:project_viability,R01,0.0,True
 dimension:project_viability,R06,0.1018,True
 dimension:project_viability,R07,0.1572,True
@@ -59,6 +64,7 @@ dimension:project_viability,Rcu725,0.0632,True
 dimension:project_viability,R027,0.0244,True
 dimension:project_viability,R23,0.0334,True
 dimension:project_viability,R16,0.1828,True
+dimension:project_viability,R35,0.0518,True
 dimension:risk_security,R01,0.0,True
 dimension:risk_security,R06,0.0,True
 dimension:risk_security,R07,0.0387,True
@@ -69,6 +75,7 @@ dimension:risk_security,Rcu725,0.1875,True
 dimension:risk_security,R027,0.0,True
 dimension:risk_security,R23,0.0421,True
 dimension:risk_security,R16,0.0769,True
+dimension:risk_security,R35,0.0406,True
 objective:credit_risk,R06,0.2934,False
 objective:credit_risk,R07,0.0,True
 objective:credit_risk,R03,0.0,True
@@ -79,3 +86,4 @@ objective:credit_risk,R01,0.0702,True
 objective:credit_risk,R027,0.2137,True
 objective:credit_risk,R23,0.0713,True
 objective:credit_risk,R16,0.0,True
+objective:credit_risk,R35,0.0239,True

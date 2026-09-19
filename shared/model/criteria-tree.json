@@ -9,12 +9,12 @@
   },
   "weightStatus": {
     "state": "ELICITED",
-    "detail": "Weights derived by Best-Worst Method from 10 respondent(s). 3 level-response(s) were excluded for consistency ratio above 0.25. Aggregation is by geometric mean over usable responses.",
+    "detail": "Weights derived by Best-Worst Method from 11 respondent(s). 3 level-response(s) were excluded for consistency ratio above 0.25. Aggregation is by geometric mean over usable responses.",
     "plannedMethod": "Best-Worst Method (Rezaei 2015; linear model Rezaei 2016), consistency ratio reported per respondent, responses above CR 0.25 excluded, aggregation by geometric mean. BWM was chosen over pairwise AHP because AHP over this tree requires 168 comparisons per respondent against BWM's 86; the fatigue-driven inconsistency at that length would make the weights unusable.",
     "elicitation": {
       "method": "Best-Worst Method (Rezaei 2015), linear programme",
-      "respondents": 10,
-      "date": "2026-09-17",
+      "respondents": 11,
+      "date": "2026-09-19",
       "droppedInconsistent": 3,
       "consistencyThreshold": 0.25
     }
@@ -145,35 +145,35 @@
                   100
                 ]
               ],
-              "weight": 0.202278
+              "weight": 0.214887
             },
             {
               "id": "sponsor_quals",
               "name": "Educational/professional qualifications",
               "ref": "2.8",
               "type": "qualitative",
-              "weight": 0.121685
+              "weight": 0.122801
             },
             {
               "id": "org_structure",
               "name": "Organizational structure & management style",
               "ref": "3.2",
               "type": "qualitative",
-              "weight": 0.253536
+              "weight": 0.250212
             },
             {
               "id": "hr_adequacy",
               "name": "HR adequacy & succession depth",
               "ref": "3.4",
               "type": "qualitative",
-              "weight": 0.157365
+              "weight": 0.154777
             },
             {
               "id": "statutory_compliance",
               "name": "EPF/ETF payment compliance",
               "ref": "3.4.2",
               "type": "qualitative",
-              "weight": 0.139506
+              "weight": 0.130946
             },
             {
               "id": "business_vintage",
@@ -204,10 +204,10 @@
                   100
                 ]
               ],
-              "weight": 0.125629
+              "weight": 0.126377
             }
           ],
-          "weight": 0.206192
+          "weight": 0.218983
         },
         {
           "id": "credit_conduct",
@@ -219,7 +219,7 @@
               "name": "Repayment performance on prior facilities",
               "ref": "2.11.1, 2.11.2",
               "type": "qualitative",
-              "weight": 0.211991
+              "weight": 0.215706
             },
             {
               "id": "arrears_ratio",
@@ -250,7 +250,7 @@
                   0
                 ]
               ],
-              "weight": 0.110242
+              "weight": 0.104546
             },
             {
               "id": "account_turnover",
@@ -281,7 +281,7 @@
                   100
                 ]
               ],
-              "weight": 0.358723
+              "weight": 0.373732
             },
             {
               "id": "cheque_returns",
@@ -312,17 +312,17 @@
                   0
                 ]
               ],
-              "weight": 0.19888
+              "weight": 0.187116
             },
             {
               "id": "external_exposure",
               "name": "Exposure to other financial institutions",
               "ref": "2.11.2",
               "type": "qualitative",
-              "weight": 0.120165
+              "weight": 0.118899
             }
           ],
-          "weight": 0.173306
+          "weight": 0.159442
         },
         {
           "id": "historic_financials",
@@ -358,7 +358,7 @@
                   100
                 ]
               ],
-              "weight": 0.062387
+              "weight": 0.065645
             },
             {
               "id": "net_profit_ratio",
@@ -389,7 +389,7 @@
                   100
                 ]
               ],
-              "weight": 0.119414
+              "weight": 0.12408
             },
             {
               "id": "current_ratio",
@@ -420,7 +420,7 @@
                   70
                 ]
               ],
-              "weight": 0.159509
+              "weight": 0.149468
             },
             {
               "id": "debt_equity_hist",
@@ -451,7 +451,7 @@
                   0
                 ]
               ],
-              "weight": 0.115941
+              "weight": 0.120794
             },
             {
               "id": "gearing_ratio",
@@ -482,7 +482,7 @@
                   0
                 ]
               ],
-              "weight": 0.122614
+              "weight": 0.117676
             },
             {
               "id": "asset_turnover",
@@ -513,7 +513,7 @@
                   100
                 ]
               ],
-              "weight": 0.101814
+              "weight": 0.099379
             },
             {
               "id": "stock_retention",
@@ -544,7 +544,7 @@
                   0
                 ]
               ],
-              "weight": 0.103878
+              "weight": 0.114802
             },
             {
               "id": "debtor_retention",
@@ -575,17 +575,17 @@
                   0
                 ]
               ],
-              "weight": 0.122454
+              "weight": 0.117536
             },
             {
               "id": "sales_trend",
               "name": "Sales trend & stability",
               "ref": "2.13",
               "type": "qualitative",
-              "weight": 0.091989
+              "weight": 0.090621
             }
           ],
-          "weight": 0.111587
+          "weight": 0.10728
         },
         {
           "id": "project_viability",
@@ -623,7 +623,7 @@
               ],
               "critical": true,
               "criticalNote": "DSCR below 1.0 is a hard knock-out in most credit policies; the engine flags it rather than silently averaging it away.",
-              "weight": 0.192838
+              "weight": 0.18389
             },
             {
               "id": "iscr",
@@ -654,7 +654,7 @@
                   100
                 ]
               ],
-              "weight": 0.092615
+              "weight": 0.094407
             },
             {
               "id": "roi",
@@ -685,7 +685,7 @@
                   100
                 ]
               ],
-              "weight": 0.129174
+              "weight": 0.123902
             },
             {
               "id": "projected_np",
@@ -716,7 +716,7 @@
                   100
                 ]
               ],
-              "weight": 0.139789
+              "weight": 0.127084
             },
             {
               "id": "project_gearing",
@@ -747,7 +747,7 @@
                   0
                 ]
               ],
-              "weight": 0.120635
+              "weight": 0.134778
             },
             {
               "id": "promoter_equity",
@@ -778,7 +778,7 @@
                   100
                 ]
               ],
-              "weight": 0.107802
+              "weight": 0.121679
             },
             {
               "id": "capacity_growth",
@@ -809,7 +809,7 @@
                   100
                 ]
               ],
-              "weight": 0.12442
+              "weight": 0.119749
             },
             {
               "id": "bep_headroom",
@@ -840,10 +840,10 @@
                   100
                 ]
               ],
-              "weight": 0.092727
+              "weight": 0.094511
             }
           ],
-          "weight": 0.250449
+          "weight": 0.269791
         },
         {
           "id": "market_position",
@@ -856,52 +856,52 @@
               "name": "Rivalry among competing sellers",
               "ref": "3.10.3",
               "type": "qualitative",
-              "weight": 0.165071
+              "weight": 0.16887
             },
             {
               "id": "threat_entry",
               "name": "Competitive force of potential entry",
               "ref": "3.10.3",
               "type": "qualitative",
-              "weight": 0.15865
+              "weight": 0.149236
             },
             {
               "id": "buyer_power",
               "name": "Power of buyers",
               "ref": "3.10.3",
               "type": "qualitative",
-              "weight": 0.172679
+              "weight": 0.167947
             },
             {
               "id": "supplier_power",
               "name": "Power of suppliers",
               "ref": "3.10.3",
               "type": "qualitative",
-              "weight": 0.124021
+              "weight": 0.124307
             },
             {
               "id": "substitutes",
               "name": "Pressure from substitute products",
               "ref": "3.10.3",
               "type": "qualitative",
-              "weight": 0.134175
+              "weight": 0.129503
             },
             {
               "id": "raw_material",
               "name": "Security of raw material supply",
               "ref": "3.10.2",
               "type": "qualitative",
-              "weight": 0.147008
+              "weight": 0.159417
             },
             {
               "id": "distribution",
               "name": "Distribution arrangements",
               "ref": "3.10.4",
               "type": "qualitative",
-              "weight": 0.098395
+              "weight": 0.100719
             }
           ],
-          "weight": 0.152675
+          "weight": 0.142252
         },
         {
           "id": "risk_security",
@@ -937,45 +937,45 @@
                   100
                 ]
               ],
-              "weight": 0.240811
+              "weight": 0.215924
             },
             {
               "id": "technological_risk",
               "name": "Technological risk",
               "ref": "3.11",
               "type": "qualitative",
-              "weight": 0.188819
+              "weight": 0.185508
             },
             {
               "id": "environmental_risk",
               "name": "Environmental risk",
               "ref": "3.12",
               "type": "qualitative",
-              "weight": 0.133345
+              "weight": 0.141643
             },
             {
               "id": "govt_consent",
               "name": "Government approvals obtained & current",
               "ref": "3.6",
               "type": "qualitative",
-              "weight": 0.13699
+              "weight": 0.155945
             },
             {
               "id": "insurance_cover",
               "name": "Insurance coverage adequacy",
               "ref": "3.3",
               "type": "qualitative",
-              "weight": 0.156348
+              "weight": 0.156264
             },
             {
               "id": "implementation",
               "name": "Realism of implementation schedule",
               "ref": "3.5",
               "type": "qualitative",
-              "weight": 0.143687
+              "weight": 0.144717
             }
           ],
-          "weight": 0.10579
+          "weight": 0.102252
         }
       ]
     },
@@ -1019,7 +1019,7 @@
                   100
                 ]
               ],
-              "weight": 0.140089
+              "weight": 0.124833
             },
             {
               "id": "women_participation",
@@ -1050,7 +1050,7 @@
                   100
                 ]
               ],
-              "weight": 0.05223
+              "weight": 0.055747
             },
             {
               "id": "local_raw_material",
@@ -1081,7 +1081,7 @@
                   100
                 ]
               ],
-              "weight": 0.143376
+              "weight": 0.156123
             },
             {
               "id": "productive_capacity",
@@ -1112,7 +1112,7 @@
                   100
                 ]
               ],
-              "weight": 0.163891
+              "weight": 0.157655
             },
             {
               "id": "export_share",
@@ -1143,14 +1143,14 @@
                   100
                 ]
               ],
-              "weight": 0.116668
+              "weight": 0.11575
             },
             {
               "id": "import_substitution",
               "name": "Import substitution effect",
               "ref": "5.7",
               "type": "qualitative",
-              "weight": 0.111502
+              "weight": 0.111081
             },
             {
               "id": "value_added",
@@ -1181,14 +1181,14 @@
                   100
                 ]
               ],
-              "weight": 0.118622
+              "weight": 0.123097
             },
             {
               "id": "fx_earnings",
               "name": "Foreign exchange earnings",
               "ref": "5.9",
               "type": "qualitative",
-              "weight": 0.153621
+              "weight": 0.155714
             }
           ],
           "weight": 1.0

@@ -120,13 +120,14 @@ correlated on average.
 
 > ## WEIGHTS ARE ELICITED
 >
-> `weightStatus.state = "ELICITED"`. Derived from **ten credit practitioners**
-> by the Best-Worst Method (Rezaei 2015; linear model 2016). Three of eighty
-> level-responses were excluded for a consistency ratio above 0.25; the
-> remaining 77 were aggregated by geometric mean.
+> `weightStatus.state = "ELICITED"`. Derived from **eleven credit practitioners**
+> by the Best-Worst Method (Rezaei 2015; linear model 2016). Three of
+> eighty-eight level-responses were excluded for a consistency ratio above 0.25;
+> the remaining 85 were aggregated by geometric mean.
 >
-> **The sample is one segment, not the sector.** Nine of the ten respondents
-> are from state commercial banking, which is the setting the source instrument
+> **The sample is one segment, not the sector.** Ten of the eleven respondents
+> are from state commercial banking and the eleventh did not state an
+> institution, which is the setting the source instrument
 > comes from. These weights describe that setting. They are not validated for
 > lending decisions at any institution without that institution's own review.
 
@@ -134,12 +135,12 @@ Objective-level weights, credit risk:
 
 | Dimension | Weight | Against equal |
 |---|---:|---:|
-| Project Viability & Projections | 0.2504 | 1.50 |
-| Borrower & Management Capacity | 0.2062 | 1.24 |
-| Credit History & Banking Conduct | 0.1733 | 1.04 |
-| Market & Competitive Position | 0.1527 | 0.92 |
-| Historic Financial Performance | 0.1116 | 0.67 |
-| Risk, Security & Compliance | 0.1058 | 0.63 |
+| Project Viability & Projections | 0.2698 | 1.62 |
+| Borrower & Management Capacity | 0.2190 | 1.31 |
+| Credit History & Banking Conduct | 0.1594 | 0.96 |
+| Market & Competitive Position | 0.1423 | 0.85 |
+| Historic Financial Performance | 0.1073 | 0.64 |
+| Risk, Security & Compliance | 0.1023 | 0.61 |
 
 Forward-looking project viability outranks historic financial performance by
 more than two to one, inverting the emphasis of an instrument whose longest
@@ -164,11 +165,11 @@ Within the range experts plausibly disagree over (±25%), ranking is preserved
 and roughly 93–94% of bands are unchanged.
 
 The elicited weights turned out to fall **outside** that range: within a level
-the ratio of largest to smallest reaches 3.25, and the largest departure from
-equal weighting is 79%. Scoring 2,000 simulated appraisals under the equal
-vector and then under the elicited one gives a rank correlation of 0.9136 for
-credit risk and 0.9662 for development impact, with **no case moving two risk
-bands** and 13–16% moving one. The perturbation study understated the
+the ratio of largest to smallest reaches 3.57, and the largest departure from
+equal weighting is 87%. Scoring 2,000 simulated appraisals under the equal
+vector and then under the elicited one gives a rank correlation of 0.8983 for
+credit risk and 0.9671 for development impact, with **no case moving two risk
+bands** and about 15% moving one. The perturbation study understated the
 disturbance and still called the outcome correctly.
 
 ### Structural asymmetry
@@ -304,6 +305,7 @@ Every number in the thesis is produced by one of these. None was entered by hand
 |---|---|
 | 0.1.0-draft | Initial 49-criterion tree derived from the source form. Weights placeholder. |
 | 0.1.0-draft | Weights elicited from ten practitioners and applied; `weightStatus` set to `ELICITED`. |
+| 0.1.0-draft | Re-derived after an eleventh respondent completed the instrument. |
 
 **On any change to criteria, bands or weights**, bump the version. Stored
 appraisals record the version that scored them, so historical recommendations

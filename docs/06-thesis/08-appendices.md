@@ -25,7 +25,7 @@ Twenty-eight criteria are quantitative and twenty-one qualitative.
 
 ## Appendix 2 The weight elicitation instrument
 
-The instrument was built, verified and administered; ten practitioners completed
+The instrument was built, verified and administered; eleven practitioners completed
 it and Section 6.1 reports the result. It is reproduced here so that the design
 can be assessed independently of its findings, and so that a later study can
 administer it unchanged and compare.
@@ -136,7 +136,7 @@ any point, and the system was demonstrated using constructed cases.
 **Human participants.** The elicitation instrument collects no name and no
 customer information. Participation was voluntary, participants identified
 themselves only by a code of their own choosing, and the responses are reported
-in aggregate. Ten practitioners took part. What is stored is a participant code,
+in aggregate. Eleven practitioners took part. What is stored is a participant code,
 years of experience, institution type, role, and the comparison judgements
 themselves; nothing in that record identifies a person or a borrower.
 

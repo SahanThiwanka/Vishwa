@@ -17,7 +17,7 @@ Five activities make up the design. @tbl:research-activities-questions-they sets
 | Activity | Addresses | Method | Output |
 |---|---|---|---|
 | Formalisation | RQ1 | Clause-by-clause derivation from the bank's form | 49-criterion model, working system |
-| Weight elicitation | RQ2 | Best-Worst Method with ten practitioners | Section 6.1 |
+| Weight elicitation | RQ2 | Best-Worst Method with eleven practitioners | Section 6.1 |
 | Weight sensitivity | RQ2 | Monte Carlo over perturbed weight vectors | Section 5.6a |
 | Empirical validation | RQ3 | Benchmarking against realised outcomes, with confidence intervals (CIs) and paired tests | Sections 5.3 to 5.6 |
 | Objective separability | RQ4 | Correlation and band agreement across 652,284 facilities | Section 5.6b |

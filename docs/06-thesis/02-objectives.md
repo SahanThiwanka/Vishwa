@@ -58,8 +58,9 @@ a measurable consistency criterion, and a stated rule for excluding inconsistent
 responses before aggregation.
 
 > **Status note.** The instrument, solver and analysis pipeline were built and
-> verified, and the instrument was administered. Ten practitioners completed it,
-> three of eighty level-responses were excluded for inconsistency, and the
+> verified, and the instrument was administered. Eleven practitioners completed
+> it,
+> three of eighty-eight level-responses were excluded for inconsistency, and the
 > resulting weights now govern every score the system produces. Section 6.1
 > reports the elicitation in full, including what changed when the elicited
 > weights replaced the equal weighting used during development. The recruited

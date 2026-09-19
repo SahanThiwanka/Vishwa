@@ -162,7 +162,7 @@ specified, not that its scores are accurate. Accuracy is the subject of Chapter
 
 ## 5.7 Status of the weights
 
-The model now carries an elicited state, recording ten respondents, three
+The model now carries an elicited state, recording eleven respondents, three
 level-responses excluded for inconsistency, and the date. Section 6.1 reports
 the elicitation; the weights themselves are in Section 6.1.4.
 

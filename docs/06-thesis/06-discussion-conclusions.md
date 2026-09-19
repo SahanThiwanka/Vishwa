@@ -23,28 +23,25 @@ feasible.
 
 ### 6.1.2 Respondents
 
-Ten credit practitioners completed the instrument, above the five-to-eight range typical of published BWM studies. @tbl:profile-ten-elicitation-respondents summarises the sample by experience, role and institution.
+Eleven credit practitioners completed the instrument, above the five-to-eight range typical of published BWM studies. @tbl:profile-ten-elicitation-respondents summarises the sample by experience, role and institution.
 
-[Table: profile-ten-elicitation-respondents | Profile of the ten elicitation respondents]
+[Table: profile-ten-elicitation-respondents | Profile of the eleven elicitation respondents]
 
 | | |
 |---|---|
-| Respondents | 10 |
+| Respondents | 11 |
 | Experience | 1–12 years, median 8 |
 | Credit / appraisal officers | 4 |
-| Branch managers | 3 |
+| Branch managers | 4 |
 | Regional or head-office credit | 2 |
 | Not stated | 1 |
-| Institution | State commercial bank (9); not stated (1) |
+| Institution | State commercial bank (10); not stated (1) |
 
-All respondents are from state commercial banking, which is the setting the
-instrument comes from and also a limitation: these weights describe one segment
-of Sri Lankan SME lending, not the sector.
+Ten of the eleven give their institution as a state commercial bank and the eleventh did not state one, which is the setting the instrument comes from and also a limitation: these weights describe one segment of Sri Lankan SME lending, not the sector.
 
 ### 6.1.3 Consistency
 
-Each respondent produced eight level-responses, giving 80 in total. Three were
-excluded for a consistency ratio above 0.25 and the remaining 77 retained. The
+Each respondent produced eight level-responses, giving 88 in total. Three were excluded for a consistency ratio above 0.25 and the remaining 85 retained. The
 exclusions are reported rather than absorbed: two fell in
 the borrower and management dimension and the credit conduct dimension from one
 respondent (CR 0.298 and 0.377), and one at the credit-risk objective level from another
@@ -59,14 +56,14 @@ the stated comparisons admit a weight vector that reproduces them exactly.
 
 [Table: elicited-weights-six-credit | Elicited weights for the six credit-risk dimensions]
 
-| Dimension | Weight | Against equal |
+| Dimension | Weight | Multiple of equal weight |
 |---|---:|---:|
-| Project Viability & Projections | 0.2504 | ×1.50 |
-| Borrower & Management Capacity | 0.2062 | ×1.24 |
-| Credit History & Banking Conduct | 0.1733 | ×1.04 |
-| Market & Competitive Position | 0.1527 | ×0.92 |
-| Historic Financial Performance | 0.1116 | ×0.67 |
-| Risk, Security & Compliance | 0.1058 | ×0.63 |
+| Project Viability & Projections | 0.2698 | 1.62 |
+| Borrower & Management Capacity | 0.2190 | 1.31 |
+| Credit History & Banking Conduct | 0.1594 | 0.96 |
+| Market & Competitive Position | 0.1423 | 0.85 |
+| Historic Financial Performance | 0.1073 | 0.64 |
+| Risk, Security & Compliance | 0.1023 | 0.61 |
 
 The ordering is itself a finding. Forward-looking project viability outranks
 historic financial performance by more than two to one, which inverts the
@@ -74,7 +71,7 @@ emphasis of an instrument whose longest section is the historic financial
 analysis. Security and compliance ranks last of the six, despite occupying a
 full clause of the form.
 
-The model's weight status is now recorded as elicited, against ten respondents,
+The model's weight status is now recorded as elicited, against eleven respondents,
 three exclusions and the date of elicitation. Every score the system produces is
 computed from these weights.
 
@@ -84,9 +81,7 @@ Until elicitation completed, every scored result used equal weights within each
 level. Section 5.16 argued this mattered less than it appeared, on a simulation
 perturbing weights by up to ±25%.
 
-**The elicited weights fall outside that range.** Within a level the ratio of
-largest to smallest reaches 3.25, and the largest departure from equal weighting
-is 79%, three times the perturbation tested. The earlier reassurance was
+**The elicited weights fall outside that range.** Within a level the ratio of largest to smallest reaches 3.57, and the largest departure from equal weighting is 87%, three and a half times the perturbation tested. The earlier reassurance was
 therefore about a narrower disturbance than the one that actually occurred.
 
 It survives the test anyway. @tbl:scoring-placeholder-elicited-weights scores the same 2,000 simulated appraisals under both vectors and compares the two rankings.
@@ -95,13 +90,12 @@ It survives the test anyway. @tbl:scoring-placeholder-elicited-weights scores th
 
 | | Credit risk | Development impact |
 |---|---:|---:|
-| Spearman correlation | 0.9136 | 0.9662 |
-| Same risk band | 86.7% | 84.1% |
+| Spearman correlation | 0.8983 | 0.9671 |
+| Same risk band | 85.5% | 84.9% |
 | Two or more bands apart | 0.0% | 0.0% |
-| Mean absolute score shift | 1.85 | 2.45 |
+| Mean absolute score shift | 2.04 | 2.38 |
 
-No case moves two bands. Between 13% and 16% move one band. That is not nothing:
-those are appraisals that would carry a different recommendation. The ordering
+No case moves two bands. Around 15% move one band. That is not nothing: those are appraisals that would carry a different recommendation. The ordering
 is nonetheless substantially preserved across a weight change far larger than
 the one Section 5.16 modelled.
 
@@ -132,23 +126,19 @@ avoiding it.
 
 Both halves are now answered.
 
-*What they assign.* Ten practitioners, 1–12 years' experience, produced the
-weights in Section 6.1.4. The ordering is the substantive result:
+*What they assign.* Eleven practitioners, 1–12 years' experience, produced the weights in Section 6.1.4. The ordering is the substantive result:
 forward-looking project viability outranks historic financial performance by
 more than two to one, and security and compliance ranks last of the six
-credit-risk areas. Three of 80 level-responses were excluded for inconsistency.
+credit-risk areas. Three of 88 level-responses were excluded for inconsistency.
 
 *How much they matter.* Less than the effort of eliciting them might imply, and
 the answer is now measured rather than simulated. The elicited weights depart
-from the placeholders by up to 79% within a level, three times the ±25% Section
-5.16 modelled, yet rank correlation between the two scorings is 0.9136 (credit)
-and
-0.9662 (development), no case moves two risk bands, and 84–87% keep the same
-band (Section 6.1.5).
+from the placeholders by up to 87% within a level, three and a half times the
+±25% Section 5.16 modelled, yet rank correlation between the two scorings is
+0.8983 for credit risk and 0.9671 for development impact, no case moves two risk
+bands, and about 85% keep the same band (Section 6.1.5).
 
-Three qualifications. The 13–16% that change band are real appraisals that would
-carry a different recommendation. All ten respondents come from state commercial
-banking, so these weights describe one segment, not the sector. And the criteria
+Three qualifications. The 15% that change band are real appraisals that would carry a different recommendation. Ten of the eleven respondents come from state commercial banking, and the eleventh did not state an institution, so these weights describe one segment, not the sector. And the criteria
 tree is structurally asymmetric: a development-impact criterion carries four to
 seven times the leverage of a credit-risk criterion, so elicitation error costs
 more on that side.

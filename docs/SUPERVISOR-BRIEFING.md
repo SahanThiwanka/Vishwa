@@ -38,14 +38,15 @@ restated in a weaker form. The contribution now rests elsewhere (§3 below).
 ### 2.2 Weight elicitation was carried out, on a narrow sample
 
 The methodology specifies eliciting criterion weights from credit practitioners
-by Best-Worst Method, and this was done. **Ten practitioners** completed the
+by Best-Worst Method, and this was done. **Eleven practitioners** completed the
 instrument, above the five-to-eight range typical of published BWM studies.
-Three of eighty level-responses were excluded for a consistency ratio above
-0.25, and the remaining 77 aggregated by geometric mean. `weightStatus` is
+Three of eighty-eight level-responses were excluded for a consistency ratio
+above 0.25, and the remaining 85 aggregated by geometric mean. `weightStatus` is
 `ELICITED` and every score the system produces now uses those weights.
 
-**The limitation that remains is the sample, not its absence.** Nine of the ten
-respondents are from state commercial banking. The weights describe that
+**The limitation that remains is the sample, not its absence.** Ten of the
+eleven respondents are from state commercial banking and the eleventh did not
+state an institution. The weights describe that
 segment, not Sri Lankan SME lending as a whole, and §6.3 treats this as a
 principal limitation.
 
@@ -58,10 +59,10 @@ historic financial analysis.
 
 RQ2 originally asked only what weights practitioners assign. It now asks both
 that **and how far the model's output depends on them**, which proved to be the
-useful form: the elicited weights depart from equal weighting by up to 79%
-within a level, three times the perturbation §5.16 had tested, yet rank
-correlation between the two scorings is 0.91 and 0.97 and no appraisal moves two
-risk bands. A thesis reporting only the first half would have left that unsaid.
+useful form: the elicited weights depart from equal weighting by up to 87%
+within a level, three and a half times the perturbation §5.16 had tested, yet
+rank correlation between the two scorings is 0.90 and 0.97 and no appraisal
+moves two risk bands. A thesis reporting only the first half would have left that unsaid.
 RQ4 was likewise reframed to something testable on available data.
 
 §1.3 and §6.1 state both changes openly.
@@ -113,8 +114,8 @@ is reported as it occurred.
 
 - **Weight sensitivity.** At ±25% perturbation, rank correlation holds at 0.982
   and 94% of risk bands are unchanged. The elicited weights later turned out to
-  depart from equal weighting by up to 79%, further than that study tested, and
-  the ranking held anyway (ρ = 0.91 and 0.97, no case moving two bands).
+  depart from equal weighting by up to 87%, further than that study tested, and
+  the ranking held anyway (ρ = 0.90 and 0.97, no case moving two bands).
 - **Objective separability.** Across 652,284 facilities the two objectives
   correlate at r = +0.40. This removes the *strong* form of the premise the design
   was justified on, but does **not** contradict Arvanitis et al. (2015): reading

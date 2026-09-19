@@ -8,83 +8,84 @@
     "R16",
     "R23",
     "R24",
+    "R35",
     "Rcu725",
     "S01"
   ],
-  "n_respondents": 10,
+  "n_respondents": 11,
   "n_dropped_inconsistent": 3,
   "consistency_threshold": 0.25,
   "weights": {
     "dimension:borrower_management": {
-      "business_vintage": 0.12562872562850635,
-      "hr_adequacy": 0.15736544285371426,
-      "org_structure": 0.2535363289390713,
-      "sponsor_experience": 0.20227822490268937,
-      "sponsor_quals": 0.12168532799197268,
-      "statutory_compliance": 0.13950594968404598
+      "business_vintage": 0.1263767302800241,
+      "hr_adequacy": 0.15477666595972875,
+      "org_structure": 0.2502119852638209,
+      "sponsor_experience": 0.2148874371051752,
+      "sponsor_quals": 0.12280087213825124,
+      "statutory_compliance": 0.13094630925299988
     },
     "dimension:credit_conduct": {
-      "account_turnover": 0.3587226324863321,
-      "arrears_ratio": 0.11024239876351584,
-      "cheque_returns": 0.19887979180329757,
-      "external_exposure": 0.12016466748233157,
-      "repayment_performance": 0.21199050946452289
+      "account_turnover": 0.3737317894521436,
+      "arrears_ratio": 0.10454639302699778,
+      "cheque_returns": 0.18711634714987155,
+      "external_exposure": 0.11889928686057318,
+      "repayment_performance": 0.21570618351041396
     },
     "dimension:dev_impact": {
-      "employment_generation": 0.1400890644719413,
-      "export_share": 0.1166675474565461,
-      "fx_earnings": 0.1536214636112116,
-      "import_substitution": 0.11150173558545118,
-      "local_raw_material": 0.1433760242148093,
-      "productive_capacity": 0.16389147033164475,
-      "value_added": 0.11862225036111303,
-      "women_participation": 0.05223044396728271
+      "employment_generation": 0.12483263316626317,
+      "export_share": 0.11574981448776497,
+      "fx_earnings": 0.1557135475560432,
+      "import_substitution": 0.11108103120741343,
+      "local_raw_material": 0.15612339145165072,
+      "productive_capacity": 0.15765503080349075,
+      "value_added": 0.12309727920174657,
+      "women_participation": 0.05574727212562725
     },
     "dimension:historic_financials": {
-      "asset_turnover": 0.10181413122064858,
-      "current_ratio": 0.1595093178255331,
-      "debt_equity_hist": 0.11594050904108039,
-      "debtor_retention": 0.12245352583892555,
-      "gearing_ratio": 0.12261441564936146,
-      "gross_profit_ratio": 0.06238665313621588,
-      "net_profit_ratio": 0.11941444031015261,
-      "sales_trend": 0.09198912706448206,
-      "stock_retention": 0.10387787991360041
+      "asset_turnover": 0.09937897344051162,
+      "current_ratio": 0.1494676586924377,
+      "debt_equity_hist": 0.1207937166450442,
+      "debtor_retention": 0.1175358017467733,
+      "gearing_ratio": 0.11767618290109924,
+      "gross_profit_ratio": 0.06564480355298599,
+      "net_profit_ratio": 0.12407959997075745,
+      "sales_trend": 0.09062112508768727,
+      "stock_retention": 0.11480213796270329
     },
     "dimension:market_position": {
-      "buyer_power": 0.17267881613969122,
-      "distribution": 0.09839535230984477,
-      "raw_material": 0.1470083699533455,
-      "rivalry": 0.1650711629676604,
-      "substitutes": 0.1341751126082769,
-      "supplier_power": 0.12402070835840302,
-      "threat_entry": 0.15865047766277818
+      "buyer_power": 0.1679469542862483,
+      "distribution": 0.10071948963685338,
+      "raw_material": 0.1594173839970108,
+      "rivalry": 0.16886951051816682,
+      "substitutes": 0.12950344344191347,
+      "supplier_power": 0.12430682998642435,
+      "threat_entry": 0.14923638813338286
     },
     "dimension:project_viability": {
-      "bep_headroom": 0.09272717931476857,
-      "capacity_growth": 0.12441950617920207,
-      "dscr": 0.19283761500703422,
-      "iscr": 0.09261512242152366,
-      "project_gearing": 0.12063513080567352,
-      "projected_np": 0.1397890050804739,
-      "promoter_equity": 0.1078023061204628,
-      "roi": 0.12917413507086128
+      "bep_headroom": 0.09451097170210682,
+      "capacity_growth": 0.119748996705555,
+      "dscr": 0.1838904732807392,
+      "iscr": 0.09440713642237408,
+      "project_gearing": 0.13477813828188376,
+      "projected_np": 0.12708367384519828,
+      "promoter_equity": 0.12167860655578563,
+      "roi": 0.12390200320635725
     },
     "dimension:risk_security": {
-      "environmental_risk": 0.13334510255422835,
-      "govt_consent": 0.13698985615135684,
-      "implementation": 0.14368709519413805,
-      "insurance_cover": 0.15634771425637992,
-      "security_cover": 0.2408111289268882,
-      "technological_risk": 0.18881910291700868
+      "environmental_risk": 0.1416430350334646,
+      "govt_consent": 0.1559449197515872,
+      "implementation": 0.14471671545569142,
+      "insurance_cover": 0.15626383884191739,
+      "security_cover": 0.21592355922948084,
+      "technological_risk": 0.18550793168785853
     },
     "objective:credit_risk": {
-      "borrower_management": 0.20619215455792927,
-      "credit_conduct": 0.1733063452618753,
-      "historic_financials": 0.11158677428692117,
-      "market_position": 0.1526748518959125,
-      "project_viability": 0.25044940649186176,
-      "risk_security": 0.10579046750550002
+      "borrower_management": 0.21898320936521903,
+      "credit_conduct": 0.15944169783519643,
+      "historic_financials": 0.1072803900638348,
+      "market_position": 0.142252415480914,
+      "project_viability": 0.2697905311076561,
+      "risk_security": 0.10225175614717968
     }
   }
 }

@@ -78,13 +78,13 @@ clause and expressed as 49 criteria across seven dimensions and two objectives,
 each traceable to a numbered clause. Quantitative criteria map
 through piecewise-linear bands and qualitative criteria through a five-point
 linguistic scale represented as triangular fuzzy numbers. A working system implements it,
-scoring credit risk and development impact separately. Weights were elicited from ten credit
+scoring credit risk and development impact separately. Weights were elicited from eleven credit
 practitioners by the Best-Worst Method, and the scoring method was benchmarked
 against the SBA National dataset of 899,164 loan guarantees.
 
 Practitioners weight forward-looking project viability above historic financial
 performance by more than two to one, inverting the emphasis of the source form. Scoring proved robust
-to that change: rank correlation against equal weighting is 0.91 for credit risk and 0.97 for development impact, and no
+to that change: rank correlation against equal weighting is 0.90 for credit risk and 0.97 for development impact, and no
 appraisal moves two risk bands. Validation produced an unanticipated principal
 finding: whether a facility's term is an exact multiple of twelve, a property
 with no economic content, predicts default at an area under the curve of 0.889

@@ -10,7 +10,7 @@ Method. It was carried out, and this section reports it.
 - A web instrument implementing BWM across eight comparison levels (86 comparisons, approximately fifteen minutes), with a participation and
   confidentiality notice, collecting a self-chosen participant code, years of
   experience, institution type and role, and no name or customer information.
-- A linear BWM solver [22], verified two ways on deliberately
+- A linear BWM solver [26], verified two ways on deliberately
   inconsistent inputs: the maximum deviation recomputed from the returned weights
   matches the reported ξ\*, and an independent optimiser from forty random starts
   finds no better solution, agreeing to six decimal places (Section 4.5.3).
@@ -123,7 +123,7 @@ The working system scores, explains, and exports in the bank's own report
 format. Contributions decompose exactly to the score, so any recommendation is
 traceable to the clause that produced it.
 
-What the formalisation does not do is preserve everything. Stein's (2002)
+What the formalisation does not do is preserve everything. Stein's [12]
 distinction between hard and soft information implies that hardening a judgement
 loses something, and the fuzzy linguistic scale mitigates that loss rather than
 avoiding it.
@@ -181,7 +181,7 @@ matters.
 Across 652,284 facilities the two scores correlate at r = +0.40, or +0.36 with
 the shared-input confound removed. That is *moderate*, and it removes the strong
 form of the premise the design was justified on. It does not, however, overturn
-Arvanitis et al. [25]. Their estimate was also positive (slope 0.048) and
+Arvanitis et al. [29]. Their estimate was also positive (slope 0.048) and
 merely non-significant in 109 observations; this study measures the same
 direction at a sample size able to resolve it (Section 5.17.1). What went wrong
 was the reading of that paper: an underpowered null carried forward as an
@@ -214,7 +214,7 @@ only because an AUC of 0.9726 was investigated rather than reported. Had it been
 published it would have exceeded every benchmark it would have been compared
 against, which is precisely why it would not have been questioned.
 
-Kapoor and Narayanan [28] found leakage affecting 294 papers across seventeen
+Kapoor and Narayanan [32] found leakage affecting 294 papers across seventeen
 fields. This case is harder to catch than the textbook forms: the offending
 field is documented as legitimate, is available at prediction time under its
 documented meaning, and is economically meaningful. It is caught only by
@@ -282,9 +282,11 @@ firms, and the smallest facility quartile at 3.42 times the largest.
 Micro-firms, small facilities and agriculture are precisely the segments that
 SME and development finance exist to reach.
 
-This has to be stated carefully. These are credit-access proxies; the dataset
-records no protected characteristic, so no claim about lawful discrimination
-follows. Group default rates genuinely differ, so selection-rate gaps are not by
+This has to be stated carefully. Barocas and Selbst [46] set out why disparate
+impact is a legal as well as a technical problem: a model can disadvantage a
+group whose defining attribute it never observes. That is the shape of what is
+found here. But these are credit-access proxies; the dataset records no
+protected characteristic, so no claim about lawful discrimination follows. Group default rates genuinely differ, so selection-rate gaps are not by
 themselves evidence of injustice, which is why the error-rate comparison, taken
 only over borrowers who actually repaid, is the one reported as the finding.
 
@@ -331,8 +333,8 @@ inconsistent is supported from the literature [2] but not
 measured here. This remains the single most significant omission.
 
 **No field evaluation and no fairness assessment.** No officer has used the
-system on live applications, so neither perceived usefulness [36] nor
-usability [37] has been measured, and no disparate-impact analysis has
+system on live applications, so neither perceived usefulness [47] nor
+usability [48] has been measured, and no disparate-impact analysis has
 been performed. For a credit model the second is a serious gap, recorded in the
 model card.
 

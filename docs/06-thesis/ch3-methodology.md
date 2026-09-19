@@ -106,6 +106,18 @@ For each section the respondent identifies the most important item, identifies
 the least important, then rates the best against each other item and each item
 against the worst, on the 1–9 scale.
 
+@fig:elicitation-instrument-landing shows the screen a practitioner meets first.
+It states the time the exercise takes and the number of comparisons before
+asking for anything, carries the participation and confidentiality notice in
+full, and collects only a self-chosen code, years of experience, institution
+type and role. There is no field for a name, and none for any borrower.
+
+[Image: system-elicitation.png | elicitation-instrument-landing | The opening screen of the weight elicitation instrument, as a practitioner receives it. The participation notice is shown before any question is asked, and the only identifier collected is a code the respondent chooses.]
+
+Nothing on the screen asks the respondent to commit before they know what
+they are agreeing to, which is the design response to a recruitment problem:
+a practitioner deciding in ten seconds whether to spend fifteen minutes.
+
 ### 3.5.3 Analysis
 
 Each response is solved as a linear programme minimising the maximum deviation
@@ -170,14 +182,14 @@ Chapter 5 is entitled to conclude.
   earlier cohorts, test on later). Both are reported, because random splitting
   places the same economic cycle on both sides and overstates performance.
 - The unfitted expert scorecard is compared against logistic regression and
-  gradient boosting, both trained on hundreds of thousands of labelled outcomes.
+  gradient boosting (Friedman, 2001), both trained on hundreds of thousands of labelled outcomes and fitted with scikit-learn (Pedregosa et al., 2011).
 - Metrics: area under the receiver operating characteristic (ROC) curve (Hanley and McNeil, 1982), Kolmogorov–Smirnov
   separation, average precision, the Brier score (Brier, 1950) under
   Murphy's decomposition (Murphy, 1973), and F1 at the Youden-optimal threshold.
 - Paired comparisons of AUC use DeLong's test (DeLong, DeLong and
   Clarke-Pearson, 1988), which accounts for the correlation induced by
   evaluating both models on identical cases.
-- Interval estimates are stratified bootstrap percentile intervals, resampling
+- Interval estimates are stratified bootstrap percentile intervals (Efron, 1979), resampling
   positives and negatives separately.
 
 The comparison is deliberately asymmetric. The scorecard never sees a default

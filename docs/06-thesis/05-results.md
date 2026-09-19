@@ -222,7 +222,7 @@ Chapter 6.
 
 ## 5.9 Dataset
 
-The SBA National dataset [29] records 899,164 loan
+The SBA National dataset [33] records 899,164 loan
 guarantees issued by the U.S. Small Business Administration between 1987 and
 2014, with realised outcomes in *MIS_Status* (*P I F* = paid in full, *CHGOFF* =
 charged off). It is the largest public dataset of small-business lending with
@@ -293,7 +293,7 @@ A one-month difference in contractual term cannot produce an eight-fold change i
 
 [Image: adjacent_terms.png | default-rate-exact-contractual | Default rate by exact contractual term, 2007 approvals. Terms that are multiples of twelve are shown in blue.]
 
-The pattern is roundness. Across the 1990–2010 cohort:
+Only the sixty-month bar falls below 80%, and it is the only term in the range that is a multiple of twelve. The pattern is roundness. Across the 1990–2010 cohort:
 
 - 86.4% of repaid loans have a term that is an exact multiple of twelve
 - 8.5% of charged-off loans do
@@ -304,6 +304,8 @@ The pattern is roundness. Across the 1990–2010 cohort:
 The single boolean *"is the term a multiple of twelve"*, a quantity with no economic content whatsoever, achieves AUC 0.8894. @fig:distribution-across-term-mod shows the distribution behind that figure: repaid facilities pile up at residue zero while charged-off facilities spread almost uniformly across the twelve residues.
 
 [Image: term_leakage.png | distribution-across-term-mod | Left: the share of facilities at each value of *Term* modulo twelve, separately for those repaid and those charged off. Right: default rate within each approval year, for facilities whose term is a multiple of twelve and for the rest.]
+
+The two panels say different things about the same field. The left shows where the terms sit: repaid facilities are concentrated almost entirely at residue zero, while charged-off facilities are spread across all twelve residues at between 7.7% and 9.0% each. The right shows that the gap between the two groups is present in every approval year, and widens as the overall default rate climbs after 2003.
 
 ### 5.10.3 Ruling out cohort composition
 
@@ -326,6 +328,8 @@ the association might be an artefact of pooling cohorts. It is not. @tbl:default
 The association holds in every year, within a band of 0.859–0.900, and @fig:discrimination-achieved-term-roundness plots that year-by-year discrimination. Cohort composition is excluded.
 
 [Image: roundness_by_year.png | discrimination-achieved-term-roundness | Discrimination achieved by the term-roundness boolean alone, computed separately within each approval year.]
+
+Discrimination stays between 0.8589 and 0.8995 across the whole twenty-one year period. A variable that is genuinely a cohort artefact would not hold a band that narrow across two recessions and a doubling of the default rate.
 
 ### 5.10.4 The mechanism is not established
 
@@ -420,7 +424,7 @@ within the non-multiples separately, which strips out whatever a modulus inherit
 
 [Table: share-terms-divisible-modulus | Share of terms divisible by each modulus, with the resulting AUC]
 
-| Modulus | Share ≡ 0 | Raw AUC |
+| Modulus | Share divisible | Raw AUC |
 |---:|---:|---:|
 | 12 | 70.07% | 0.8859 |
 | 6 | 74.39% | 0.8600 |
@@ -452,7 +456,7 @@ same analysis.)
 
 ### 5.10.7 The contamination reaches the dataset's own documentation
 
-Li, Mickel and Taylor [29], the paper that documents this dataset, derive a
+Li, Mickel and Taylor [33], the paper that documents this dataset, derive a
 feature from *Term* themselves. They define a dummy *RealEstate*, set to 1 where
 *Term* ≥ 240 months, reasoning that only real-estate-backed loans run twenty
 years or more, and report those loans defaulting at 1.64% against 21.16% for the
@@ -530,7 +534,8 @@ Paired DeLong tests confirm this formally. Because the models are compared on id
 | Leakage effect, logistic regression | temporal | 0.4565 vs 0.7854 | < 0.001 |
 | Gradient boosting vs logistic, clean | both | — | < 0.001 |
 
-Three observations.
+Each row compares two models or two protocols on the same facilities, so
+the p-values are those of a paired test. Three observations follow.
 
 **The inflation is severe.** Gradient boosting rises from 0.6076 to 0.9461 on
 temporal validation, 0.339 AUC obtained from a contaminated field.
@@ -544,6 +549,8 @@ in term, gains 0.33 AUC from contamination; gradient boosting, free to split on
 exact values, gains more and reaches further. Published results on this dataset using tree ensembles with the *Term* field should be read with this in mind. @fig:discrimination-without-term-field sets the four values side by side against the level the roundness boolean reaches on its own.
 
 [Image: leakage_inflation.png | discrimination-without-term-field | Discrimination with and without the *Term* field, under both validation protocols. The dashed line marks the level the roundness boolean reaches on its own.]
+
+The dashed line in each panel marks what the roundness boolean reaches on its own: 0.887 under random splitting and 0.8965 under temporal splitting. Under temporal validation every trained model sits below that line when the field is excluded and well above it when it is included, which places the gain in the field and not in the model that consumes it.
 
 ## 5.12 Validation protocol matters independently
 
@@ -565,8 +572,8 @@ whether a predicted probability means what it says. A bank pricing risk, setting
 provisions, or reporting expected loss needs the second property, and a model
 can have the first without it.
 
-Calibration is reported here as the Brier score [33] under Murphy's
-decomposition [34], *Brier = reliability − resolution + uncertainty*,
+Calibration is reported here as the Brier score [39] under Murphy's
+decomposition [40], *Brier = reliability − resolution + uncertainty*,
 where reliability measures how far predicted probabilities sit from observed
 rates (lower is better; zero is perfect) and resolution measures how far the model separates cases from the base rate (higher is better). @tbl:brier-score-decomposed-reliability gives the decomposition for both models under both protocols.
 
@@ -590,6 +597,8 @@ The mechanism is straightforward. The model is trained on 1990–2003 approvals
 defaulting at 9.1% and tested on 2004–2010 approvals defaulting at 35.9%. It has learned the base rate of a benign period and carries it into a stressed one. @fig:reliability-diagrams-random-temporal shows this directly: under temporal validation the curve lifts away from the diagonal, in the direction of under-prediction.
 
 [Image: calibration.png | reliability-diagrams-random-temporal | Reliability diagrams under random and temporal validation. Marker area is proportional to the number of facilities in each bin. Under temporal validation the curve lifts above the diagonal, indicating systematic under-prediction of default.]
+
+The shape is the finding. Under random splitting the gradient-boosting curve follows the diagonal closely, so a predicted 40% means an observed 40%. Under temporal splitting the same curve sits above the diagonal across the whole range: at every level of predicted risk, more facilities defaulted than the model said would.
 
 ### 5.13.1 Why this matters more than the AUC result
 
@@ -701,7 +710,7 @@ about real borrowers. Simulation is appropriate precisely because the question
 is about the model rather than the world.
 
 Each weight was then perturbed multiplicatively by up to ±p and renormalised,
-for p ∈ {10%, 25%, 50%, 75%, 100%}, with 400 draws at each level. For every draw
+at 10%, 25%, 50%, 75% and 100%, with 400 draws at each level. For every draw
 the whole population was rescored and compared against the equal-weight baseline
 on three measures: Spearman rank correlation, the proportion of cases keeping
 their risk band, and the largest score shift.
@@ -764,7 +773,7 @@ and the development weights deserve more respondents, not fewer.
 ## 5.17 Are the two objectives independent? (RQ4)
 
 The model reports two scores and refuses to combine them. That decision was
-justified in Section 5.2.2 on Arvanitis, Stampini and Vencatachellum [25], who
+justified in Section 5.2.2 on Arvanitis, Stampini and Vencatachellum [29], who
 report that development and credit concerns in development-bank appraisal are
 "rather independent from each other".
 
@@ -887,9 +896,9 @@ analysis is reported for what it is.
 
 Two distinct quantities are measured and must not be conflated. The first is
 selection-rate disparity, whether a group is declined more often, assessed
-against the four-fifths rule. On its own this is weak evidence, because the
+against the four-fifths rule, in the form Feldman et al. [43] formalise. On its own this is weak evidence, because the
 groups have genuinely different default rates and a model that declines a
-riskier group more often is doing its job. The second is error-rate disparity:
+riskier group more often is doing its job. The second is error-rate disparity, which is Hardt, Price and Srebro's [44] equality-of-opportunity criterion:
 among borrowers who actually repaid, what share would have been declined. That
 measure has no base-rate defence. If creditworthy firms in one group are turned
 away at three times the rate of another, the model is worse for that group.
@@ -1004,12 +1013,14 @@ values down whichever branch carried the greater training weight; the urban indi
 absent for about a third of training rows and those rows defaulted less often,
 so "not stated" is scored like a low-risk population.
 
-Median imputation, the standard alternative, fails differently rather than
+The distinction matters because neither model treats absence as Rubin [45] would have it treated: as information about the mechanism that produced the gap. Median imputation, the standard alternative, fails differently rather than
 better. Under the logistic regression, withholding the SBA guarantee share
 scores
 90.5% of applicants as less risky and flips 19.61% from decline to approval. It does not reward omission through a missingness branch; it silently asserts a value the applicant never gave. @fig:effect-withholding-information-same traces both models as fields are progressively withheld.
 
 [Image: missingness.png | effect-withholding-information-same | The effect of withholding information about the same applicants. Left: mean assessed probability of default as fields are withheld, shaded across draws, with the thin horizontal line marking each model's assessment when nothing is withheld. Right: the share of all applicants converted from decline to approval. Both models converge on the ceiling, at which every applicant who would have been declined is approved.]
+
+Both models behave the same way and differ only in pace. Assessed risk falls monotonically as fields are withheld, and on the right-hand panel both curves reach the ceiling once twelve of the fourteen fields are withheld, at which point every applicant who would have been declined has been approved.
 
 ### 5.19.3 The limit case
 

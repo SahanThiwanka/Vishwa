@@ -2,10 +2,10 @@
 
 ## 4.1 Research design
 
-This study follows Design Science Research [30]: knowledge is
+This study follows Design Science Research [34]: knowledge is
 produced by building an artefact and evaluating it, not by testing hypotheses
 about existing phenomena. The process follows the six activities set out by
-Peffers et al. [31]: problem identification, objectives, design and
+Peffers et al. [35]: problem identification, objectives, design and
 development, demonstration, evaluation, and communication. The artefact is a
 dual-objective decision-support system for SME credit appraisal, together with
 the criteria model beneath it.
@@ -87,11 +87,11 @@ attention, and response quality degrades well before the end. Inconsistency
 introduced by fatigue would make the resulting weights unusable regardless of
 how carefully the instrument was designed.
 
-The Best-Worst Method [21] requires 2n−3 comparisons per level,
+The Best-Worst Method [25] requires 2n−3 comparisons per level,
 reducing the instrument to 86 comparisons, roughly fifteen minutes. Because
 every comparison is anchored to a fixed reference rather than a rotating
 partner, BWM also tends to yield more consistent responses. The linear
-formulation [22] is used, giving a unique solution.
+formulation [26] is used, giving a unique solution.
 
 The choice is a response to a real constraint on practitioner time, not a
 convenience.
@@ -105,6 +105,18 @@ criteria within each of the seven dimensions.
 For each section the respondent identifies the most important item, identifies
 the least important, then rates the best against each other item and each item
 against the worst, on the 1–9 scale.
+
+@fig:elicitation-instrument-landing shows the screen a practitioner meets first.
+It states the time the exercise takes and the number of comparisons before
+asking for anything, carries the participation and confidentiality notice in
+full, and collects only a self-chosen code, years of experience, institution
+type and role. There is no field for a name, and none for any borrower.
+
+[Image: system-elicitation.png | elicitation-instrument-landing | The opening screen of the weight elicitation instrument, as a practitioner receives it. The participation notice is shown before any question is asked, and the only identifier collected is a code the respondent chooses.]
+
+Nothing on the screen asks the respondent to commit before they know what
+they are agreeing to, which is the design response to a recruitment problem:
+a practitioner deciding in ten seconds whether to spend fifteen minutes.
 
 ### 4.5.3 Analysis
 
@@ -170,13 +182,13 @@ Chapter 5 is entitled to conclude.
   earlier cohorts, test on later). Both are reported, because random splitting
   places the same economic cycle on both sides and overstates performance.
 - The unfitted expert scorecard is compared against logistic regression and
-  gradient boosting, both trained on hundreds of thousands of labelled outcomes.
-- Metrics: area under the receiver operating characteristic (ROC) curve [32], Kolmogorov–Smirnov
-  separation, average precision, the Brier score [33] under
-  Murphy's decomposition [34], and F1 at the Youden-optimal threshold.
-- Paired comparisons of AUC use DeLong's test [35], which accounts for the correlation induced by
+  gradient boosting [36], both trained on hundreds of thousands of labelled outcomes and fitted with scikit-learn [37].
+- Metrics: area under the receiver operating characteristic (ROC) curve [38], Kolmogorov–Smirnov
+  separation, average precision, the Brier score [39] under
+  Murphy's decomposition [40], and F1 at the Youden-optimal threshold.
+- Paired comparisons of AUC use DeLong's test [41], which accounts for the correlation induced by
   evaluating both models on identical cases.
-- Interval estimates are stratified bootstrap percentile intervals, resampling
+- Interval estimates are stratified bootstrap percentile intervals [42], resampling
   positives and negatives separately.
 
 The comparison is deliberately asymmetric. The scorecard never sees a default
@@ -294,9 +306,7 @@ agreed to.
 ### 4.11.1 Quantitative criteria
 
 Each quantitative criterion carries a set of (raw value, score) anchors
-defining a piecewise-linear map onto 0–100. DSCR, for example, anchors at 0.8→0,
-1.0→25,
-1.25→50, 1.5→75, 2.0→100. Values outside the anchor range clamp to the nearest
+defining a piecewise-linear map onto 0–100. A DSCR of 0.8, for example, scores 0; 1.0 scores 25; 1.25 scores 50; 1.5 scores 75; and 2.0 scores 100. Values outside the anchor range clamp to the nearest
 endpoint.
 
 Because interpolation simply follows the anchor sequence, a single
@@ -385,6 +395,27 @@ recommendation would silently re-interpret under the current model, and an
 appraisal signed in March could not be explained in September. Storing the
 result document makes past decisions permanently reconstructible.
 
+### 4.12.2 Deployment
+
+The system was deployed to a public URL on the Vercel platform, with the
+SQLite development database replaced by a managed PostgreSQL instance. Nothing
+in the application changed: the persistence layer selects its driver from the
+connection string, so the same build runs against either.
+
+Deployment was not a presentation exercise. The elicitation instrument had to
+reach practitioners who would complete it on a phone, in their own time, from a
+link in a message, and who would not install anything or create an account to
+do so. Section 6.1 reports ten completed responses; a locally-hosted instrument
+would have obtained none of them. The deployment is therefore part of the
+method, and it is what made the answer to RQ2 possible.
+
+Two consequences follow for the artefact. First, the serverless execution model
+means a request may reach a process that has just started, so the connection
+pool is kept small and connections are retired quickly. Second, the platform's
+filesystem does not persist between invocations, which is why the file-backed
+database that serves local demonstration cannot serve the deployment, and why
+the driver is selected rather than assumed.
+
 ## 4.13 Access control and the integrity of the audit trail
 
 An audit trail is only worth as much as the identity behind each entry.
@@ -410,6 +441,12 @@ only the actions a user's role permits; the server re-checks the role before
 writing, so the restriction cannot be bypassed by calling the action directly;
 and an appraisal that has been approved or declined rejects further decisions; a
 correction is made by raising a new appraisal, never by rewriting a signed one.
+
+@fig:system-sign-in shows the sign-in screen. It states on its face that the
+weighting study needs no account, so a practitioner who follows the study link
+and lands here by accident is not left thinking they must register to take part.
+
+[Image: system-signin.png | system-sign-in | The sign-in screen. Appraisal records are restricted; the screen states that the criterion weighting study is not, so a practitioner arriving by mistake is told immediately that no account is needed.]
 
 **The elicitation instrument is deliberately left public.** Requiring accounts
 of practitioners completing a fifteen-minute voluntary study would collapse the

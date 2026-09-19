@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 
 import { currentUser, signOut } from "@/lib/auth-actions";
+import { criteriaTree } from "@/lib/scoring";
 
 import "./globals.css";
 
@@ -102,8 +103,23 @@ export default async function RootLayout({
 
         <footer className="border-t border-slate-200 bg-white">
           <div className="mx-auto max-w-7xl px-6 py-3 text-xs text-slate-400">
-            Research prototype. Criterion weights are not yet elicited — scores
-            must not be used for lending decisions or reported as results.
+            {/*
+              Read from the model, never written here. This line said
+              "Criterion weights are not yet elicited" on every page of the
+              system for as long as it took anyone to notice, including after
+              the elicitation was complete and the weights were in use. A
+              hardcoded statement about the state of the data is wrong the
+              moment the data changes, and nothing fails when it does.
+            */}
+            Research prototype.{" "}
+            {criteriaTree.weightStatus.state === "ELICITED"
+              ? `Criterion weights elicited from ${
+                  criteriaTree.weightStatus.elicitation?.respondents ??
+                  "a panel of"
+                } practitioners.`
+              : "Criterion weights are not yet elicited."}{" "}
+            Scores must not be used for lending decisions without institutional
+            validation.
           </div>
         </footer>
       </body>

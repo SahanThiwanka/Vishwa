@@ -128,9 +128,7 @@ application scored 80.2 on credit risk (band A) and 74.6 on development impact
 ### 4.4.1 Quantitative criteria
 
 Each quantitative criterion carries a set of (raw value, score) anchors
-defining a piecewise-linear map onto 0–100. DSCR, for example, anchors at 0.8→0,
-1.0→25,
-1.25→50, 1.5→75, 2.0→100. Values outside the anchor range clamp to the nearest
+defining a piecewise-linear map onto 0–100. A DSCR of 0.8, for example, scores 0; 1.0 scores 25; 1.25 scores 50; 1.5 scores 75; and 2.0 scores 100. Values outside the anchor range clamp to the nearest
 endpoint.
 
 Because interpolation simply follows the anchor sequence, a single
@@ -249,6 +247,27 @@ recommendation would silently re-interpret under the current model, and an
 appraisal signed in March could not be explained in September. Storing the
 result document makes past decisions permanently reconstructible.
 
+### 4.6.2 Deployment
+
+The system was deployed to a public URL on the Vercel platform, with the
+SQLite development database replaced by a managed PostgreSQL instance. Nothing
+in the application changed: the persistence layer selects its driver from the
+connection string, so the same build runs against either.
+
+Deployment was not a presentation exercise. The elicitation instrument had to
+reach practitioners who would complete it on a phone, in their own time, from a
+link in a message, and who would not install anything or create an account to
+do so. Section 6.1 reports ten completed responses; a locally-hosted instrument
+would have obtained none of them. The deployment is therefore part of the
+method, and it is what made the answer to RQ2 possible.
+
+Two consequences follow for the artefact. First, the serverless execution model
+means a request may reach a process that has just started, so the connection
+pool is kept small and connections are retired quickly. Second, the platform's
+filesystem does not persist between invocations, which is why the file-backed
+database that serves local demonstration cannot serve the deployment, and why
+the driver is selected rather than assumed.
+
 ## 4.6a Access control and the integrity of the audit trail
 
 An audit trail is only worth as much as the identity behind each entry.
@@ -274,6 +293,12 @@ only the actions a user's role permits; the server re-checks the role before
 writing, so the restriction cannot be bypassed by calling the action directly;
 and an appraisal that has been approved or declined rejects further decisions; a
 correction is made by raising a new appraisal, never by rewriting a signed one.
+
+@fig:system-sign-in shows the sign-in screen. It states on its face that the
+weighting study needs no account, so a practitioner who follows the study link
+and lands here by accident is not left thinking they must register to take part.
+
+[Image: system-signin.png | system-sign-in | The sign-in screen. Appraisal records are restricted; the screen states that the criterion weighting study is not, so a practitioner arriving by mistake is told immediately that no account is needed.]
 
 **The elicitation instrument is deliberately left public.** Requiring accounts
 of practitioners completing a fifteen-minute voluntary study would collapse the

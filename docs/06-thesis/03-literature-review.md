@@ -27,7 +27,7 @@ Hand and Henley [5] reviewed the statistical methods then in use, and Thomas,
 Crook and Edelman [6] and Thomas, Edelman and Crook [7] provided the
 standard textbook treatments. The most useful modern reference point is Lessmann
 et al. [8], who benchmarked forty-one classifiers across seven real-world
-retail credit scoring datasets, updating Baesens et al. (2003). They report a
+retail credit scoring datasets, updating Baesens et al. [9]. They report a
 *tendency* for homogeneous ensembles to outperform individual classifiers: the
 five best methods all belong to that family, with random forest giving the most
 accurate probability-of-default estimates. The picture is not uniform, however,
@@ -47,10 +47,10 @@ analogy alone.
 
 SMEs are harder than consumer credit. Financial statements are frequently
 unaudited or absent, trading histories are short, and collateral is thin. Beck
-and Demirgüç-Kunt [9] is the standard reference for access to finance as a
+and Demirgüç-Kunt [10] is the standard reference for access to finance as a
 binding growth constraint on SMEs internationally.
 
-Berger and Udell [10] provide the framework this study sits inside. They
+Berger and Udell [11] provide the framework this study sits inside. They
 identify nine distinct SME lending technologies: relationship lending, financial
 statement lending, trade credit, equipment lending, real-estate-based lending,
 leasing, factoring, small business credit scoring, and asset-based lending. They
@@ -59,7 +59,7 @@ institutional setting. The People's Bank instrument is principally financial
 statement lending with substantial relationship and asset-based elements, and
 this study adds a scoring layer without discarding the relationship content.
 
-Stein [11] explains why that is difficult. He distinguishes *hard*
+Stein [12] explains why that is difficult. He distinguishes *hard*
 information, which can be credibly transmitted through a hierarchy, from *soft*
 information, which cannot, and shows that decentralised structures outperform
 where information is soft. An appraisal officer's judgement about management
@@ -71,7 +71,7 @@ quality is soft information in exactly this sense.
 > five-point linguistic scale represented as fuzzy numbers rather than a forced
 > crisp value (Section 4.11.2), is an attempt to lose less, not to avoid the loss.
 
-Ciampi, Giannozzi, Marzi and Altman [12] provide the anchoring review: a
+Ciampi, Giannozzi, Marzi and Altman [13] provide the anchoring review: a
 systematic analysis of over a hundred articles on SME default prediction across
 thirty-four years, identifying five research streams and calling for work
 exploiting new data sources.
@@ -123,27 +123,30 @@ does. That is an argument, not an observation, and it is offered as one.
 Related work reaches similar conclusions from other directions: studies of
 discretion in loan rate setting, and of loan officers' subjective judgement in
 microfinance, where risk classification rests on recollected professional
-experience instead of an explicit model. SharafEldin, Idrees and Ouf [13]
+experience instead of an explicit model. SharafEldin, Idrees and Ouf [14]
 similarly motivate their work by observing that traditional credit assessment
 "often relied on subjective judgment, leading to inconsistent decisions".
 
 The premise is therefore supported by the literature. This study does not itself
 measure inter-rater reliability, which remains its most significant gap (Section
-6.4); Cohen [14], Landis and Koch [15] and Krippendorff's α provide the
+6.4); Cohen [15], Landis and Koch [16] and Krippendorff's α provide the
 instruments a proper measurement would use.
 
 ## 3.5 Multi-criteria decision methods
 
 ### 3.5.1 Foundations
 
-Zadeh [16] introduced fuzzy sets, providing a representation for gradations of
-membership instead of binary classification. Saaty [17] introduced the
-Analytic Hierarchy Process (AHP), later defending it against criticism [18],
-deriving priority weights from pairwise comparisons on a 1–9 scale, still the
-most widely used weighting method.
+Zadeh [17] introduced fuzzy sets, providing a representation for gradations of
+membership instead of binary classification, and later extended it to the
+linguistic variable [18], which is the construct the five-point scale
+in this study rests on. Saaty [19] gave the scaling method for priorities in a
+hierarchy and set it out in full as the Analytic Hierarchy Process (AHP) in
+Saaty [20], later defending it against criticism [21]. It derives
+priority weights from pairwise comparisons on a 1–9 scale, and remains the most
+widely used weighting method.
 
-Fuzzy extensions followed. Chang [19] proposed extent analysis for fuzzy AHP,
-and Chen [20] extended the Technique for Order Preference by Similarity to Ideal Solution (TOPSIS) to fuzzy group decision-making with linguistic
+Fuzzy extensions followed. van Laarhoven and Pedrycz [22] gave the first fuzzy extension of Saaty's priority theory; Chang [23] proposed extent analysis for fuzzy AHP,
+and Chen [24] extended the Technique for Order Preference by Similarity to Ideal Solution (TOPSIS) to fuzzy group decision-making with linguistic
 ratings.
 
 **A caution that shaped this study's method choice.** Chang's extent analysis is
@@ -154,11 +157,11 @@ resistance; it is also documented to be wrong.
 
 ### 3.5.2 Best-Worst Method
 
-Rezaei [21] introduced the Best-Worst Method (BWM), which derives weights from two
+Rezaei [25] introduced the Best-Worst Method (BWM), which derives weights from two
 comparison vectors — the best criterion against all others, and all others
 against the worst — requiring 2n−3 comparisons rather than AHP's n(n−1)/2.
 Anchoring every comparison to a fixed reference tends to produce more consistent
-responses. Rezaei [22] gave a linear formulation with a unique solution, which
+responses. Rezaei [26] gave a linear formulation with a unique solution, which
 is the form implemented here (Section 4.5).
 
 For this study's criteria tree the difference is decisive: 168 comparisons under
@@ -168,7 +171,7 @@ between usable and unusable responses.
 
 ### 3.5.3 Application to credit, and the nearest precedent
 
-**Roy and Shaw [23] must be acknowledged plainly.** They construct a
+**Roy and Shaw [27] must be acknowledged plainly.** They construct a
 multicriteria credit scoring model for SMEs using exactly the hybrid this
 study's proposal treated as novel: BWM to determine criteria weights, combined
 with a ranking method (TOPSIS) to score applicants. Their instrument has 30
@@ -211,7 +214,7 @@ document.
 
 ### 3.6.1 Social criteria in credit scoring
 
-Gutiérrez-Nieto, Serrano-Cinca and Camón-Cala [24] build a credit score system
+Gutiérrez-Nieto, Serrano-Cinca and Camón-Cala [28] build a credit score system
 for socially responsible lending that evaluates social alongside financial
 aspects, quantifying a loan's impact on outcomes such as employment, education,
 environment and health, and using MCDM to combine them. Their system yields not
@@ -236,7 +239,7 @@ shows changes the answer for
 
 ### 3.6.2 Development returns and credit risk
 
-Arvanitis, Stampini and Vencatachellum [25] examine ex-ante appraisal at the
+Arvanitis, Stampini and Vencatachellum [29] examine ex-ante appraisal at the
 African Development Bank, and their result is the closest thing in the
 literature to a test of whether the two objectives need to be reported
 separately. They conclude that the variables weighed at appraisal, "whether they
@@ -274,8 +277,8 @@ creditor cannot excuse non-compliance on the grounds that its technology is too
 complex to interpret, nor satisfy the requirement by citing broad categories.
 Credit scoring is designated high-risk under the EU AI Act.
 
-The technical response has been post-hoc explanation: Local Interpretable Model-agnostic Explanations, or LIME [26] fits an interpretable local surrogate around a prediction, and
-SHapley Additive exPlanations, or SHAP [27], assigns each
+The technical response has been post-hoc explanation: Local Interpretable Model-agnostic Explanations, or LIME [30] fits an interpretable local surrogate around a prediction, and
+SHapley Additive exPlanations, or SHAP [31], assigns each
 feature a Shapley-value contribution
 with uniqueness guarantees.
 
@@ -294,7 +297,7 @@ subtle: a model reading some trace of the answer scores well and the error is
 invisible in every conventional diagnostic, because the model really does
 predict the held-out data; the held-out data is simply contaminated too.
 
-Kapoor and Narayanan [28] established the scale of the problem. Surveying
+Kapoor and Narayanan [32] established the scale of the problem. Surveying
 prior reviews across machine-learning-based science, they find leakage in 17
 fields, collectively affecting 294 papers, in some cases producing what they
 call wildly overoptimistic conclusions, and argue it is the largest single cause
@@ -334,7 +337,7 @@ variety that passes the current best-practice defence.
 
 ### 3.7.3 The SBA National dataset
 
-Li, Mickel and Taylor [29] introduced the SBA National dataset, 899,164 loan
+Li, Mickel and Taylor [33] introduced the SBA National dataset, 899,164 loan
 guarantees issued by the U.S. Small Business Administration between 1987 and
 2014 with realised outcomes, as a teaching resource, built around a case
 assignment in which students take the role of a loan officer and decide whether
@@ -373,10 +376,10 @@ the original proposal:
 
 - combining weighted financial ratios into a credit score ([3], and
   sixty years of work after it);
-- applying BWM or fuzzy MCDM to SME credit scoring ([23], and the
+- applying BWM or fuzzy MCDM to SME credit scoring ([27], and the
   surrounding literature in Section 3.5.3);
-- scoring social or developmental impact alongside credit risk [24];
-- observing that development banks appraise against two objectives [25].
+- scoring social or developmental impact alongside credit risk [28];
+- observing that development banks appraise against two objectives [29].
 
 What the literature leaves open, and what this study addresses, is set out
 below. The first is the substantial contribution and the most transferable;

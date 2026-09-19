@@ -68,7 +68,10 @@ Comparisons are made on the nine-point scale in @tbl:scale-used-pairwise-judgeme
 | 7 | Very strongly more important |
 | 9 | Extremely more important |
 
-Even values represent intermediate judgements.
+Even values represent intermediate judgements, so a respondent who finds one
+item somewhat more important than another but not clearly so has a value to
+express it with. The scale is the one Saaty defined for the Analytic
+Hierarchy Process and that the Best-Worst Method inherits unchanged.
 
 ## Appendix 3 Reproducing the results
 
@@ -121,6 +124,8 @@ The SBA National dataset is public and is not reproduced here; it is distributed
 | With a usable outcome | 897,167 |
 | Approval years 1990–2010 | 847,980 |
 | Fully matured before the 2014 cut-off | 652,284 |
+
+Each stage removes records that would otherwise bias the estimate: those with no recorded outcome, those approved outside the window in which both the leakage and the benchmark results are computed, and those whose contractual term had not elapsed by the data cut-off. The 652,284 facilities that survive are the population every result in Chapter 5 is computed on.
 
 ## Appendix 5 Ethical considerations
 

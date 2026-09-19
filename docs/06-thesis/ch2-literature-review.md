@@ -155,12 +155,15 @@ instruments a proper measurement would use.
 ### 2.5.1 Foundations
 
 Zadeh (1965) introduced fuzzy sets, providing a representation for gradations of
-membership instead of binary classification. Saaty (1980) introduced the
-Analytic Hierarchy Process (AHP), later defending it against criticism (Saaty, 1990),
-deriving priority weights from pairwise comparisons on a 1–9 scale, still the
-most widely used weighting method.
+membership instead of binary classification, and later extended it to the
+linguistic variable (Zadeh, 1975), which is the construct the five-point scale
+in this study rests on. Saaty (1977) gave the scaling method for priorities in a
+hierarchy and set it out in full as the Analytic Hierarchy Process (AHP) in
+Saaty (1980), later defending it against criticism (Saaty, 1990). It derives
+priority weights from pairwise comparisons on a 1–9 scale, and remains the most
+widely used weighting method.
 
-Fuzzy extensions followed. Chang (1996) proposed extent analysis for fuzzy AHP,
+Fuzzy extensions followed. van Laarhoven and Pedrycz (1983) gave the first fuzzy extension of Saaty's priority theory; Chang (1996) proposed extent analysis for fuzzy AHP,
 and Chen (2000) extended the Technique for Order Preference by Similarity to Ideal Solution (TOPSIS) to fuzzy group decision-making with linguistic
 ratings.
 

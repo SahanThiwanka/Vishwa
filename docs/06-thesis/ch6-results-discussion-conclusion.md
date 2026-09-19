@@ -282,9 +282,11 @@ firms, and the smallest facility quartile at 3.42 times the largest.
 Micro-firms, small facilities and agriculture are precisely the segments that
 SME and development finance exist to reach.
 
-This has to be stated carefully. These are credit-access proxies; the dataset
-records no protected characteristic, so no claim about lawful discrimination
-follows. Group default rates genuinely differ, so selection-rate gaps are not by
+This has to be stated carefully. Barocas and Selbst (2016) set out why disparate
+impact is a legal as well as a technical problem: a model can disadvantage a
+group whose defining attribute it never observes. That is the shape of what is
+found here. But these are credit-access proxies; the dataset records no
+protected characteristic, so no claim about lawful discrimination follows. Group default rates genuinely differ, so selection-rate gaps are not by
 themselves evidence of injustice, which is why the error-rate comparison, taken
 only over borrowers who actually repaid, is the one reported as the finding.
 

@@ -89,6 +89,13 @@ BODY_ORDER = ["01-introduction.md", "02-objectives.md", "03-literature-review.md
               "04-methodology.md", "05-results.md", "06-discussion-conclusions.md",
               "08-appendices.md"]
 
+# Everything that reaches the page. BODY_ORDER leaves out the front matter and
+# the reference list because they carry no numbered sections, and the path check
+# was reading BODY_ORDER - so "docs/02-literature/bibliography.md", printed in
+# the preamble to the References, passed every build.
+ALL_RENDERED = ["00-front-matter.md"] + BODY_ORDER[:-1] + ["07-references.md",
+                                                           "08-appendices.md"]
+
 
 def _body_text() -> str:
     return "\n".join((CHAPTERS / n).read_text(encoding="utf-8")
@@ -172,7 +179,58 @@ def check_exhibits_are_referenced() -> list[tuple[bool, str]]:
     if not out:
         out.append((True, f"OK    all {len(defined)} tables and figures are "
                           f"referred to by number"))
+    out.extend(_check_exhibits_are_read())
     return out
+
+
+def _check_exhibits_are_read() -> list[tuple[bool, str]]:
+    """Is there prose after each exhibit saying what it shows?
+
+    Naming a table in the sentence before it is half the job. The guideline's
+    own worked example names the exhibit and then states what the reader should
+    take from it. All six figures in Chapter 5 were followed immediately by the
+    next heading, so each was shown and then abandoned.
+    """
+    silent = []
+    for name in BODY_ORDER:
+        path = CHAPTERS / name
+        if not path.exists():
+            continue
+        lines = path.read_text(encoding="utf-8").splitlines()
+        i = 0
+        while i < len(lines):
+            marker = re.match(
+                r"^\[(?:Table:\s*|Image:\s*\S+\s*\|\s*)([a-z0-9-]+)\s*\|",
+                lines[i])
+            if not marker:
+                i += 1
+                continue
+            j = i + 1
+            while j < len(lines) and (not lines[j].strip()
+                                      or lines[j].strip().startswith("|")):
+                j += 1
+            after = []
+            while j < len(lines):
+                s = lines[j].strip()
+                if not s:
+                    if after:
+                        break
+                    j += 1
+                    continue
+                if s.startswith(("#", "[")) or re.match(r"^\s*([-*]\s|\d+\.\s)",
+                                                        lines[j]):
+                    break
+                after.append(s)
+                j += 1
+            if len(" ".join(after)) < 60:
+                silent.append(f"{name[:2]}: {marker.group(1)}")
+            i += 1
+    if silent:
+        out = [(False, f"FAIL  {len(silent)} exhibit(s) have no sentence "
+                       f"reading them")]
+        return out + [(False, f"        {s}") for s in silent[:8]]
+    return [(True, "OK    every table and figure is read in the text that "
+                   "follows it")]
 
 
 def check_abbreviations_expanded() -> list[tuple[bool, str]]:
@@ -220,8 +278,13 @@ def check_no_repository_paths() -> list[tuple[bool, str]]:
     An examiner reads the thesis without the repository, so "run
     research/src/bwm.py" is a dead reference and reads as a note the author
     forgot to take out. 45 of them were in the submitted draft.
+
+    Checked over everything that reaches the page, not just the numbered
+    chapters: the one that survived the first sweep was in the front matter of
+    the reference list.
     """
-    text = _body_text()
+    text = "\n".join((CHAPTERS / n).read_text(encoding="utf-8")
+                     for n in ALL_RENDERED if (CHAPTERS / n).exists())
     if not text:
         return []
     patterns = {

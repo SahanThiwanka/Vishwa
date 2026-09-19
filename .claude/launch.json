@@ -23,6 +23,37 @@
         "docs/06-thesis"
       ],
       "port": 8777
+    },
+    {
+      "name": "appraisal-web-local",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "cross-env",
+        "DATABASE_URL=file:./dev.db",
+        "npm",
+        "--prefix",
+        "web",
+        "run",
+        "dev"
+      ],
+      "port": 3000
+    },
+    {
+      "name": "appraisal-web-prod",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "cross-env",
+        "DATABASE_URL=file:./dev.db",
+        "npm",
+        "--prefix",
+        "web",
+        "run",
+        "start",
+        "--",
+        "-p",
+        "3100"
+      ],
+      "port": 3100
     }
   ]
 }

@@ -231,6 +231,63 @@ REFERENCES: dict[str, tuple[tuple[str, ...], str, str]] = {
         'J. Brooke, "SUS: a \'quick and dirty\' usability scale," in *Usability '
         "Evaluation in Industry*, P. W. Jordan et al., Eds. London, U.K.: "
         "Taylor & Francis, 1996, pp. 189-194."),
+    # ---- Methods the study actually uses, which the draft used without
+    # citing. Each is cited at the point the method is applied, not collected
+    # here to lengthen the list.
+    "baesens2003": (
+        ("Baesens et al.", "Baesens"), "2003",
+        'B. Baesens, T. Van Gestel, S. Viaene, M. Stepanova, J. Suykens and '
+        'J. Vanthienen, "Benchmarking state-of-the-art classification '
+        'algorithms for credit scoring," *Journal of the Operational Research '
+        "Society*, vol. 54, no. 6, pp. 627-635, 2003."),
+    "saaty1977": (
+        ("Saaty",), "1977",
+        'T. L. Saaty, "A scaling method for priorities in hierarchical '
+        'structures," *Journal of Mathematical Psychology*, vol. 15, no. 3, '
+        "pp. 234-281, 1977."),
+    "zadeh1975": (
+        ("Zadeh",), "1975",
+        'L. A. Zadeh, "The concept of a linguistic variable and its '
+        'application to approximate reasoning - I," *Information Sciences*, '
+        "vol. 8, no. 3, pp. 199-249, 1975."),
+    "vanlaarhoven1983": (
+        ("van Laarhoven and Pedrycz", "Van Laarhoven and Pedrycz"), "1983",
+        'P. J. M. van Laarhoven and W. Pedrycz, "A fuzzy extension of Saaty\'s '
+        'priority theory," *Fuzzy Sets and Systems*, vol. 11, no. 1-3, '
+        "pp. 229-241, 1983."),
+    "friedman2001": (
+        ("Friedman",), "2001",
+        'J. H. Friedman, "Greedy function approximation: a gradient boosting '
+        'machine," *Annals of Statistics*, vol. 29, no. 5, pp. 1189-1232, '
+        "2001."),
+    "pedregosa2011": (
+        ("Pedregosa et al.", "Pedregosa"), "2011",
+        'F. Pedregosa et al., "Scikit-learn: machine learning in Python," '
+        "*Journal of Machine Learning Research*, vol. 12, pp. 2825-2830, "
+        "2011."),
+    "efron1979": (
+        ("Efron",), "1979",
+        'B. Efron, "Bootstrap methods: another look at the jackknife," '
+        "*Annals of Statistics*, vol. 7, no. 1, pp. 1-26, 1979."),
+    "rubin1976": (
+        ("Rubin",), "1976",
+        'D. B. Rubin, "Inference and missing data," *Biometrika*, vol. 63, '
+        "no. 3, pp. 581-592, 1976."),
+    "hardt2016": (
+        ("Hardt, Price and Srebro", "Hardt et al.", "Hardt"), "2016",
+        'M. Hardt, E. Price and N. Srebro, "Equality of opportunity in '
+        'supervised learning," in *Advances in Neural Information Processing '
+        "Systems 29*, 2016, pp. 3315-3323."),
+    "feldman2015": (
+        ("Feldman et al.", "Feldman"), "2015",
+        'M. Feldman, S. A. Friedler, J. Moeller, C. Scheidegger and '
+        'S. Venkatasubramanian, "Certifying and removing disparate impact," in '
+        "*Proc. 21st ACM SIGKDD Int. Conf. Knowledge Discovery and Data "
+        "Mining*, 2015, pp. 259-268."),
+    "barocas2016": (
+        ("Barocas and Selbst", "Barocas"), "2016",
+        'S. Barocas and A. D. Selbst, "Big data\'s disparate impact," '
+        "*California Law Review*, vol. 104, no. 3, pp. 671-732, 2016."),
     # The source of the sector statistics quoted in the Introduction. Cited so
     # that those figures carry a primary attribution rather than the "widely
     # reported" hedge they had while the draft was being written.
@@ -256,8 +313,11 @@ def citation_patterns(names: tuple[str, ...], year: str) -> list[re.Pattern]:
         n = r"\s+".join(re.escape(part) for part in name.split())
         # "(Author, 2016)" and "(Author 2016)"
         pats.append(re.compile(rf"\(\s*{n},?\s+{year}\s*\)"))
-        # "Author (2016)" -> keep the name, replace the year
-        pats.append(re.compile(rf"(?<![\w-]){n}\s+\({year}\)"))
+        # "Author (2016)" -> keep the name, replace the year.
+        # The possessive is allowed too: "Stein's (2002) distinction" was left
+        # in author-date form while every other citation to the same work was
+        # numbered, so the reference list and the text disagreed.
+        pats.append(re.compile(rf"(?<![\w-]){n}(?:['’]s)?\s+\({year}\)"))
         # bare "Author, 2016" inside a longer parenthetical
         pats.append(re.compile(rf"(?<![\w-]){n},\s+{year}(?![\d)])"))
     return pats
@@ -317,16 +377,12 @@ def main() -> int:
 
     # ---- regenerate the reference list in citation order -------------------
     ordered = sorted(assigned.items(), key=lambda kv: kv[1])
-    lines = [
-        "# REFERENCES",
-        "",
-        "References are numbered in order of first citation, following IEEE "
-        "style. Sources located through a database search whose full text has "
-        "not been obtained are recorded as such in the accompanying "
-        "bibliography (docs/02-literature/bibliography.md) rather than "
-        "concealed here.",
-        "",
-    ]
+    # No preamble. A reference list is a list, and the previous one carried a
+    # note about the completeness of the literature search that named a file in
+    # the repository - a sentence written for the author's own records that had
+    # no business in a submitted thesis. The point it made about the search
+    # being non-exhaustive belongs in the Literature Review, where it is made.
+    lines = ["# REFERENCES", ""]
     for key, number in ordered:
         lines.append(f"[{number}] {REFERENCES[key][2]}")
         lines.append("")

@@ -118,16 +118,36 @@ correlated on average.
 
 ## 5. Weights
 
-> ## ⛔ WEIGHTS ARE PLACEHOLDERS
+> ## WEIGHTS ARE ELICITED
 >
-> `weightStatus.state = "PLACEHOLDER"`. All criteria are equally weighted within
-> their level. **No elicitation has been completed.** Scores are structurally
-> valid but must not be reported as research results or used for any decision.
+> `weightStatus.state = "ELICITED"`. Derived from **ten credit practitioners**
+> by the Best-Worst Method (Rezaei 2015; linear model 2016). Three of eighty
+> level-responses were excluded for a consistency ratio above 0.25; the
+> remaining 77 were aggregated by geometric mean.
+>
+> **The sample is one segment, not the sector.** Nine of the ten respondents
+> are from state commercial banking, which is the setting the source instrument
+> comes from. These weights describe that setting. They are not validated for
+> lending decisions at any institution without that institution's own review.
 
-Planned derivation: Best-Worst Method (Rezaei 2015; linear model 2016), responses
-above consistency ratio 0.25 excluded, aggregation by geometric mean.
+Objective-level weights, credit risk:
+
+| Dimension | Weight | Against equal |
+|---|---:|---:|
+| Project Viability & Projections | 0.2504 | 1.50 |
+| Borrower & Management Capacity | 0.2062 | 1.24 |
+| Credit History & Banking Conduct | 0.1733 | 1.04 |
+| Market & Competitive Position | 0.1527 | 0.92 |
+| Historic Financial Performance | 0.1116 | 0.67 |
+| Risk, Security & Compliance | 0.1058 | 0.63 |
+
+Forward-looking project viability outranks historic financial performance by
+more than two to one, inverting the emphasis of an instrument whose longest
+section is the historic financial analysis.
+
 `research/src/derive_weights.py` refuses to mark the model `ELICITED` without
-usable responses.
+usable responses, and excludes any participant code beginning `TEST`, `PILOT`
+or `DEMO`.
 
 ### Sensitivity to weights
 
@@ -140,10 +160,16 @@ Measured over 2,000 simulated appraisals × 400 draws per perturbation level:
 | ±50% | 0.931 | 88.2% | 0.959 | 85.5% |
 | ±100% | 0.755 | 76.1% | 0.854 | 71.2% |
 
-Within the range experts plausibly disagree over (±25%), ranking is preserved and
-~93–94% of bands are unchanged. **This bounds, but does not remove, the
-placeholder-weight limitation** — 6–7% of cases would still receive a different
-recommendation.
+Within the range experts plausibly disagree over (±25%), ranking is preserved
+and roughly 93–94% of bands are unchanged.
+
+The elicited weights turned out to fall **outside** that range: within a level
+the ratio of largest to smallest reaches 3.25, and the largest departure from
+equal weighting is 79%. Scoring 2,000 simulated appraisals under the equal
+vector and then under the elicited one gives a rank correlation of 0.9136 for
+credit risk and 0.9662 for development impact, with **no case moving two risk
+bands** and 13–16% moving one. The perturbation study understated the
+disturbance and still called the outcome correctly.
 
 ### Structural asymmetry
 
@@ -277,6 +303,7 @@ Every number in the thesis is produced by one of these. None was entered by hand
 | Version | Change |
 |---|---|
 | 0.1.0-draft | Initial 49-criterion tree derived from the source form. Weights placeholder. |
+| 0.1.0-draft | Weights elicited from ten practitioners and applied; `weightStatus` set to `ELICITED`. |
 
 **On any change to criteria, bands or weights**, bump the version. Stored
 appraisals record the version that scored them, so historical recommendations

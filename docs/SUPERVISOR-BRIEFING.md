@@ -35,30 +35,36 @@ credit scoring. The literature review found this is not novel:
 Both claims are **withdrawn explicitly** in §2.5.3 and §2.6.1 rather than
 restated in a weaker form. The contribution now rests elsewhere (§3 below).
 
-### 2.2 Weight elicitation was not carried out
+### 2.2 Weight elicitation was carried out, on a narrow sample
 
 The methodology specifies eliciting criterion weights from credit practitioners
-by Best-Worst Method. **This was not done.** Recruiting officers requires
-institutional access and participant time that were not secured.
+by Best-Worst Method, and this was done. **Ten practitioners** completed the
+instrument, above the five-to-eight range typical of published BWM studies.
+Three of eighty level-responses were excluded for a consistency ratio above
+0.25, and the remaining 77 aggregated by geometric mean. `weightStatus` is
+`ELICITED` and every score the system produces now uses those weights.
 
-What exists: the web instrument (86 comparisons, ~15 minutes, no name or customer
-data collected), a verified BWM solver, and the full analysis pipeline. What does
-not exist: any practitioner response.
+**The limitation that remains is the sample, not its absence.** Nine of the ten
+respondents are from state commercial banking. The weights describe that
+segment, not Sri Lankan SME lending as a whole, and §6.3 treats this as a
+principal limitation.
 
-The model therefore carries `weightStatus: PLACEHOLDER`, and this is enforced
-mechanically — the derivation script refuses to mark it otherwise without usable
-responses, and an automated check fails the build if any chapter claims
-elicitation occurred.
+The substantive result is the ordering. Practitioners weight forward-looking
+project viability above historic financial performance by more than two to one,
+which inverts the emphasis of an instrument whose longest section is the
+historic financial analysis.
 
 ### 2.3 The research questions were revised
 
-RQ2 originally asked what weights practitioners assign. Since that cannot be
-answered, it now asks **how much the model's output depends on its weights at
-all** — answerable by simulation, and it bounds what the missing elicitation
-costs. RQ4 was likewise reframed to something testable on available data.
+RQ2 originally asked only what weights practitioners assign. It now asks both
+that **and how far the model's output depends on them**, which proved to be the
+useful form: the elicited weights depart from equal weighting by up to 79%
+within a level, three times the perturbation §5.16 had tested, yet rank
+correlation between the two scorings is 0.91 and 0.97 and no appraisal moves two
+risk bands. A thesis reporting only the first half would have left that unsaid.
+RQ4 was likewise reframed to something testable on available data.
 
-§1.3 and §6.1 state both changes openly. This is a narrowing of scope, not a
-substitution of equivalent value, and the thesis says so.
+§1.3 and §6.1 state both changes openly.
 
 ---
 
@@ -106,7 +112,9 @@ is reported as it occurred.
 ### 3.3 Supporting findings
 
 - **Weight sensitivity.** At ±25% perturbation, rank correlation holds at 0.982
-  and 94% of risk bands are unchanged — bounding the placeholder-weight problem.
+  and 94% of risk bands are unchanged. The elicited weights later turned out to
+  depart from equal weighting by up to 79%, further than that study tested, and
+  the ranking held anyway (ρ = 0.91 and 0.97, no case moving two bands).
 - **Objective separability.** Across 652,284 facilities the two objectives
   correlate at r = +0.40. This removes the *strong* form of the premise the design
   was justified on, but does **not** contradict Arvanitis et al. (2015): reading

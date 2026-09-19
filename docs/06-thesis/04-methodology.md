@@ -330,6 +330,16 @@ Poor, Fair, Good and Excellent, represented as the triangular fuzzy numbers in @
 | G | Good | [50, 75, 100] |
 | E | Excellent | [75, 100, 100] |
 
+@fig:appraisal-form-live-scoring shows the scale as the officer meets it, in
+one dimension of a file part-way through entry. Both criterion types appear
+together: a quantitative one, where twelve years of sponsor experience maps to
+85, and four qualitative ones on the five-point scale, where Good maps to 75.
+Two criteria are unassessed, and their scores read as a dash. The dimension
+scores 78.7 at 50% assessed, computed over what has been entered and not over
+what has not.
+
+[Image: system-appraisal-form.jpg | appraisal-form-live-scoring | One dimension of an appraisal during entry. Each criterion carries the clause of the People's Bank form it derives from. Quantitative criteria take a value, qualitative criteria a point on the five-point scale, and unassessed criteria show a dash instead of a zero.]
+
 Fuzzy representation is used because appraisal judgements are linguistic and
 imprecise. An officer writing "management is sound" is not asserting 75.0; the
 triangular number carries that imprecision explicitly instead of discarding it.

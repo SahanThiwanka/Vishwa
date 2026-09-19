@@ -152,6 +152,16 @@ Poor, Fair, Good and Excellent, represented as the triangular fuzzy numbers in @
 | G | Good | [50, 75, 100] |
 | E | Excellent | [75, 100, 100] |
 
+@fig:appraisal-form-live-scoring shows the scale as the officer meets it, in
+one dimension of a file part-way through entry. Both criterion types appear
+together: a quantitative one, where twelve years of sponsor experience maps to
+85, and four qualitative ones on the five-point scale, where Good maps to 75.
+Two criteria are unassessed, and their scores read as a dash. The dimension
+scores 78.7 at 50% assessed, computed over what has been entered and not over
+what has not.
+
+[Image: system-appraisal-form.jpg | appraisal-form-live-scoring | One dimension of an appraisal during entry. Each criterion carries the clause of the People's Bank form it derives from. Quantitative criteria take a value, qualitative criteria a point on the five-point scale, and unassessed criteria show a dash instead of a zero.]
+
 Fuzzy representation is used because appraisal judgements are linguistic and
 imprecise. An officer writing "management is sound" is not asserting 75.0; the
 triangular number carries that imprecision explicitly instead of discarding it.
@@ -204,6 +214,14 @@ An objective assessed below a completeness threshold (0.6) returns its score but
 no risk band and no recommendation. The result carries a *sufficient* flag and a
 list of outstanding criteria, and the interface tells the officer what is
 missing instead of offering a number to sign against.
+
+@fig:completeness-gate-refusal shows the gate holding. Credit risk stands at
+78.7, which on a complete file would be a comfortable Band B, and the system
+declines to say so: 7% of the objective has been assessed against the 60%
+required. The number is still shown, because hiding it would be its own kind of
+dishonesty, but no band and no recommendation accompany it.
+
+[Image: system-completeness-gate.jpg | completeness-gate-refusal | The completeness gate refusing to recommend. A credit-risk score of 78.7 is displayed, and withheld from banding, because only 7% of the objective has been assessed.]
 
 The gate is deliberately a refusal to answer, not a scoring adjustment.
 Discounting the score for incompleteness would have preserved the false
@@ -328,6 +346,23 @@ objective, its completeness, and a table of constituent criteria showing raw
 value, derived score and contribution, each labelled with its source clause. An
 officer can therefore trace any recommendation from the headline score down to
 the clause of the bank's own form that produced it.
+
+@fig:completed-appraisal-result shows a completed appraisal. The two objectives
+are reported side by side and are never added together: the same facility scores
+68.0 on credit risk, which bands B and carries a recommendation with conditions,
+and 26.0 on development impact, which bands D and carries a recommendation to
+decline. A single combined figure would have averaged those into a middling
+number that describes neither.
+
+[Image: system-result.jpg | completed-appraisal-result | A completed appraisal. The two objectives are scored and banded separately and are never combined. Each dimension's contribution is expressed in points of the objective score, and each criterion shows its entered value, its derived score, its contribution and the clause it comes from.]
+
+Beneath the two objective scores, each dimension's contribution is given in
+points of the objective score, and every criterion shows the value entered, the
+score it mapped to, and the points it contributed. Borrower and management
+capacity scores 94.4 and contributes 15.7 points; project viability scores 47.0
+and contributes 7.8. The contributions sum to the objective score exactly, so
+the breakdown accounts for the whole of it and not merely for the part that is
+convenient to explain.
 
 ## 4.8 Report generation
 

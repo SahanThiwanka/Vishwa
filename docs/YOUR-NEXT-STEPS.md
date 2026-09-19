@@ -192,43 +192,16 @@ hardest for, and nobody outside this project has ever looked at it.
 
 ---
 
-## Task 5a — Three screenshots I cannot take
+## Task 5a — Screenshots
 
-The thesis now carries two screenshots of the system: the elicitation
-instrument as a practitioner meets it (Figure 4.1) and the sign-in screen
-(Figure 4.2). Both are public pages, so I could capture them.
+Done. The thesis carries five screenshots of the system, captured from the
+deployment: the elicitation instrument as a practitioner meets it, one dimension
+of an appraisal during entry, the sign-in screen, the completeness gate refusing
+to recommend, and a completed appraisal with both objective scores and the
+contribution breakdown.
 
-Three more would strengthen Chapter 5, and all three sit behind the login. I do
-not sign in to accounts or enter passwords, so these need you. It is about five
-minutes.
-
-**What to capture**
-
-| File name to save as | Page | What it should show |
-|---|---|---|
-| `system-appraisal-form.png` | New appraisal | A partly completed form with the live score visible |
-| `system-result.png` | A completed appraisal | Both objective scores, their bands, and the per-criterion contributions |
-| `system-completeness-gate.png` | An appraisal with only a few criteria entered | The refusal to recommend, with the completeness percentage |
-
-**How**
-
-1. Sign in at `https://vishwa-ten.vercel.app` with your administrator account.
-2. Create a new appraisal using made-up figures. Use no real borrower's data;
-   the screenshots go into a document that will be read by other people.
-3. Enter perhaps a third of the criteria, and capture the completeness gate
-   refusing to recommend.
-4. Fill the rest in, capture the form with the live score showing, then save
-   and capture the result page.
-5. Press the Windows key with Shift and S to capture a region, or use the
-   browser's own full-page screenshot from the developer tools, which gives a
-   cleaner image.
-6. Save all three into `docs/05-results/figures/` under exactly the names in
-   the table above.
-
-Send them to me, or just tell me they are in place, and I will add them to the
-thesis with captions and the sentences that read them. The build fails on a
-figure that is referenced but missing, so the thesis will not silently go out
-with a gap where one should be.
+All were taken against a demonstration case with invented figures, and none was
+saved to the database, so nothing was added to your appraisal records.
 
 ## Task 6 — Two decisions only you can make
 

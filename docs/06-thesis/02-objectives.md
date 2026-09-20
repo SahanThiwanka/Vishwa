@@ -57,12 +57,40 @@ credit practitioners, with a response burden realistic for working professionals
 a measurable consistency criterion, and a stated rule for excluding inconsistent
 responses before aggregation.
 
-> **Status note.** The instrument, solver and analysis pipeline were built and
-> verified, and the instrument was administered. Eleven practitioners completed
-> it,
-> three of eighty-eight level-responses were excluded for inconsistency, and the
-> resulting weights now govern every score the system produces. Section 6.1
-> reports the elicitation in full, including what changed when the elicited
-> weights replaced the equal weighting used during development. The recruited
-> sample is drawn from state commercial banking alone, which Section 6.3 treats
-> as a limitation on how far the weights generalise.
+The instrument, solver and analysis pipeline were built, verified and
+administered. Eleven practitioners completed the instrument, three of the
+eighty-eight level-responses were excluded for inconsistency, and the resulting
+weights govern every score the system now produces. Section 6.1 reports the
+elicitation in full, including what changed when the elicited weights replaced
+the equal weighting used during development. The recruited sample is drawn from
+state commercial banking alone, which Section 6.4 treats as a limitation on how
+far the weights generalise.
+
+## 2.3 How the objectives answer the research questions
+
+The seven specific objectives are not in one-to-one correspondence with the four
+research questions: RQ1 asks whether a narrative instrument can be formalised at
+all, and answering it takes a criteria model, a scoring method and a working
+system rather than any one of them.
+@tbl:objectives-questions-they-serve sets each objective against the question it
+serves and the section reporting its outcome.
+
+[Table: objectives-questions-they-serve | The specific objectives, the research question each serves and where its outcome is reported]
+
+| Objective | Serves | Outcome reported in |
+|---|---|---|
+| 2.2.1 Derive a computable criteria model | RQ1 | Sections 4.10, 5.1 |
+| 2.2.2 Implement a scoring method for measured and judged inputs | RQ1 | Section 4.11 |
+| 2.2.3 Build a working decision-support system | RQ1 | Sections 4.12, 5.4, 5.5 |
+| 2.2.4 Establish how far the model depends on its weights | RQ2 | Section 5.16 |
+| 2.2.5 Evaluate the scoring method against realised outcomes | RQ3 | Sections 5.10 to 5.15 |
+| 2.2.6 Determine whether the two objectives are separable | RQ4 | Section 5.17 |
+| 2.2.7 Elicit criterion weights from credit practitioners | RQ2 | Section 6.1 |
+
+This table contains the mapping from objective to research question, and the
+section in which each objective's outcome is reported. Three objectives serve
+RQ1 and two serve RQ2, because formalisation and weighting are each established
+by more than one piece of work; RQ3 and RQ4 are each answered by a single
+objective. No objective serves two questions, and no question is left without
+one, so the set is a partition of the work rather than a list of activities
+assembled after the fact.

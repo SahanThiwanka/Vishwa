@@ -105,6 +105,28 @@ elicited one, on identical cases.
 
 ## 6.2 Answers to the research questions
 
+Each question is answered below in the same four steps: the answer, the evidence
+supporting it, what follows from it, and the limit on how far it can be taken.
+@tbl:questions-methods-results-contributions states the four answers together
+first, so that the chapter's claims can be read against one another before each
+is argued at length.
+
+[Table: questions-methods-results-contributions | The research questions, the method used for each, the principal result and the contribution claimed]
+
+| Question | Method | Principal result | Contribution claimed |
+|---|---|---|---|
+| RQ1 Can the instrument be formalised? | Clause-by-clause derivation from the source form, then implementation | 49 criteria across 7 dimensions, each traceable to a numbered clause; a working system | A traceable appraisal model, and the demonstration that the traceability constraint is affordable |
+| RQ2 What weights do practitioners assign, and how much do they matter? | Best-Worst Method with eleven practitioners; Monte Carlo perturbation | Project viability weighted above historic performance by more than two to one; rankings stable, 13–16% of cases move one band | Elicited weights for a Sri Lankan state commercial bank, with their stability measured rather than assumed |
+| RQ3 What can public data establish about an instrument-specific model? | Benchmarking against logistic regression and gradient boosting on 652,284 matured facilities | The scoring machinery is testable; the criteria tree is not. A predictor documented as economic proved to carry outcome information | A bounded account of what proxy validation can support, and a reusable contamination finding |
+| RQ4 Are the two objectives separable? | Correlation and band agreement across the same population | The scores correlate at r = +0.40, and bands disagree often enough that a combined figure would conceal the disagreement | Evidence that separate reporting is warranted, against the study's own prior expectation of independence |
+
+This table contains, for each research question, the method used to answer it,
+the result that answer rests on, and the contribution claimed from it. The
+contributions are deliberately narrower than the results: RQ3 produced a finding
+about the SBA dataset that is useful beyond this study, but the contribution
+claimed is the account of proxy validation rather than the finding's priority,
+which Section 6.4 records as unestablished.
+
 ### 6.2.1 RQ1: can the instrument be formalised?
 
 Yes, and the artefact demonstrates it. Forty-nine criteria across seven
@@ -155,12 +177,12 @@ temporal), a negative result reported as it occurred (Section 5.15).
 The attempt surfaced something more useful. The SBA National dataset's *Term*
 field carries outcome information: roundness alone predicts default at AUC 0.889
 within every approval year, and excluding the field drops gradient-boosting
-temporal AUC from 0.9461 to 0.6076 (Sections 5.3 to 5.4). Confidence intervals
+temporal AUC from 0.9461 to 0.6076 (Sections 5.10 to 5.11). Confidence intervals
 do not overlap and paired DeLong tests give p < 0.001.
 
 Two further hazards emerged. Calibration degrades roughly 700-fold across the
 temporal boundary, with models systematically under-predicting default (Section
-5.5a). And at realistic cost ratios, none of the models beats a fixed policy on
+5.13). And at realistic cost ratios, none of the models beats a fixed policy on
 the stressed cohort (Section 5.14).
 
 ### 6.2.4 RQ4: are the objectives separable?
@@ -216,10 +238,12 @@ economic mechanism could produce.
 Substituting available proxies for the intended criteria tests the proxies, not
 the model. Institutions without clean historical default data cannot fit a
 scorecard, and this study shows they cannot borrow someone else's dataset to
-validate one either. Expert elicitation is not a second-best option in that
-situation; it is the only sound one, which is why the weights reported in
-Section 6.1 were elicited from practitioners rather than fitted to borrowed
-outcomes.
+validate one either. That narrows the options rather than closing them: expert
+elicitation remains available, and it is defensible precisely because it does
+not depend on outcome data the institution does not have. It is not equivalent
+to fitting on real outcomes, and nothing here shows it is. It is why the weights
+reported in Section 6.1 were elicited from practitioners rather than fitted to
+borrowed ones.
 
 ### 6.3.3 What temporal validation reveals
 
@@ -298,8 +322,13 @@ transfers directly to Sri Lankan SME credit.
 **The criteria tree is not empirically validated.** No dataset contains its
 variables.
 
-No weight elicitation was carried out (Section 6.1). RQ2 as originally posed is
-unanswered.
+**The elicited weights describe one segment, not the sector.** Eleven
+practitioners completed the instrument, which is within the range published BWM
+studies rely on, but the sample is purposive rather than probabilistic: ten
+respondents work in state commercial banking and the eleventh did not state an
+institution. The weights in Section 6.1.4 are the judgement of those
+respondents. They are not a measurement of Sri Lankan credit practice, and
+nothing in this thesis licenses treating them as one.
 
 **Fairness is assessed only on credit-access proxies.** The SBA file records no
 race, sex, age, disability or marital-status field. Passing, or failing, on
@@ -322,11 +351,10 @@ business age are plausible confounders and were not adjusted for.
 inconsistent is supported from the literature [2] but not
 measured here. This remains the single most significant omission.
 
-**No field evaluation and no fairness assessment.** No officer has used the
-system on live applications, so neither perceived usefulness [47] nor
-usability [48] has been measured, and no disparate-impact analysis has
-been performed. For a credit model the second is a serious gap, recorded in the
-model card.
+**No field evaluation.** No officer has used the system on live applications, so
+neither perceived usefulness [47] nor usability [48] has been
+measured. Structural correctness is established; fitness for the desk is not,
+and the two are not the same claim.
 
 Novelty of the contamination finding is not established as priority. A
 literature search found no prior report, but was not exhaustive.
@@ -338,8 +366,18 @@ independently, compute inter-rater reliability, then repeat with the system.
 This directly tests the premise the research rests on and requires only
 practitioner time and constructed cases.
 
-**Complete the elicitation.** The instrument and pipeline are built and
-verified; they need respondents.
+**Broaden the elicitation.** The instrument, solver and analysis pipeline are
+built, verified and now administered once. Re-administering them unchanged
+across development banks, licensed specialised banks and the non-bank sector
+would establish whether the ordering reported in Section 6.1.4 is a property of
+Sri Lankan credit judgement or of state commercial banking specifically. Because
+the instrument is fixed and the analysis is scripted, a second sample is
+directly comparable with the first rather than a fresh study.
+
+**Measure usability on the desk.** A field evaluation with officers working real
+applications, instrumented with an established usability measure, would test what
+structural verification cannot: whether the explanation the system produces is
+the explanation an officer needs.
 
 **Control the development–default association.** Adjust for facility size,
 business age and sector to determine whether the relationship in Section 5.17.3

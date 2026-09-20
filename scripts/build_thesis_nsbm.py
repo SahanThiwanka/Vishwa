@@ -540,6 +540,30 @@ def set_fixed_layout(table) -> None:
     tbl_pr.append(layout)
 
 
+def word_width(word: str, pt: int = 9) -> float:
+    """Roughly how many inches a word occupies in Times at `pt`.
+
+    Times is proportional and a character count is not a width: capitals and
+    digits are close to half an em, lower case nearer a third, and "i", "l" and
+    the punctuation narrower still. Used only to floor a column at its longest
+    unbreakable word, so it is deliberately a slight over-estimate - a column
+    half a point too wide costs nothing, one half a point too narrow breaks a
+    word down the middle of the page.
+    """
+    em = pt / 72.0
+    total = 0.0
+    for ch in word:
+        if ch in "ilj.,;:'!|()[]":
+            total += em * 0.28
+        elif ch.isupper() or ch.isdigit():
+            total += em * 0.60
+        elif ch in "mw":
+            total += em * 0.78
+        else:
+            total += em * 0.47
+    return total
+
+
 def column_widths(rows: list[list[str]], ncol: int) -> list[float]:
     """Inches per column, summing to the text width.
 
@@ -551,11 +575,14 @@ def column_widths(rows: list[list[str]], ncol: int) -> list[float]:
     """
     longest = [1] * ncol
     longest_word = [1] * ncol
+    longest_word_text = [""] * ncol
     for row in rows:
         for j in range(min(len(row), ncol)):
             cell = clean(row[j])
             longest[j] = max(longest[j], len(cell))
             for word in cell.split():
+                if word_width(word) > word_width(longest_word_text[j]):
+                    longest_word_text[j] = word
                 longest_word[j] = max(longest_word[j], len(word))
 
     # 45 characters is roughly a third of the text column at 10 pt; past that a
@@ -564,12 +591,44 @@ def column_widths(rows: list[list[str]], ncol: int) -> list[float]:
               for j in range(ncol)]
     total = sum(demand) or 1
 
-    min_in = min(0.6, TEXT_WIDTH_IN / ncol)
-    widths = [max(min_in, TEXT_WIDTH_IN * d / total) for d in demand]
+    # Word insets every cell by 0.08" on each side, and that inset is not
+    # available to the text. Dividing the full measure by character demand
+    # therefore over-promises each column by 0.16", which a wide prose column
+    # absorbs and a narrow one cannot: in the fifty-row criteria table the
+    # six-character input column came out at 0.6" and hyphenated "Measured" as
+    # "Meas-ured" on every other row. Padding is taken off the top and given
+    # back to each column, so what is shared out is only what text can occupy.
+    padding = 0.16
+    usable = max(TEXT_WIDTH_IN - padding * ncol, TEXT_WIDTH_IN * 0.4)
+    reserve = (TEXT_WIDTH_IN - usable) / ncol
 
-    # Re-normalise: the minimum-width floor can push the total over the measure.
-    scale = TEXT_WIDTH_IN / sum(widths)
-    return [w * scale for w in widths]
+    # A floor per column rather than one flat 0.6" for all of them. The flat
+    # floor was charged even to a column of one- and two-digit row numbers,
+    # and because the floors are honoured before the total is re-normalised,
+    # width granted to a column that could not use it was taken back out of
+    # every column that could.
+    #
+    # The floor is the width of the column's longest single word, which is what
+    # cannot be broken. Times is proportional, so a character count is the wrong
+    # measure: "BMC" is half again as wide as "bmc", and a three-letter
+    # dimension code in a column sized for three lower-case letters came out as
+    # "BM" over "C".
+    floors = [min(reserve + word_width(longest_word_text[j]) * 1.08,
+                  TEXT_WIDTH_IN / ncol)
+              for j in range(ncol)]
+
+    # Floors first, then share out what is left over. Taking the maximum of
+    # floor and proportional share and re-normalising afterwards does not give
+    # a floor at all: the re-normalisation scales every column down, including
+    # the ones that were only just wide enough, and "BMC" came back as "BM"
+    # over "C" in a column that had been floored to fit it. Giving each column
+    # its floor and dividing only the surplus makes the floor hold by
+    # construction, and the total is the measure exactly.
+    spare = TEXT_WIDTH_IN - sum(floors)
+    if spare <= 0:
+        scale = TEXT_WIDTH_IN / sum(floors)
+        return [f * scale for f in floors]
+    return [floors[j] + spare * demand[j] / total for j in range(ncol)]
 
 
 def table_font_size(rows: list[list[str]], ncol: int) -> int:

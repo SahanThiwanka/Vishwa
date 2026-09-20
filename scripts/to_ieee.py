@@ -332,6 +332,29 @@ def main() -> int:
 
     texts = {n: (CH / n).read_text(encoding="utf-8") for n in ORDER}
 
+    # This conversion is one-way and destructive. It reads author-date citations
+    # and writes numbers, then rebuilds the reference list from what it found;
+    # run a second time it finds nothing, concludes nothing is cited, and writes
+    # an empty reference list over a correct one. That happened, and the build
+    # made from it was a complete thesis with no references at all - which the
+    # page count showed and no check caught, because a document with no
+    # citations contradicts nothing.
+    #
+    # The generated sections are rewritten from the source chapters by
+    # restructure_thesis.py, so the fix is always to re-run that first. Refusing
+    # here is what makes that a message rather than a silent loss.
+    body = "\n".join(texts[n] for n in ORDER)
+    already = len(re.findall(r"\[\d+\]", body))
+    remaining = sum(1 for key, (names, year, _) in REFERENCES.items()
+                    for pat in citation_patterns(names, year)
+                    if pat.search(body))
+    if already and not remaining:
+        print(f"Already converted: {already} numbered citations are present and "
+              "no author-date citation remains.")
+        print("Re-running would empty the reference list. Run "
+              "restructure_thesis.py first, then this.")
+        return 1
+
     # ---- assign numbers in order of first appearance -----------------------
     assigned: dict[str, int] = {}
     next_number = 1

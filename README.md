@@ -175,11 +175,22 @@ python research/src/test_parity.py        # TypeScript/Python engine agreement
 python research/src/bwm.py                # BWM solver self-test
 python research/src/statistical_tests.py  # CIs, DeLong tests, calibration
 python research/src/weight_sensitivity.py # weight perturbation Monte Carlo
-python research/src/make_figures.py       # all figures
+python research/src/make_figures.py       # all data figures
+python research/src/make_architecture_figure.py  # the model, end to end
 python research/src/derive_weights.py     # weights (needs responses)
+python scripts/gen_appendix_criteria.py   # Appendix 1 from the criteria model
 python scripts/restructure_thesis.py      # chapters -> NSBM section order
 python scripts/to_ieee.py                 # author-date -> IEEE numbered
-python scripts/build_thesis_nsbm.py       # assemble THESIS-NSBM.docx
+python scripts/verify_claims.py           # every number against its analysis
+python scripts/build_thesis_nsbm.py       # assemble the dated .docx
+python scripts/export_pdf.py              # contents lists, then the PDF
 python scripts/build_paper.py             # paper + supervisor briefing
 cd web && npm test && npm run dev
 ```
+
+The last four run in that order, and `to_ieee.py` runs **once** per
+`restructure_thesis.py`. It reads author-date citations and writes numbers, so a
+second run finds none, concludes nothing is cited and empties the reference
+list; it now refuses rather than doing that, and `verify_claims.py` fails if the
+reference list is empty. Re-run `restructure_thesis.py` first and the pair is
+safe to repeat.

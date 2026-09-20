@@ -16,6 +16,22 @@ credit decisioning faces regulatory constraints in most jurisdictions, and an
 instrument whose value lies in encoding institutional expertise would forfeit
 that value by discarding the expert.
 
+@fig:conceptual-architecture-model sets out the whole model in one view, from
+the bank's form to the report an officer signs. The sections that follow take
+each stage of it in turn, and the figure is the map to read them against.
+
+[Image: conceptual-architecture.png | conceptual-architecture-model | The model end to end. The bank's appraisal form is decomposed clause by clause into criteria; measured and judged inputs travel separate mappings into a single aggregation path governed by elicited weights; the two objectives are scored separately and never summed; and two gates stand between a score and a recommendation.]
+
+Three features of that diagram carry most of the design argument, and each is
+defended in its own section below. Quantitative and qualitative criteria are
+mapped differently but aggregated identically, so a judgement and a measurement
+can be combined without either being converted into the other (Section 4.4).
+The two objectives run in parallel to the end and are never added together,
+because a combined figure would conceal the disagreement between them (Section
+4.3). And a score does not become a recommendation until it has passed the
+completeness gate, because weight renormalisation otherwise lets a nearly empty
+file produce a confident one (Section 4.5).
+
 ## 4.2 Formalising a narrative instrument
 
 ### 4.2.1 The source
@@ -55,7 +71,7 @@ traced to the institutional document that authorises it, and it prevents the
 common failure of a scoring model quietly acquiring criteria its users never
 agreed to.
 
-### 4.2.3 Result
+### 4.2.3 The derived criteria model
 
 The derivation produced forty-nine criteria across seven dimensions and two
 objectives. @tbl:criterion-counts-source-clauses gives the count for each

@@ -135,9 +135,19 @@ def write(path: Path, title: str, blocks_out: list[tuple[str, str]],
 
 
 NUM = r"\d+(?:\.\d+)*[a-z]?(?:\.\d+)*"
+
+# A reference always carries a dot - there is no "Section 5" - and requiring one
+# stops the \s+ below from reaching across a line break to claim an ordinary
+# numeral that happens to open the next line.
+REFNUM = r"\d+(?:\.\d+)+[a-z]?(?:\.\d+)*"
+
+# Matching a literal space after "Section" missed every reference the prose had
+# wrapped, and the singular-only lead missed every plural one. Both forms are
+# ordinary in hard-wrapped source, so this was not an edge case: ten references
+# to renumbered sections went untranslated and shipped.
 REFERENCE = re.compile(
-    rf"(?P<lead>§|\b[Ss]ection )(?P<a>{NUM})"
-    rf"(?P<dash>\s*[–—-]\s*(?P<b>{NUM}))?"
+    rf"(?P<lead>§|\b[Ss]ections?\s+)(?P<a>{REFNUM})"
+    rf"(?P<dash>\s*(?:[–—-]|to|and)\s*(?P<b>{REFNUM}))?"
 )
 
 # Chapter-level references need the same treatment as section references. The
@@ -275,7 +285,13 @@ def main() -> int:
         "1.8": "1.7", "2.3.3": "3.5.3", "2.4.1": "3.6.1", "2.4.2": "3.6.2",
         "2.5.3": "3.5.3", "2.6.1": "3.6.1", "2.6.2": "3.6.2", "2.7": "3.8",
         "2.8": "3.8", "2.2.1": "3.4",
-        "3.5": "4.5", "3.5.1": "4.5.1", "3.6.3": "4.6.3",
+        # The methodology's own sections, which move from chapter 3 to chapter 4.
+        # Every level referred to anywhere has to be listed: an unlisted one is
+        # left as "3.5.3", which in the finished document is a section of the
+        # literature review.
+        "3.4": "4.4", "3.5": "4.5", "3.5.1": "4.5.1", "3.5.2": "4.5.2",
+        "3.5.3": "4.5.3", "3.5.4": "4.5.4", "3.6": "4.6", "3.6.1": "4.6.1",
+        "3.6.3": "4.6.3", "3.7": "4.7", "3.8": "4.8",
         # The draft's chapter 4 is split across chapters 4 and 5 of the
         # document, so every one of its numbers has to be listed. "4.4" was
         # missing, and a reference to the scoring specification in the draft's
@@ -298,15 +314,26 @@ def main() -> int:
         "5.6c": "5.18", "5.6c.1": "5.18.1", "5.6c.2": "5.18.2",
         "5.6c.3": "5.18.3", "5.6d": "5.19", "5.6d.1": "5.19.1",
         "5.6d.2": "5.19.2", "5.6d.3": "5.19.3", "5.6d.4": "5.19.4",
-        "5.7": "5.20", "5.8": "5.21", "6.1": "6.1", "6.4": "6.3",
+        "5.7": "5.20", "5.8": "5.21", "6.1": "6.1",
+        # No other chapter-6 entry. Chapter 6 is carried into the document
+        # unrenumbered - 6.1 to 6.6 in the draft are 6.1 to 6.6 in the document -
+        # so any entry here that changes a number rewrites a reference that was
+        # already right. "6.4": "6.3" did exactly that, and silently redirected
+        # every pointer to the limitations into the discussion.
     }
     for name in ("01-introduction.md", "03-literature-review.md",
                  "04-methodology.md", "05-results.md",
                  "06-discussion-conclusions.md"):
         fix_cross_references(CH / name, mapping)
-    # Hand-maintained, so it is not regenerated and must not have its chapter
-    # references renumbered again on each run.
-    fix_cross_references(CH / "02-objectives.md", mapping, chapters=False)
+    # 02-objectives.md, 07-references.md and 08-appendices.md are hand-maintained
+    # and deliberately absent from this loop. The mapping translates draft
+    # numbering into final numbering, which is a one-way, one-time operation; a
+    # file that is not regenerated already holds final numbers, so applying it
+    # again translates numbers that were already correct. It did: the objectives
+    # chapter pointed at the limitations as Section 6.4, the mapping rewrote that
+    # to 6.3 on a later run, and 6.3 is the discussion. The reference resolved,
+    # so nothing flagged it. Hand-maintained files are written in final numbering
+    # and left alone.
 
     print("\nCross-references updated.")
     print("Source chapters left untouched - they remain the editable originals.")

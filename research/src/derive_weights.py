@@ -24,6 +24,7 @@ import argparse
 import json
 import os
 import sqlite3
+import statistics
 import sys
 from collections import defaultdict
 from datetime import date
@@ -243,14 +244,35 @@ def main() -> int:
             print(f"    {item:<26} {w:.4f}  {bar}")
         print()
 
+    # The exclusion threshold is a design choice, so report what it costs rather
+    # than only what it is. An examiner asking "why 0.25 and not 0.10?" is owed
+    # the number of responses each answer would have discarded, and the gap in
+    # the observed distribution that the chosen value sits in.
+    observed = sorted((row["consistency_ratio"] for row in consistency_rows),
+                      reverse=True)
+    sensitivity = [
+        {"threshold": t,
+         "excluded": sum(1 for cr in observed if cr > t),
+         "retained": sum(1 for cr in observed if cr <= t)}
+        for t in (0.10, 0.15, 0.20, 0.25, 0.30)
+    ]
+
     # --- persist the audit tables ------------------------------------------
     OUT_TABLES.mkdir(parents=True, exist_ok=True)
     with open(OUT_TABLES / "elicited_weights.json", "w", encoding="utf-8") as fh:
         json.dump({
             "respondents": respondents,
             "n_respondents": len(respondents),
+            "n_level_responses": len(consistency_rows),
             "n_dropped_inconsistent": dropped,
             "consistency_threshold": CONSISTENCY_THRESHOLD,
+            # statistics.median, not the middle element: with an even count the
+            # middle element is one of two equally central values, and which one
+            # it is depends on the sort direction.
+            "consistency_median": round(
+                statistics.median(observed) if observed else 0.0, 4),
+            "consistency_highest": observed[:8],
+            "threshold_sensitivity": sensitivity,
             "weights": level_weights,
         }, fh, indent=2)
 

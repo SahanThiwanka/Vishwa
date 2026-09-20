@@ -13,8 +13,47 @@
     "S01"
   ],
   "n_respondents": 11,
+  "n_level_responses": 88,
   "n_dropped_inconsistent": 3,
   "consistency_threshold": 0.25,
+  "consistency_median": 0.036,
+  "consistency_highest": [
+    0.377,
+    0.2984,
+    0.2934,
+    0.2137,
+    0.2105,
+    0.1875,
+    0.1842,
+    0.1828
+  ],
+  "threshold_sensitivity": [
+    {
+      "threshold": 0.1,
+      "excluded": 18,
+      "retained": 70
+    },
+    {
+      "threshold": 0.15,
+      "excluded": 10,
+      "retained": 78
+    },
+    {
+      "threshold": 0.2,
+      "excluded": 5,
+      "retained": 83
+    },
+    {
+      "threshold": 0.25,
+      "excluded": 3,
+      "retained": 85
+    },
+    {
+      "threshold": 0.3,
+      "excluded": 1,
+      "retained": 87
+    }
+  ],
   "weights": {
     "dimension:borrower_management": {
       "business_vintage": 0.1263767302800241,

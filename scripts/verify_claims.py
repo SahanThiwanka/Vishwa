@@ -306,6 +306,89 @@ def check_no_repository_paths() -> list[tuple[bool, str]]:
     return [(True, "OK    no file paths or commands in the thesis body")]
 
 
+# Sentences that were true of an earlier draft and are false of this one. Each
+# survived into a submitted PDF, in a chapter that elsewhere stated the opposite:
+# Section 6.4 said no elicitation had been carried out while Section 6.1 of the
+# same chapter reported eleven respondents and their weights. A contradiction
+# between two sections is worse than either sentence alone, because it tells an
+# examiner the document was assembled rather than written.
+STALE_CLAIMS = {
+    r"[Nn]o weight elicitation was carried out":
+        "the elicitation was carried out; eleven practitioners completed it",
+    r"RQ2 .{0,30}is\s+unanswered":
+        "RQ2 is answered in Section 6.1",
+    r"\*\*Complete the elicitation\.?\*\*":
+        "already complete; future work is to broaden it, not to finish it",
+    r"[Tt]en (?:respondents|practitioners) (?:completed|took part)":
+        "eleven practitioners completed the instrument",
+    r"must be obtained and recorded":
+        "the ethics position is stated in the past tense, not as a pending task",
+    r"no disparate-impact analysis has been performed":
+        "Section 5.18 performs one; only protected characteristics are untested",
+    r"the only sound one":
+        "an absolute the evidence does not support",
+}
+
+
+def check_no_stale_claims() -> list[tuple[bool, str]]:
+    """No sentence left over from a stage of the work that has since moved on."""
+    hits: list[str] = []
+    for name in ALL_RENDERED:
+        path = CHAPTERS / name
+        if not path.exists():
+            continue
+        text = path.read_text(encoding="utf-8")
+        for pattern, why in STALE_CLAIMS.items():
+            found = re.search(pattern, text)
+            if found:
+                hits.append(f"        {name}: \"{found.group(0)}\" - {why}")
+    if hits:
+        return [(False, "FAIL  the thesis still carries a claim from an "
+                        "earlier stage of the work")] + \
+               [(False, h) for h in hits]
+    return [(True, f"OK    no stale claims from earlier drafts "
+                   f"({len(STALE_CLAIMS)} patterns)")]
+
+
+def check_references_resolve() -> list[tuple[bool, str]]:
+    """Every [n] in the text has an entry, and every entry is cited.
+
+    A thesis with no reference list is a complete, well-formed, internally
+    consistent document: nothing in it contradicts anything else, every number
+    verifies, every cross-reference resolves, and it is unsubmittable. One was
+    built, because the citation converter was run twice and emptied the list the
+    second time. Nothing noticed for three commands.
+    """
+    refs = CHAPTERS / "07-references.md"
+    if not refs.exists():
+        return [(False, "FAIL  07-references.md is missing")]
+
+    entries = {int(n) for n in re.findall(r"^\[(\d+)\]", refs.read_text(
+        encoding="utf-8"), re.M)}
+    if not entries:
+        return [(False, "FAIL  the reference list is empty - re-run "
+                        "restructure_thesis.py then to_ieee.py")]
+
+    body = "\n".join((CHAPTERS / n).read_text(encoding="utf-8")
+                     for n in ALL_RENDERED
+                     if n != "07-references.md" and (CHAPTERS / n).exists())
+    cited = {int(n) for n in re.findall(r"\[(\d+)\]", body)}
+
+    out = []
+    dangling = sorted(cited - entries)
+    if dangling:
+        out.append((False, f"FAIL  {len(dangling)} citation(s) have no entry: "
+                           f"{dangling[:8]}"))
+    uncited = sorted(entries - cited)
+    if uncited:
+        out.append((False, f"FAIL  {len(uncited)} reference(s) are never cited: "
+                           f"{uncited[:8]}"))
+    if not out:
+        out.append((True, f"OK    all {len(entries)} references are cited and "
+                          f"every citation resolves"))
+    return out
+
+
 def check_headings_are_numbered() -> list[tuple[bool, str]]:
     """Every subheading in a source chapter must carry a section number.
 
@@ -406,7 +489,13 @@ def check_section_coverage() -> list[tuple[bool, str]]:
     return out
 
 
-CROSSREF = re.compile(r"(?:§|\b[Ss]ection )(\d+(?:\.\d+)+[a-z]?(?:\.\d+)*)")
+# Must match every form the restructure rewrites. While it did not, the check
+# certified a smaller set of references than the document contained: ten broken
+# ones were plural, wrapped across a line, or joined by "to" rather than a dash,
+# and so were never extracted to be tested at all.
+CROSSREF = re.compile(
+    r"(?:§|\b[Ss]ections?\s+)(\d+(?:\.\d+)+[a-z]?(?:\.\d+)*)"
+    r"(?:\s*(?:[–—-]|to|and)\s*(\d+(?:\.\d+)+[a-z]?(?:\.\d+)*))?")
 
 
 def check_cross_references() -> tuple[bool, str]:
@@ -428,7 +517,8 @@ def check_cross_references() -> tuple[bool, str]:
     for path in sorted(CHAPTERS.glob("0[0-9]-*.md")):
         text = path.read_text(encoding="utf-8")
         numbers.update(n for n, _ in HEADING.findall(text))
-        refs[path.name] = set(CROSSREF.findall(text))
+        refs[path.name] = {n for pair in CROSSREF.findall(text)
+                           for n in pair if n}
 
     if not numbers:
         return True, "OK    cross-reference check skipped (files absent)"
@@ -668,6 +758,24 @@ def main() -> int:
                   "06-discussion-conclusions.md"]
         checks.append(check("elicitation respondents",
                             str(elicited["n_respondents"]), docs, BOTH_E))
+
+        # The methodology justifies the exclusion threshold from the observed
+        # distribution rather than asserting it, so those figures are claims
+        # about the data and are checked like any other.
+        BOTH_M = ["ch3-methodology.md", "04-methodology.md"]
+        if "n_level_responses" in elicited:
+            checks.append(check("level-responses collected",
+                                str(elicited["n_level_responses"]),
+                                docs, BOTH_M))
+        if "consistency_median" in elicited:
+            checks.append(check("median consistency ratio",
+                                f"{elicited['consistency_median']:g}",
+                                docs, BOTH_M))
+        for row in elicited.get("threshold_sensitivity", []):
+            checks.append(check(
+                f"excluded at CR > {row['threshold']:g}",
+                f"| {row['threshold']:.2f} | {row['excluded']} | "
+                f"{row['retained']} |", docs, BOTH_M))
         w = elicited["weights"].get("objective:credit_risk", {})
         for item, label in (("project_viability", "project viability weight"),
                             ("risk_security", "risk & security weight")):
@@ -829,6 +937,8 @@ def main() -> int:
     checks.extend(check_exhibits_are_referenced())
     checks.extend(check_abbreviations_expanded())
     checks.extend(check_no_repository_paths())
+    checks.extend(check_no_stale_claims())
+    checks.extend(check_references_resolve())
     checks.extend(check_section_coverage())
     checks.append(check_cross_references())
 

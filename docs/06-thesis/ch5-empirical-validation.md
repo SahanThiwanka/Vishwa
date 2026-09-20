@@ -6,7 +6,7 @@
 > every load-bearing figure quoted in this chapter against the result files the
 > analyses generate.
 
-## 5.1 Purpose and scope of this chapter
+## 5.1 Empirical evaluation: purpose and scope
 
 The preceding sections presented a criteria tree of 49 criteria derived from the
 People's Bank *Project / Business Appraisal Report for SME Credit Facility*, and

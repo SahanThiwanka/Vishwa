@@ -1,6 +1,6 @@
 # 5 RESULTS
 
-## 5.1 Result
+## 5.1 The derived criteria model
 
 The derivation produced forty-nine criteria across seven dimensions and two
 objectives. @tbl:criterion-counts-source-clauses gives the count for each
@@ -204,7 +204,7 @@ The design principle is worth stating separately from this instance: a
 placeholder that is only described in prose will outlive the condition it
 describes, because nothing breaks when the condition changes.
 
-## 5.8 Purpose and scope of this chapter
+## 5.8 Empirical evaluation: purpose and scope
 
 The preceding sections presented a criteria tree of 49 criteria derived from the
 People's Bank *Project / Business Appraisal Report for SME Credit Facility*, and
@@ -227,7 +227,7 @@ The validation is therefore split three ways, and @tbl:three-validation-claims-e
 
 | Component | Evidence | Reported in |
 |---|---|---|
-| Scoring method (band mapping, weighted aggregation, defuzzification) | Real default outcomes, SBA National | Sections 5.3 to 5.5 |
+| Scoring method (band mapping, weighted aggregation, defuzzification) | Real default outcomes, SBA National | Sections 5.10 to 5.12 |
 | Criterion weights | Expert elicitation, Best-Worst Method | Chapter 6 |
 | Full 49-criterion tree | Design contribution; not empirically validated | Section 5.20 |
 
@@ -1097,7 +1097,7 @@ quantitative, so each input enters as a degenerate triangular fuzzy number
 [*x*, *x*, *x*]. Centroid defuzzification returns *x*, and the fuzzy weighted average
 reduces exactly to an ordinary weighted mean. On this dataset the fuzzy
 machinery does no work. It is exercised only by qualitative criteria, which SBA
-data does not contain. What Sections 5.3 to 5.6 validates is band mapping and
+data does not contain. What Sections 5.10 to 5.15 validates is band mapping and
 weighted aggregation, not fuzzy inference.
 
 **Maturity filtering biases composition.** Restricting to fully-matured loans
@@ -1115,7 +1115,7 @@ measured rather than merely acknowledged.
 
 **The independence test uses thin development proxies.** SBA data carries
 employment only; five of the nine items in clause 5 have no counterpart. Section
-5.6b tests the employment dimension of development impact, not the whole
+5.17 tests the employment dimension of development impact, not the whole
 objective.
 
 **The proposed model is not calibrated.** It produces an ordinal risk band, not

@@ -93,7 +93,7 @@ extracts.
 
 An instrument-specific appraisal model cannot be validated against a dataset
 that lacks its variables: substituting proxies tests the proxies. Expert
-elicitation is therefore not a second-best option but the only sound one.
+elicitation is therefore a defensible route to those weights, not a fallback.
 
 **Keywords:** SME credit appraisal, multi-criteria decision analysis, fuzzy sets,
 decision support systems, data leakage, development banking

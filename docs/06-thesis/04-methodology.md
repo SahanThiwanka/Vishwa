@@ -19,7 +19,7 @@ Five activities make up the design. @tbl:research-activities-questions-they sets
 | Formalisation | RQ1 | Clause-by-clause derivation from the bank's form | 49-criterion model, working system |
 | Weight elicitation | RQ2 | Best-Worst Method with eleven practitioners | Section 6.1 |
 | Weight sensitivity | RQ2 | Monte Carlo over perturbed weight vectors | Section 5.16 |
-| Empirical validation | RQ3 | Benchmarking against realised outcomes, with confidence intervals (CIs) and paired tests | Sections 5.3 to 5.6 |
+| Empirical validation | RQ3 | Benchmarking against realised outcomes, with confidence intervals (CIs) and paired tests | Sections 5.10 to 5.15 |
 | Objective separability | RQ4 | Correlation and band agreement across 652,284 facilities | Section 5.17 |
 
 Weight elicitation by Best-Worst Method is specified in Section 4.5 and was
@@ -76,6 +76,31 @@ Three rules govern edge cases, each chosen deliberately:
 2. Below a completeness threshold, no recommendation is issued, because rule 1 alone allows a sparse file to produce a confident score (Section 5.3).
 3. Critical criteria are evaluated on raw values and surfaced separately, so a
    debt service cover ratio (DSCR) below 1.0 cannot be averaged away.
+
+Several numbers in the model are not derived from anything; they were chosen.
+Leaving that implicit would invite the reasonable objection that the results
+depend on values selected to produce them, so @tbl:thresholds-model-their-basis
+states every threshold in the model, its value, and whether it follows from
+something or was set.
+
+[Table: thresholds-model-their-basis | The thresholds in the model, their values and their basis]
+
+| Threshold | Value | Basis |
+|---|---|---|
+| Quantitative band anchors | Five points per criterion, listed in Appendix 1.2 | Design assumption. Anchors were placed at the values the source form and Sri Lankan SME lending practice already treat as boundaries, but their exact placement is a judgement |
+| Risk band boundaries | 80, 65 and 50 | Design assumption, chosen so that the four bands correspond to the four recommendation actions the bank's own sign-off chain already distinguishes |
+| Objective completeness floor | 60% | Design assumption, adopted in response to a defect found during verification (Section 5.3) rather than fixed in advance |
+| Dimension completeness floor | 50% | Design assumption, set below the objective floor so that one thin dimension does not by itself suppress a recommendation |
+| Critical criterion: DSCR | Below 1.0 | Definitional, not chosen: below 1.0 the projected cash flow does not cover the debt service it is being asked to fund |
+| Consistency exclusion | Consistency ratio (CR) above 0.25 | Design choice. Section 4.5.3 reports what stricter and looser values would have excluded |
+
+This table contains the six thresholds that govern the model's output, the value
+each takes, and whether that value is derived or assumed. Only one is
+definitional. The other five are design assumptions, which is why the model's
+sensitivity to them is measured rather than argued: Section 5.16 perturbs the
+weights and the anchors together and reports how far rankings and bands move.
+Stating them here means a reader who disagrees with a value can see exactly what
+it controls, instead of finding it implied by a result.
 
 ## 4.5 Weight elicitation (RQ2)
 
@@ -146,8 +171,34 @@ inconsistent cases the two agree to six decimal places, and the returned weights
 exhibit exactly the deviation reported. Both checks run as part of the
 solver's own test suite.
 
-Responses with a consistency ratio (CR) above 0.25 are excluded, not averaged in. The number excluded is
+Responses with a CR above 0.25 are excluded, not averaged in. The number excluded is
 reported: silently discarding respondents would make the study unreproducible.
+
+The threshold is a design choice and is treated as one.
+@tbl:exclusion-threshold-would-discarded reports what each candidate value would
+have discarded from the 88 level-responses collected.
+
+[Table: exclusion-threshold-would-discarded | What each candidate exclusion threshold would have discarded]
+
+| Threshold | Excluded | Retained |
+|---:|---:|---:|
+| 0.10 | 18 | 70 |
+| 0.15 | 10 | 78 |
+| 0.20 | 5 | 83 |
+| 0.25 | 3 | 85 |
+| 0.30 | 1 | 87 |
+
+This table contains the number of level-responses that each candidate threshold
+would have excluded and retained. It is reported because the choice is
+consequential in one direction only: a stricter rule discards more of a sample
+that is already small, and at 0.10 it would discard a fifth of it. The observed
+distribution decides the question more cleanly than the argument does. The
+median level-response has a CR of 0.036, an order of magnitude inside any
+candidate threshold, and the upper tail is not continuous: the ratios run
+0.183, 0.184, 0.188, 0.211, 0.214 and then jump to 0.293, 0.298 and 0.377. The
+0.25 threshold falls in that gap, so it separates a tight cluster of consistent
+responses from three isolated outliers rather than cutting through a continuum.
+Any value between 0.22 and 0.29 would exclude the same three responses.
 
 Surviving responses are aggregated by geometric mean, the standard aggregation
 for ratio-scale priority vectors, which preserves the ratio relationships that
@@ -219,12 +270,21 @@ template. No customer file, no borrower data and no internal credit policy
 document was accessed. The system was demonstrated using constructed cases, not
 real applications.
 
-**Institutional approval.** Formal ethics clearance and any institutional
-permission required for practitioner participation must be obtained and recorded
-before elicitation data is used in the submitted work. Where this study was
-conducted under time constraints that limited the scale of participant
-recruitment, that constraint is reported in the limitations and not concealed by
-the sample size.
+**Consent and risk category.** The elicitation was designed to sit in the
+minimal-risk, anonymous category. No direct or indirect personal identifier was
+collected, respondents were not asked about their own institution's cases, and
+no question could be answered with customer information. The participant
+information reproduced in Appendix 2.2 was presented in full before the first
+question, and a respondent who read it and continued gave consent by doing so;
+a respondent who stopped left no record behind. Because responses carry only a
+self-chosen code, a participant cannot be re-identified, which also means a
+withdrawal request after submission cannot be honoured — a limitation stated on
+the instrument itself rather than discovered afterwards.
+
+**Recruitment scale.** Practitioner recruitment was constrained by the time
+available, and the achieved sample is small. That constraint is reported as a
+limitation in Section 6.4 and is not concealed by presenting the weights as more
+general than they are.
 
 **Research integrity.** Every quantitative result reported in this thesis is
 produced by code in the accompanying repository and is regenerable from the raw
@@ -261,6 +321,22 @@ traceable. The officer still decides. This positioning is not modesty: automated
 credit decisioning faces regulatory constraints in most jurisdictions, and an
 instrument whose value lies in encoding institutional expertise would forfeit
 that value by discarding the expert.
+
+@fig:conceptual-architecture-model sets out the whole model in one view, from
+the bank's form to the report an officer signs. The sections that follow take
+each stage of it in turn, and the figure is the map to read them against.
+
+[Image: conceptual-architecture.png | conceptual-architecture-model | The model end to end. The bank's appraisal form is decomposed clause by clause into criteria; measured and judged inputs travel separate mappings into a single aggregation path governed by elicited weights; the two objectives are scored separately and never summed; and two gates stand between a score and a recommendation.]
+
+Three features of that diagram carry most of the design argument, and each is
+defended in its own section below. Quantitative and qualitative criteria are
+mapped differently but aggregated identically, so a judgement and a measurement
+can be combined without either being converted into the other (Section 4.11).
+The two objectives run in parallel to the end and are never added together,
+because a combined figure would conceal the disagreement between them (Section
+5.2). And a score does not become a recommendation until it has passed the
+completeness gate, because weight renormalisation otherwise lets a nearly empty
+file produce a confident one (Section 5.3).
 
 ## 4.10 Formalising a narrative instrument
 
